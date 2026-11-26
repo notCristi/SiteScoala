@@ -1,0 +1,506 @@
+---
+/**
+ * Interactive step-by-step guide (admissions & exams). Steps are numbered regions with
+ * When / What you need / documents always visible (D-08, D-09); status is computed from dates;
+ * the personal checklist is stored only in the visitor's browser.
+ */
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Icon from '~/components/svg/Icon.astro';
+import RubricNumeral from '~/components/svg/RubricNumeral.astro';
+import Manicule from '~/components/svg/Manicule.astro';
+import { pick, formatDate, formatBytes } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import { NAV } from '~/i18n/nav';
+import { docUrl } from '~/lib/documents';
+import type { Doc, Guide, GuideStep } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, alternates, settings, banners, entity } = Astro.props as ViewProps;
+const { guide, steps, docs } = entity as { guide: Guide; steps: GuideStep[]; docs: Map<number, Doc> };
+const L = (k: string) => ui(locale, k);
+const title = pick(guide, 'title', locale);
+const lead = pick(guide, 'lead', locale);
+const body = pick(guide, 'bodyHtml', locale);
+const now = Date.now();
+const stateOf = (st: GuideStep) => {
+  if (!st.startsAt && !st.endsAt) return null;
+  if (st.endsAt && st.endsAt < now) return 'closed';
+  if (st.startsAt && st.startsAt > now) return 'upcoming';
+  return 'open';
+};
+type FAQ = { q_ro: string; q_de?: string; q_en?: string; a_ro: string; a_de?: string; a_en?: string };
+let faq: FAQ[] = [];
+try {
+  faq = guide.faqJson ? (JSON.parse(guide.faqJson) as FAQ[]) : [];
+} catch {
+  faq = [];
+}
+const checklistOf = (st: GuideStep): string[] => {
+  try {
+    const c = st.checklistJson ? (JSON.parse(st.checklistJson) as Record<string, string[]>) : {};
+    return c[locale]?.length ? c[locale]! : (c.ro ?? []);
+  } catch {
+    return [];
+  }
+};
+const admissions = NAV.find((n) => n.id === 'admitere')!;
+const siblings = admissions.columns!.find((c) => c.links.some((l) => l.params?.kind === guide.kind))!;
+const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => stateOf(s) === 'upcoming');
+---
+
+<Base locale={locale} title={title.value} description={lead.value} route="guide" alternates={alternates} settings={settings} banners={banners} fallback={title.fallback}>
+  <PageHead
+    locale={locale}
+    kicker={guide.academicYear ? `${admissions.label[locale]} · ${guide.academicYear.replace('-', '–')}` : admissions.label[locale]}
+    title={title.value}
+    titleLang={title.lang}
+    lead={lead.value}
+    leadLang={lead.lang}
+    crumbs={[{ label: admissions.label[locale], route: 'admissions' }, { label: title.value }]}
+  >
+    {
+      nextStep && (
+        <p class="next">
+          <span class="next__label">{stateOf(nextStep) === 'open' ? L('stateOpen') : L('stateUpcoming')}</span>
+          <a href={`#step-${nextStep.sortOrder}`}>
+            {L('step')} {nextStep.sortOrder}: {pick(nextStep, 'title', locale).value}
+          </a>
+          {pick(nextStep, 'when', locale).value && <span class="muted"> · {pick(nextStep, 'when', locale).value}</span>}
+        </p>
+      )
+    }
+  </PageHead>
+
+  <div class="wrap guide">
+    <nav class="guide__toc" aria-label={L('steps')}>
+      <p class="kicker">{L('steps')}</p>
+      <ol role="list">
+        {
+          steps.map((s) => (
+            <li>
+              <a href={`#step-${s.sortOrder}`} data-state={stateOf(s) ?? undefined}>
+                <span class="num">{s.sortOrder}</span>
+                <span>{pick(s, 'title', locale).value}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="kicker toc__other">{siblings.title[locale]}</p>
+      <ul role="list">
+        {
+          siblings.links
+            .filter((l) => l.params?.kind !== guide.kind)
+            .map((l) => (
+              <li>
+                <a href={url(l.route, locale, l.params)}>{l.label[locale]}</a>
+              </li>
+            ))
+        }
+      </ul>
+    </nav>
+
+    <div class="guide__main">
+      <ol class="steps" role="list" data-guide={guide.slug}>
+        {
+          steps.map((s) => {
+            const st = stateOf(s);
+            const items = checklistOf(s);
+            const doc = s.documentId ? docs.get(s.documentId) : undefined;
+            const when = pick(s, 'when', locale).value;
+            const stepBody = pick(s, 'bodyHtml', locale);
+            return (
+              <li class="step" id={`step-${s.sortOrder}`} data-state={st ?? undefined} data-reveal>
+                <div class="step__num">
+                  <RubricNumeral n={s.sortOrder} />
+                </div>
+                <div class="step__body">
+                  <header class="step__head">
+                    <h2>{pick(s, 'title', locale).value}</h2>
+                    {st && <span class:list={['tag', st === 'closed' ? 'tag--muted' : st === 'open' ? 'tag--rubric' : 'tag--lapis']}>{L(st === 'closed' ? 'stateClosed' : st === 'open' ? 'stateOpen' : 'stateUpcoming')}</span>}
+                  </header>
+                  {(when || s.startsAt || s.endsAt) && (
+                    <p class="step__when">
+                      <Icon name="calendar" />
+                      <span>
+                        <strong>{L('when')}:</strong> {when}
+                        {s.endsAt && s.isDeadline && (
+                          <>
+                            {' '}
+                            · <time datetime={new Date(s.endsAt).toISOString()}>{formatDate(s.endsAt, locale)}</time>
+                          </>
+                        )}
+                      </span>
+                    </p>
+                  )}
+                  {stepBody.value && <div class="prose step__text" lang={stepBody.lang} set:html={stepBody.value} />}
+                  {items.length > 0 && (
+                    <fieldset class="checklist">
+                      <legend>{L('bring')}</legend>
+                      {items.map((it, i) => (
+                        <label>
+                          <input type="checkbox" data-check={`${s.sortOrder}-${i}`} />
+                          <span>{it}</span>
+                        </label>
+                      ))}
+                    </fieldset>
+                  )}
+                  {(doc || s.linkUrl) && (
+                    <p class="step__links">
+                      {doc && (
+                        <a class="btn btn--ghost" href={docUrl(doc)} target="_blank" rel="noopener">
+                          <Icon name="download" />
+                          {pick(doc, 'title', locale).value}
+                          <span class="muted">
+                            {doc.fileExt?.toUpperCase()} {formatBytes(doc.sizeBytes, locale)}
+                          </span>
+                        </a>
+                      )}
+                      {s.linkUrl && (
+                        <a class="link-arrow" href={s.linkUrl} {...(s.linkUrl.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>
+                          {L('open')}
+                          <Icon name={s.linkUrl.startsWith('http') ? 'external' : 'arrow-right'} />
+                        </a>
+                      )}
+                    </p>
+                  )}
+                </div>
+              </li>
+            );
+          })
+        }
+      </ol>
+
+      {
+        body.value && (
+          <section class="guide__more">
+            <div class="callout">
+              <span class="callout__hand" aria-hidden="true">
+                <Manicule />
+              </span>
+              <div class="prose" lang={body.lang} set:html={body.value} />
+            </div>
+          </section>
+        )
+      }
+
+      {
+        faq.length > 0 && (
+          <section class="faq" aria-labelledby="faq-h">
+            <h2 id="faq-h">{L('faq')}</h2>
+            {faq.map((f, i) => {
+              const q = (f as Record<string, string | undefined>)[`q_${locale}`] || f.q_ro;
+              const a = (f as Record<string, string | undefined>)[`a_${locale}`] || f.a_ro;
+              return (
+                <details id={`faq-${i + 1}`}>
+                  <summary>
+                    {q}
+                    <Icon name="chevron-down" />
+                  </summary>
+                  <p>{a}</p>
+                </details>
+              );
+            })}
+          </section>
+        )
+      }
+
+      <p class="contact-line">
+        {locale === 'ro' ? 'Întrebări? Secretariatul vă răspunde:' : locale === 'de' ? 'Fragen? Das Sekretariat hilft Ihnen gern:' : 'Questions? The school office can help:'}{' '}
+        <a href={`tel:+4${settings.contact.phones[0]?.replace(/\s/g, '')}`}>{settings.contact.phones[0]}</a>
+        {settings.contact.admissionsEmail && (
+          <>
+            {' · '}
+            <a href={`mailto:${settings.contact.admissionsEmail}`}>{settings.contact.admissionsEmail}</a>
+          </>
+        )}
+      </p>
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Personal checklist — stays on this device only.
+  for (const guide of document.querySelectorAll<HTMLElement>('[data-guide]')) {
+    const key = `guide:${guide.dataset.guide}`;
+    let state: Record<string, boolean> = {};
+    try {
+      state = JSON.parse(localStorage.getItem(key) ?? '{}');
+    } catch {}
+    for (const cb of guide.querySelectorAll<HTMLInputElement>('[data-check]')) {
+      cb.checked = !!state[cb.dataset.check!];
+      cb.addEventListener('change', () => {
+        state[cb.dataset.check!] = cb.checked;
+        try {
+          localStorage.setItem(key, JSON.stringify(state));
+        } catch {}
+      });
+    }
+  }
+</script>
+
+<style>
+  .next {
+    margin-top: var(--s-5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+    align-items: baseline;
+    font-size: 1.05rem;
+  }
+  .next__label {
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--rubric);
+    padding: 0.15rem 0.5rem;
+  }
+  .next a {
+    font-weight: 700;
+  }
+  .guide {
+    display: grid;
+    gap: var(--s-7);
+    grid-template-columns: minmax(0, 1fr);
+    padding-bottom: var(--s-8);
+  }
+  @media (min-width: 64rem) {
+    .guide {
+      grid-template-columns: 16rem minmax(0, 1fr);
+    }
+    .guide__toc {
+      position: sticky;
+      top: calc(var(--header-h) + 3rem);
+      align-self: start;
+    }
+  }
+  @media (max-width: 63.99rem) {
+    .guide__toc {
+      border: 1px solid var(--rule-strong);
+      padding: var(--s-4);
+      background: var(--paper-raised);
+    }
+    .toc__other,
+    .toc__other + ul {
+      display: none;
+    }
+  }
+  .guide__toc ol,
+  .guide__toc ul {
+    margin: var(--s-2) 0 0;
+  }
+  .guide__toc a {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.45rem 0;
+    min-height: 2.75rem;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    font-weight: 600;
+  }
+  .guide__toc a .num {
+    font-family: var(--font-serif);
+    color: var(--rubric);
+    font-size: 1.15rem;
+    min-width: 1.2rem;
+  }
+  .guide__toc a[data-state='closed'] {
+    color: var(--ink-3);
+  }
+  .guide__toc a:hover span:last-child {
+    text-decoration: underline;
+  }
+  .toc__other {
+    margin-top: var(--s-6);
+  }
+  .toc__other + ul a {
+    font-weight: 400;
+  }
+
+  .steps {
+    margin: 0;
+    counter-reset: step;
+    position: relative;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: var(--s-4);
+    padding-bottom: var(--s-7);
+    position: relative;
+  }
+  .step:not(:last-child)::before {
+    /* the thread linking steps: a hairline from numeral to numeral */
+    content: '';
+    position: absolute;
+    left: 2rem;
+    top: 4.25rem;
+    bottom: 0.5rem;
+    border-left: 1px solid var(--rule-strong);
+  }
+  .step__num {
+    width: 4rem;
+    color: var(--rubric);
+  }
+  .step[data-state='closed'] .step__num {
+    color: var(--ink-3);
+  }
+  .step__body {
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-3);
+  }
+  .step__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s-2) var(--s-4);
+    justify-content: space-between;
+  }
+  .step__head h2 {
+    font-size: var(--t-h3);
+    font-weight: 600;
+  }
+  .step__when {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    margin-top: var(--s-3);
+    padding: var(--s-2) var(--s-3);
+    background: var(--paper-sunk);
+    border-left: 3px solid var(--rubric);
+  }
+  .step__when :global(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
+    flex: none;
+    margin-top: 0.15rem;
+    color: var(--rubric);
+  }
+  .step__text {
+    margin-top: var(--s-4);
+  }
+  .checklist {
+    margin-top: var(--s-4);
+    border: 1px solid var(--rule-strong);
+    padding: var(--s-3) var(--s-4) var(--s-4);
+    background: var(--paper-raised);
+  }
+  .checklist legend {
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rubric);
+    padding-inline: 0.4rem;
+  }
+  .checklist label {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.55rem 0;
+    min-height: 2.75rem;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+  }
+  .checklist label:last-child {
+    border-bottom: 0;
+  }
+  .checklist input {
+    width: 1.35rem;
+    height: 1.35rem;
+    margin-top: 0.1rem;
+    accent-color: var(--lapis);
+    flex: none;
+  }
+  .checklist input:checked + span {
+    color: var(--ink-2);
+    text-decoration: line-through;
+    text-decoration-color: var(--rubric);
+  }
+  .step__links {
+    margin-top: var(--s-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    align-items: center;
+  }
+  .step__links .btn {
+    font-weight: 600;
+    text-align: left;
+  }
+  .callout {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: var(--s-4);
+    padding: var(--s-5);
+    background: var(--paper-sunk);
+    border-top: 1px solid var(--ink);
+  }
+  .callout__hand {
+    color: var(--rubric);
+    width: 3rem;
+  }
+  .faq {
+    margin-top: var(--s-7);
+  }
+  .faq h2 {
+    margin-bottom: var(--s-4);
+  }
+  .faq details {
+    border-top: 1px solid var(--rule-strong);
+  }
+  .faq details:last-of-type {
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .faq summary {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-4);
+    align-items: center;
+    min-height: 3.25rem;
+    padding: var(--s-3) 0;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary :global(svg) {
+    width: 1.2rem;
+    flex: none;
+    transition: transform 200ms;
+  }
+  .faq details[open] summary :global(svg) {
+    transform: rotate(180deg);
+  }
+  .faq details p {
+    padding-bottom: var(--s-4);
+    max-width: var(--measure);
+  }
+  .contact-line {
+    margin-top: var(--s-7);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--rule);
+  }
+  @media (max-width: 40rem) {
+    .step {
+      grid-template-columns: 2.75rem minmax(0, 1fr);
+      gap: var(--s-3);
+    }
+    .step__num {
+      width: 2.75rem;
+    }
+    .step:not(:last-child)::before {
+      left: 1.375rem;
+      top: 3rem;
+    }
+  }
+</style>

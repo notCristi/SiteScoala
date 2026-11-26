@@ -1,0 +1,42 @@
+---
+/**
+ * Responsive image for a media asset. Always reserves space (width/height + aspect-ratio)
+ * so CLS stays 0; shows the dominant colour while loading.
+ */
+import type { Locale } from '~/i18n/locales';
+import type { Media } from '~/server/content';
+import { altText, imageSources } from '~/lib/media';
+
+interface Props {
+  media: Media;
+  locale: Locale;
+  sizes?: string;
+  priority?: boolean;
+  class?: string;
+  ratio?: string;
+  alt?: string;
+}
+const { media, locale, sizes = '100vw', priority = false, class: cls, ratio, alt } = Astro.props;
+const { src, srcset, width, height } = imageSources(media);
+const style = [
+  media.placeholder ? `background:${media.placeholder}` : '',
+  ratio ? `aspect-ratio:${ratio}` : '',
+  `object-position:${Math.round((media.focalX ?? 0.5) * 100)}% ${Math.round((media.focalY ?? 0.5) * 100)}%`,
+]
+  .filter(Boolean)
+  .join(';');
+---
+
+<img
+  src={src}
+  srcset={srcset}
+  sizes={srcset ? sizes : undefined}
+  width={width}
+  height={height}
+  alt={alt ?? altText(media, locale)}
+  loading={priority ? 'eager' : 'lazy'}
+  fetchpriority={priority ? 'high' : 'auto'}
+  decoding={priority ? 'sync' : 'async'}
+  class={cls}
+  style={style}
+/>

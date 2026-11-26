@@ -1,0 +1,42 @@
+---
+/**
+ * <EmblemPrimar> — cycle emblem. Hornbook (ABC tablet with handle) — învățământ primar / Grundschule.
+ * 64 × 64 grid, 1.5 px line (non-scaling, so the weight holds from 32 to 128 px), one ink.
+ */
+interface Props {
+  class?: string;
+  /** Accessible name; omit when the emblem sits next to a visible label (decorative). */
+  title?: string;
+  size?: number | string;
+}
+
+const { class: className, title, size } = Astro.props;
+const dim = typeof size === 'number' ? `${size}px` : size;
+---
+
+<svg
+  class:list={['emblem', className]}
+  viewBox="0 0 64 64"
+  width={dim}
+  height={dim}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  {title && <title>{title}</title>}
+  <path vector-effect="non-scaling-stroke" d="M18 6H46A3 3 0 0 1 49 9V45A3 3 0 0 1 46 48H36.5V56.5A4.5 4.5 0 0 1 27.5 56.5V48H18A3 3 0 0 1 15 45V9A3 3 0 0 1 18 6ZM30.4 56.3a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0ZM19.5 10.5h25v33h-25ZM23.4 14V20.5M21.4 16.2H25.4M27.4 20.5L29.6 14L31.8 20.5M28.2 18.3H31M33.2 14V20.5H35.4C36.9 20.5 37.5 19.6 37.5 18.7C37.5 17.7 36.8 17.1 35.3 17.1H33.2M33.2 14H35.1C36.4 14 37 14.7 37 15.6C37 16.5 36.4 17.1 35.3 17.1M44.6 15.3C44 14.4 43.3 14 42.4 14C40.9 14 40 15.3 40 17.25C40 19.2 40.9 20.5 42.4 20.5C43.3 20.5 44 20.1 44.6 19.2M22 25L31 25M33.5 25L42 25M22 29.5L27 29.5M29.5 29.5L42 29.5M22 34L35 34M37.5 34L42 34M22 38.5L29 38.5M31.5 38.5L38 38.5" />
+  <path fill="currentColor" stroke="none" d="M16.4 8.4a0.9 0.9 0 1 0 1.8 0a0.9 0.9 0 1 0 -1.8 0ZM45.8 8.4a0.9 0.9 0 1 0 1.8 0a0.9 0.9 0 1 0 -1.8 0ZM16.4 45.6a0.9 0.9 0 1 0 1.8 0a0.9 0.9 0 1 0 -1.8 0ZM45.8 45.6a0.9 0.9 0 1 0 1.8 0a0.9 0.9 0 1 0 -1.8 0ZM31.1 8.4a0.9 0.9 0 1 0 1.8 0a0.9 0.9 0 1 0 -1.8 0ZM16.4 27a0.9 0.9 0 1 0 1.8 0a0.9 0.9 0 1 0 -1.8 0ZM45.8 27a0.9 0.9 0 1 0 1.8 0a0.9 0.9 0 1 0 -1.8 0ZM31.1 45.6a0.9 0.9 0 1 0 1.8 0a0.9 0.9 0 1 0 -1.8 0Z" />
+</svg>
+
+<style>
+  .emblem {
+    display: inline-block;
+    vertical-align: middle;
+  }
+</style>

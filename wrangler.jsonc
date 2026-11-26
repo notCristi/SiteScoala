@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "honterus-site",
+  "main": "./src/worker.ts",
+  "compatibility_date": "2026-11-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "binding": "ASSETS", "directory": "./dist/client", "not_found_handling": "none" },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "honterus-db", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }
+  ],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "honterus-media" }],
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "vars": { "TURNSTILE_SITE_KEY": "1x00000000000000000000AA" },
+  "observability": { "enabled": true }
+}

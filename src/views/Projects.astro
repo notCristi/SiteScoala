@@ -1,0 +1,109 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Picture from '~/components/Picture.astro';
+import { pick } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { getMediaMap, getPage, listProjects } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const [page, projects] = await Promise.all([getPage('projects'), listProjects()]);
+const media = await getMediaMap(projects.map((p) => p.coverMediaId));
+const title = page ? pick(page, 'title', locale).value : ({ ro: 'Proiecte', de: 'Projekte', en: 'Projects' } as const)[locale];
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const body = page ? pick(page, 'bodyHtml', locale) : undefined;
+const KIND = { erasmus: 'Erasmus+', etwinning: 'eTwinning', pasch: 'PASCH', dsd: 'DSD', schimb: { ro: 'Schimb de elevi', de: 'Schüleraustausch', en: 'Exchange' }, concurs: { ro: 'Concurs', de: 'Wettbewerb', en: 'Competition' }, comunitate: { ro: 'Comunitate', de: 'Gemeinschaft', en: 'Community' }, alte: { ro: 'Proiect', de: 'Projekt', en: 'Project' } } as const;
+const kindLabel = (k: keyof typeof KIND) => {
+  const v = KIND[k];
+  return typeof v === 'string' ? v : v[locale];
+};
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: ({ ro: 'Educație', de: 'Bildung', en: 'Education' } as const)[locale], route: 'education' }, { label: title }]} />
+  <div class="wrap">
+    {body?.value && <div class="prose intro" lang={body.lang} set:html={body.value} />}
+    <ol role="list" class="list">
+      {
+        projects.map((p, i) => {
+          const m = p.coverMediaId ? media.get(p.coverMediaId) : undefined;
+          return (
+            <li data-reveal style={`--i:${i % 6}`}>
+              <a class="proj" href={url('project', locale, { slug: p.slug })}>
+                <span class="proj__meta">
+                  <span class="kicker">{kindLabel(p.kind)}</span>
+                  {p.period && <span class="proj__period">{p.period}</span>}
+                </span>
+                <span class="proj__main">
+                  <span class="proj__t">{pick(p, 'title', locale).value}</span>
+                  <span class="proj__s">{pick(p, 'summary', locale).value}</span>
+                </span>
+                {m && (
+                  <span class="plate proj__img">
+                    <Picture media={m} locale={locale} sizes="14rem" ratio="4 / 3" alt="" />
+                  </span>
+                )}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ol>
+  </div>
+</Base>
+
+<style>
+  .intro {
+    margin-bottom: var(--s-6);
+  }
+  .list {
+    margin: 0;
+    border-top: 1px solid var(--ink);
+  }
+  .proj {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr) 12rem;
+    gap: var(--s-5);
+    padding: var(--s-5) 0;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    text-decoration: none;
+    align-items: start;
+  }
+  @media (max-width: 48rem) {
+    .proj {
+      grid-template-columns: 1fr;
+      gap: var(--s-2);
+    }
+    .proj__img {
+      display: none;
+    }
+  }
+  .proj__meta {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .proj__period {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--ink-2);
+  }
+  .proj__main {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .proj__t {
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  .proj:hover .proj__t {
+    text-decoration: underline;
+    text-decoration-color: var(--rubric);
+  }
+  .proj__s {
+    color: var(--ink-2);
+  }
+</style>

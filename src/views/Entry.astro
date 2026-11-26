@@ -1,0 +1,92 @@
+---
+/** Detail page for a project or a student-life entry. */
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Picture from '~/components/Picture.astro';
+import Fleuron from '~/components/svg/Fleuron.astro';
+import Icon from '~/components/svg/Icon.astro';
+import { pick } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { caption } from '~/lib/media';
+import { getMedia, type Life, type Project } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners, entity } = Astro.props as ViewProps;
+const isProject = match.id === 'project';
+const e = entity as Project & Life;
+const cover = await getMedia(e.coverMediaId);
+const t = pick(e, 'title', locale);
+const s = pick(e, 'summary', locale);
+const body = pick(e, 'bodyHtml', locale);
+const parent = isProject
+  ? { label: ({ ro: 'Proiecte', de: 'Projekte', en: 'Projects' } as const)[locale], route: 'projects' as const }
+  : { label: ({ ro: 'Viața școlară', de: 'Schulleben', en: 'School life' } as const)[locale], route: 'life' as const };
+---
+
+<Base locale={locale} title={t.value} description={s.value} route={match.id} alternates={alternates} settings={settings} banners={banners} fallback={body.fallback}>
+  <PageHead locale={locale} kicker={parent.label} title={t.value} titleLang={t.lang} lead={s.value} leadLang={s.lang} crumbs={[{ label: parent.label, route: parent.route }, { label: t.value }]} />
+  <div class="wrap book">
+    <div class="book__gutter"></div>
+    <article class="book__text">
+      {
+        cover && (
+          <figure class="cover">
+            <div class="plate">
+              <Picture media={cover} locale={locale} priority sizes="(min-width: 60rem) 42rem, 100vw" />
+            </div>
+            {caption(cover, locale) && <figcaption>{caption(cover, locale)}{cover.credit && <span class="credit">{cover.credit}</span>}</figcaption>}
+          </figure>
+        )
+      }
+      {body.value && <div class="prose" lang={body.lang} set:html={body.value} />}
+      <div class="end" aria-hidden="true"><Fleuron /></div>
+    </article>
+    <aside class="book__margin">
+      {
+        isProject && (e.period || e.partners || e.funding) && (
+          <dl class="facts">
+            {e.period && (<div><dt>{locale === 'ro' ? 'Perioada' : locale === 'de' ? 'Zeitraum' : 'Period'}</dt><dd>{e.period}</dd></div>)}
+            {e.funding && (<div><dt>{locale === 'ro' ? 'Finanțare' : locale === 'de' ? 'Förderung' : 'Funding'}</dt><dd>{e.funding}</dd></div>)}
+            {e.partners && (<div><dt>{locale === 'ro' ? 'Parteneri' : locale === 'de' ? 'Partner' : 'Partners'}</dt><dd>{e.partners}</dd></div>)}
+          </dl>
+        )
+      }
+      {isProject && e.externalUrl && <a class="link-arrow" href={e.externalUrl} target="_blank" rel="noopener">{locale === 'ro' ? 'Pagina proiectului' : locale === 'de' ? 'Projektseite' : 'Project website'}<Icon name="external" /></a>}
+      <p><a class="link-arrow" href={url(parent.route, locale)}><Icon name="arrow-left" />{parent.label}</a></p>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .book {
+    padding-bottom: var(--s-8);
+  }
+  .cover {
+    margin-bottom: var(--s-6);
+  }
+  .end {
+    width: 2rem;
+    color: var(--rubric);
+    margin-top: var(--s-6);
+  }
+  .facts {
+    display: grid;
+    gap: var(--s-4);
+    margin-bottom: var(--s-5);
+  }
+  .facts div {
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-2);
+  }
+  .facts dt {
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .facts dd {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+  }
+</style>

@@ -1,0 +1,115 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Picture from '~/components/Picture.astro';
+import Fleuron from '~/components/svg/Fleuron.astro';
+import Icon from '~/components/svg/Icon.astro';
+import { pick, formatDate } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import { caption } from '~/lib/media';
+import { getMedia, listNews, type Announcement } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, alternates, settings, banners, entity } = Astro.props as ViewProps;
+const a = entity as Announcement;
+const [cover, recent] = await Promise.all([getMedia(a.coverMediaId), listNews({ limit: 5 })]);
+const t = pick(a, 'title', locale);
+const s = pick(a, 'summary', locale);
+const body = pick(a, 'bodyHtml', locale);
+const newsLabel = ({ ro: 'Noutăți', de: 'Aktuelles', en: 'News' } as const)[locale];
+const others = recent.rows.filter((r) => r.id !== a.id).slice(0, 4);
+---
+
+<Base
+  locale={locale}
+  title={t.value}
+  description={s.value}
+  route="article"
+  alternates={alternates}
+  settings={settings}
+  banners={banners}
+  fallback={body.fallback || t.fallback}
+  jsonLd={{ '@context': 'https://schema.org', '@type': 'NewsArticle', headline: t.value, datePublished: a.publishedAt ? new Date(a.publishedAt).toISOString() : undefined, inLanguage: t.lang }}
+>
+  <PageHead locale={locale} title={t.value} titleLang={t.lang} lead={s.value} leadLang={s.lang} crumbs={[{ label: newsLabel, route: 'news' }, { label: t.value }]}>
+    {a.publishedAt && <p class="byline"><time datetime={new Date(a.publishedAt).toISOString()}>{formatDate(a.publishedAt, locale)}</time></p>}
+  </PageHead>
+  <div class="wrap book">
+    <div class="book__gutter"></div>
+    <article class="book__text">
+      {
+        cover && (
+          <figure class="cover">
+            <div class="plate">
+              <Picture media={cover} locale={locale} priority sizes="(min-width: 60rem) 42rem, 100vw" />
+            </div>
+            {caption(cover, locale) && <figcaption>{caption(cover, locale)}{cover.credit && <span class="credit">{cover.credit}</span>}</figcaption>}
+          </figure>
+        )
+      }
+      {body.value && <div class="prose" lang={body.lang} set:html={body.value} />}
+      <div class="end" aria-hidden="true"><Fleuron /></div>
+      {a.sourceUrl && <p class="muted small">{ui(locale, 'source')}: <a href={a.sourceUrl} rel="noopener" target="_blank">{new URL(a.sourceUrl).hostname}</a></p>}
+    </article>
+    <aside class="book__margin">
+      <p class="kicker">{locale === 'ro' ? 'Alte noutăți' : locale === 'de' ? 'Weitere Meldungen' : 'More news'}</p>
+      <ul role="list" class="others">
+        {
+          others.map((o) => (
+            <li>
+              <a href={url('article', locale, { slug: o.slug })}>{pick(o, 'title', locale).value}</a>
+              {o.publishedAt && <time datetime={new Date(o.publishedAt).toISOString()}>{formatDate(o.publishedAt, locale)}</time>}
+            </li>
+          ))
+        }
+      </ul>
+      <a class="link-arrow" href={url('news', locale)}>{ui(locale, 'allNews')}<Icon name="arrow-right" /></a>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .byline {
+    margin-top: var(--s-3);
+    color: var(--ink-2);
+    font-size: var(--t-small);
+  }
+  .book {
+    padding-bottom: var(--s-8);
+  }
+  .cover {
+    margin-bottom: var(--s-6);
+  }
+  .end {
+    width: 2rem;
+    color: var(--rubric);
+    margin: var(--s-6) 0 var(--s-4);
+  }
+  .small {
+    font-size: var(--t-small);
+  }
+  .others {
+    margin: var(--s-2) 0 var(--s-4);
+  }
+  .others li {
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    gap: 0.2rem;
+  }
+  .others a {
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    line-height: 1.3;
+    text-decoration: none;
+  }
+  .others a:hover {
+    text-decoration: underline;
+  }
+  .others time {
+    font-size: 0.8rem;
+    color: var(--ink-2);
+  }
+</style>

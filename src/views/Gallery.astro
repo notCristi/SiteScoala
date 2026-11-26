@@ -1,0 +1,60 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Picture from '~/components/Picture.astro';
+import YouTube from '~/components/YouTube.astro';
+import { pick } from '~/i18n/locales';
+import { altText, caption, imageSources } from '~/lib/media';
+import type { Gallery, Media } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners, entity } = Astro.props as ViewProps;
+const { gallery, items } = entity as { gallery: Gallery; items: Media[] };
+const t = pick(gallery, 'title', locale);
+const d = pick(gallery, 'description', locale);
+const galLabel = ({ ro: 'Galerie', de: 'Galerie', en: 'Gallery' } as const)[locale];
+---
+
+<Base locale={locale} title={t.value} description={d.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} title={t.value} lead={d.value} crumbs={[{ label: galLabel, route: 'gallery' }, { label: t.value }]} />
+  <ul role="list" class="wrap photos">
+    {
+      items.map((m) =>
+        m.kind === 'youtube' && m.youtubeId ? (
+          <li class="wide">
+            <YouTube id={m.youtubeId} title={caption(m, locale) || altText(m, locale)} locale={locale} />
+          </li>
+        ) : (
+          <li>
+            <figure>
+              <a href={imageSources(m).src} class="plate" target="_blank">
+                <Picture media={m} locale={locale} sizes="(min-width: 60rem) 30rem, 100vw" />
+              </a>
+              {(caption(m, locale) || m.credit) && (
+                <figcaption>
+                  {caption(m, locale)}
+                  {m.credit && <span class="credit">{m.credit}{m.license ? ` · ${m.license}` : ''}</span>}
+                </figcaption>
+              )}
+            </figure>
+          </li>
+        ),
+      )
+    }
+  </ul>
+</Base>
+
+<style>
+  .photos {
+    columns: 3 18rem;
+    column-gap: var(--s-5);
+    padding-bottom: var(--s-8);
+  }
+  .photos li {
+    break-inside: avoid;
+    margin-bottom: var(--s-5);
+  }
+  .photos a {
+    display: block;
+  }
+</style>

@@ -1,0 +1,124 @@
+---
+/** Three tall panels separated by double rules: emblem, grade range in large numerals, lead, link. */
+import { pick, type Locale } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import type { Page } from '~/server/content';
+import EmblemPrimar from '~/components/svg/EmblemPrimar.astro';
+import EmblemGimnaziu from '~/components/svg/EmblemGimnaziu.astro';
+import EmblemLiceu from '~/components/svg/EmblemLiceu.astro';
+import Icon from '~/components/svg/Icon.astro';
+
+interface Props {
+  locale: Locale;
+  pages: Map<string, Page>;
+}
+const { locale, pages } = Astro.props;
+const cycles = [
+  { key: 'primar', id: 'primar', E: EmblemPrimar, range: 'P – IV' },
+  { key: 'gimnaziu', id: 'gimnazial', E: EmblemGimnaziu, range: 'V – VIII' },
+  { key: 'liceu', id: 'liceal', E: EmblemLiceu, range: 'IX – XII' },
+] as const;
+const rangeDE = { primar: 'VK – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
+const rangeEN = { primar: 'P – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
+---
+
+<ol role="list" class="triptych">
+  {
+    cycles.map((c, i) => {
+      const p = pages.get(c.key);
+      const E = c.E;
+      return (
+        <li data-reveal style={`--i:${i}`}>
+          <a class="cycle" href={url(c.key, locale)}>
+            <span class="cycle__emblem" aria-hidden="true">
+              <E />
+            </span>
+            <span class="cycle__range" aria-hidden="true">
+              {locale === 'ro' ? c.range : locale === 'de' ? rangeDE[c.key] : rangeEN[c.key]}
+            </span>
+            <span class="cycle__name">{ui(locale, `cycles.${c.id}`)}</span>
+            <span class="cycle__grades">{ui(locale, `grades.${c.id}`)}</span>
+            {p && <span class="cycle__lead">{pick(p, 'lead', locale).value}</span>}
+            <span class="cycle__go">
+              <Icon name="arrow-right" />
+            </span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .triptych {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    border-block: 1px solid var(--ink);
+  }
+  .triptych li + li {
+    border-left: 5px double var(--rule-strong);
+  }
+  @media (max-width: 52rem) {
+    .triptych {
+      grid-template-columns: 1fr;
+    }
+    .triptych li + li {
+      border-left: 0;
+      border-top: 5px double var(--rule-strong);
+    }
+  }
+  .cycle {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    height: 100%;
+    padding: var(--s-6) var(--s-5);
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 200ms;
+  }
+  .cycle:hover {
+    background: var(--paper-raised);
+  }
+  .cycle__emblem {
+    width: 3.5rem;
+    color: var(--rubric);
+  }
+  .cycle__range {
+    font-family: var(--font-serif);
+    font-size: clamp(2.6rem, 2rem + 2.4vw, 4.2rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin-top: var(--s-4);
+  }
+  .cycle__name {
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+    font-weight: 600;
+  }
+  .cycle__grades {
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rubric);
+  }
+  .cycle__lead {
+    color: var(--ink-2);
+    margin-top: var(--s-2);
+  }
+  .cycle__go {
+    margin-top: auto;
+    padding-top: var(--s-4);
+    color: var(--lapis);
+  }
+  .cycle__go :global(svg) {
+    width: 1.4rem;
+    transition: transform 200ms;
+  }
+  .cycle:hover .cycle__go :global(svg) {
+    transform: translateX(4px);
+  }
+</style>

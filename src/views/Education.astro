@@ -1,0 +1,80 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import CycleTriptych from '~/components/CycleTriptych.astro';
+import Icon from '~/components/svg/Icon.astro';
+import EmblemDSD from '~/components/svg/EmblemDSD.astro';
+import EmblemPress from '~/components/svg/EmblemPress.astro';
+import { pick } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { getPages } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const pages = await getPages(['education', 'german', 'projects', 'primar', 'gimnaziu', 'liceu']);
+const page = pages.get('education');
+const title = page ? pick(page, 'title', locale).value : ({ ro: 'Educație', de: 'Bildung', en: 'Education' } as const)[locale];
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const german = pages.get('german');
+const projects = pages.get('projects');
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: title }]} />
+  <div class="wrap">
+    <CycleTriptych locale={locale} pages={pages} />
+    <div class="pair">
+      <a class="panel" href={url('german', locale)} data-reveal>
+        <span class="panel__emblem" aria-hidden="true"><EmblemDSD /></span>
+        <span class="panel__t">{german ? pick(german, 'title', locale).value : 'DSD'}</span>
+        {german && <span class="panel__l">{pick(german, 'lead', locale).value}</span>}
+        <Icon name="arrow-right" />
+      </a>
+      <a class="panel" href={url('projects', locale)} data-reveal style="--i:1">
+        <span class="panel__emblem" aria-hidden="true"><EmblemPress /></span>
+        <span class="panel__t">{projects ? pick(projects, 'title', locale).value : 'Erasmus+'}</span>
+        {projects && <span class="panel__l">{pick(projects, 'lead', locale).value}</span>}
+        <Icon name="arrow-right" />
+      </a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: var(--s-5);
+    margin-top: var(--s-7);
+  }
+  .panel {
+    display: grid;
+    gap: var(--s-2);
+    padding: var(--s-5);
+    border-top: 1px solid var(--ink);
+    background: var(--paper-sunk);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .panel__emblem {
+    width: 3.5rem;
+    color: var(--rubric);
+  }
+  .panel__t {
+    font-family: var(--font-serif);
+    font-size: var(--t-h2);
+    line-height: 1.1;
+  }
+  .panel__l {
+    color: var(--ink-2);
+    max-width: 40ch;
+  }
+  .panel > :global(svg:last-child) {
+    width: 1.4rem;
+    color: var(--lapis);
+    transition: transform 200ms;
+  }
+  .panel:hover > :global(svg:last-child) {
+    transform: translateX(4px);
+  }
+</style>

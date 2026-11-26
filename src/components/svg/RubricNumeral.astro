@@ -1,0 +1,72 @@
+---
+/**
+ * <RubricNumeral n={3} /> — a step or chapter numeral set inside a thin double ring that
+ * echoes the seal's rings. The numeral is real text (var(--font-serif), lining figures),
+ * so it is read and copied; the rings are a decorative SVG. Colour comes from the parent
+ * (set `color: var(--rubric)`); size follows the font-size (the ring is 2.1em).
+ * `filled` inks the inner disc and knocks the numeral out in paper — the "current step".
+ */
+interface Props {
+  n: number | string;
+  class?: string;
+  filled?: boolean;
+}
+
+const { n, class: className, filled = false } = Astro.props;
+const long = String(n).length > 2;
+---
+
+<span class:list={['rubric-numeral', filled && 'rubric-numeral--filled', className]}>
+  <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="19.25" />
+    <circle cx="20" cy="20" r="16.5" />
+    {filled && <circle class="disc" cx="20" cy="20" r="14.4" />}
+  </svg>
+  <span class:list={['num', long && 'num--long']}>{n}</span>
+</span>
+
+<style>
+  .rubric-numeral {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 2.1em;
+    block-size: 2.1em;
+    flex: none;
+    line-height: 1;
+    vertical-align: middle;
+  }
+  .rubric-numeral svg {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+  }
+  .rubric-numeral circle {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
+  }
+  .rubric-numeral .disc {
+    fill: currentColor;
+    stroke: none;
+  }
+  .num {
+    position: relative;
+    font-family: var(--font-serif, Georgia, serif);
+    font-weight: 500;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-size: 1em;
+    /* optical centring: Garamond's caps sit a hair high in the em box */
+    transform: translateY(0.04em);
+    letter-spacing: 0.01em;
+  }
+  .rubric-numeral--filled .num {
+    color: var(--paper, #f7f3ea);
+  }
+  .num--long {
+    font-size: 0.72em;
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+import '~/styles/global.css';
+import { LOCALES, LOCALE_META, type Locale } from '~/i18n/locales';
+import type { RouteId } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import Header from '~/components/Header.astro';
+import Footer from '~/components/Footer.astro';
+import NoticeBanner from '~/components/NoticeBanner.astro';
+import SearchDialog from '~/components/SearchDialog.astro';
+import type { Announcement, SiteSettings } from '~/server/content';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description?: string;
+  route?: RouteId;
+  alternates: Record<Locale, string>;
+  settings: SiteSettings;
+  banners?: Announcement[];
+  image?: string;
+  noindex?: boolean;
+  /** true when the page shows Romanian fallback text in DE/EN */
+  fallback?: boolean;
+  jsonLd?: Record<string, unknown>;
+}
+const { locale, title, description, route, alternates, settings, banners = [], image = '/og-default.png', noindex, fallback, jsonLd } = Astro.props;
+const site = Astro.site ?? new URL(Astro.url.origin);
+const canonical = new URL(alternates[locale], site).href;
+const fullTitle = route === 'home' ? ui(locale, 'schoolFull') : `${title} · ${ui(locale, 'schoolShort')}`;
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'HighSchool',
+  name: 'Colegiul Național „Johannes Honterus” Brașov',
+  alternateName: ['Johannes-Honterus-Nationalkolleg Kronstadt', 'Honterus-Lyzeum'],
+  foundingDate: '1541',
+  url: new URL('/', site).href,
+  logo: new URL('/brand/honterus-seal.svg', site).href,
+  telephone: `+4${settings.contact.phones[0]?.replace(/\s/g, '')}`,
+  email: settings.contact.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: settings.contact.street,
+    postalCode: settings.contact.postalCode,
+    addressLocality: 'Brașov',
+    addressCountry: 'RO',
+  },
+};
+---
+
+<!doctype html>
+<html lang={LOCALE_META[locale].htmlLang} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    {LOCALES.map((l) => <link rel="alternate" hreflang={LOCALE_META[l].htmlLang} href={new URL(alternates[l], site).href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(alternates.ro, site).href} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#0b1b4d" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" href="/fonts/eb-garamond.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={ui(locale, 'schoolFull')} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, site).href} />
+    <meta property="og:locale" content={LOCALE_META[locale].ogLocale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd ?? org)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{ui(locale, 'skip')}</a>
+    <NoticeBanner locale={locale} banners={banners} />
+    <Header locale={locale} current={route} alternates={alternates} settings={settings} />
+    <main id="main" tabindex="-1">
+      {
+        fallback && (
+          <p class="fallback-note wrap" role="note">
+            {ui(locale, 'languageMissing')}
+          </p>
+        )
+      }
+      <slot />
+    </main>
+    <Footer locale={locale} settings={settings} />
+    <SearchDialog locale={locale} />
+    <script>
+      // One shared observer: set-in reveals and ink-draw ornaments, once each.
+      const els = document.querySelectorAll<HTMLElement>('[data-reveal], [data-ink]');
+      if ('IntersectionObserver' in window && els.length) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              e.target.classList.add('is-in', 'is-inked');
+              io.unobserve(e.target);
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.15 },
+        );
+        els.forEach((el) => io.observe(el));
+      } else els.forEach((el) => el.classList.add('is-in', 'is-inked'));
+    </script>
+  </body>
+</html>
+
+<style>
+  .fallback-note {
+    margin-top: var(--s-4);
+    padding: var(--s-3) var(--s-4);
+    border-left: 3px solid var(--rubric);
+    background: var(--paper-sunk);
+    font-size: var(--t-small);
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+import Base from '~/layouts/Base.astro';
+import CompassRose from '~/components/svg/CompassRose.astro';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import { NAV } from '~/i18n/nav';
+import type { Locale } from '~/i18n/locales';
+import type { Announcement, SiteSettings } from '~/server/content';
+
+interface Props {
+  locale: Locale;
+  alternates: Record<Locale, string>;
+  settings: SiteSettings;
+  banners: Announcement[];
+}
+const { locale, alternates, settings, banners } = Astro.props;
+---
+
+<Base locale={locale} title={ui(locale, 'notFoundTitle')} alternates={alternates} settings={settings} banners={banners} noindex>
+  <div class="wrap nf">
+    <div class="nf__rose" aria-hidden="true" data-ink><CompassRose /></div>
+    <div>
+      <p class="kicker">404 · Terra incognita</p>
+      <h1>{ui(locale, 'notFoundTitle')}</h1>
+      <p class="lead">{ui(locale, 'notFoundBody')}</p>
+      <p class="cluster nf__actions">
+        <button class="btn" type="button" data-search-open>{ui(locale, 'search')}</button>
+        <a class="btn btn--ghost" href={url('home', locale)}>{ui(locale, 'home')}</a>
+      </p>
+      <ul role="list" class="nf__links">
+        {NAV.map((n) => <li><a href={url(n.route, locale)}>{n.label[locale]}</a></li>)}
+      </ul>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .nf {
+    display: grid;
+    grid-template-columns: minmax(8rem, 16rem) minmax(0, 1fr);
+    gap: var(--s-7);
+    align-items: center;
+    padding-block: var(--s-8);
+  }
+  @media (max-width: 40rem) {
+    .nf {
+      grid-template-columns: 1fr;
+    }
+    .nf__rose {
+      width: 8rem;
+    }
+  }
+  .nf__rose {
+    color: var(--rubric);
+  }
+  .nf .lead {
+    margin-top: var(--s-4);
+  }
+  .nf__actions {
+    margin-top: var(--s-5);
+  }
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-5);
+    margin-top: var(--s-6);
+  }
+  .nf__links a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+  }
+</style>

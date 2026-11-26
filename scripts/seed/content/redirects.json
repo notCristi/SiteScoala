@@ -1,0 +1,912 @@
+[
+  {
+    "from": "/lic/",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=30",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=30",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=30",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi/",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=10",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=10",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=10",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi/johannes-honterus/",
+    "to": "/ro/scoala/johannes-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi/johannes-honterus",
+    "to": "/ro/scoala/johannes-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=12",
+    "to": "/ro/scoala/johannes-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=12",
+    "to": "/ro/scoala/johannes-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=12",
+    "to": "/ro/scoala/johannes-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi/biserica-neagra/",
+    "to": "/ro/scoala/curtea-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi/biserica-neagra",
+    "to": "/ro/scoala/curtea-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=24",
+    "to": "/ro/scoala/curtea-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=24",
+    "to": "/ro/scoala/curtea-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=24",
+    "to": "/ro/scoala/curtea-honterus",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi/biblioteca/",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi/biblioteca",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=26",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=26",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=26",
+    "to": "/ro/scoala/istorie",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi/anuar-2015-2016/",
+    "to": "/ro/scoala",
+    "code": 301
+  },
+  {
+    "from": "/lic/despre-noi/anuar-2015-2016",
+    "to": "/ro/scoala",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=522",
+    "to": "/ro/scoala",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=522",
+    "to": "/ro/scoala",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=522",
+    "to": "/ro/scoala",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii/",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=40",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=40",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=40",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii/dezbatere-publica/",
+    "to": "/ro/documente?cat=dezbateri",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii/dezbatere-publica",
+    "to": "/ro/documente?cat=dezbateri",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=182",
+    "to": "/ro/documente?cat=dezbateri",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=182",
+    "to": "/ro/documente?cat=dezbateri",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=182",
+    "to": "/ro/documente?cat=dezbateri",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii/documente-utile/",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii/documente-utile",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=45",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=45",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=45",
+    "to": "/ro/documente",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii/formulare-2/",
+    "to": "/ro/educatie",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii/formulare-2",
+    "to": "/ro/educatie",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=3040",
+    "to": "/ro/educatie",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=3040",
+    "to": "/ro/educatie",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=3040",
+    "to": "/ro/educatie",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii/oferta-educationala/",
+    "to": "/ro/documente?cat=formulare",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii/oferta-educationala",
+    "to": "/ro/documente?cat=formulare",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=3659",
+    "to": "/ro/documente?cat=formulare",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=3659",
+    "to": "/ro/documente?cat=formulare",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=3659",
+    "to": "/ro/documente?cat=formulare",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal/",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=52",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=52",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=52",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal/conducere/",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal/conducere",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=386",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=386",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=386",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal/profesori/",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal/profesori",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=389",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=389",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=389",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal/didactic-auxiliar/",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal/didactic-auxiliar",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=392",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=392",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=392",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal/nedidactic/",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/personal/nedidactic",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=395",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=395",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=395",
+    "to": "/ro/scoala/personal",
+    "code": 301
+  },
+  {
+    "from": "/lic/elevi/",
+    "to": "/ro/educatie/germana-dsd",
+    "code": 301
+  },
+  {
+    "from": "/lic/elevi",
+    "to": "/ro/educatie/germana-dsd",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=423",
+    "to": "/ro/educatie/germana-dsd",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=423",
+    "to": "/ro/educatie/germana-dsd",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=423",
+    "to": "/ro/educatie/germana-dsd",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/",
+    "to": "/ro/admitere",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene",
+    "to": "/ro/admitere",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=293",
+    "to": "/ro/admitere",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=293",
+    "to": "/ro/admitere",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=293",
+    "to": "/ro/admitere",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/admitere-liceu/",
+    "to": "/ro/admitere/clasa-a-ix-a",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/admitere-liceu",
+    "to": "/ro/admitere/clasa-a-ix-a",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=296",
+    "to": "/ro/admitere/clasa-a-ix-a",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=296",
+    "to": "/ro/admitere/clasa-a-ix-a",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=296",
+    "to": "/ro/admitere/clasa-a-ix-a",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/bacalaureat/",
+    "to": "/ro/admitere/bacalaureat",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/bacalaureat",
+    "to": "/ro/admitere/bacalaureat",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=299",
+    "to": "/ro/admitere/bacalaureat",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=299",
+    "to": "/ro/admitere/bacalaureat",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=299",
+    "to": "/ro/admitere/bacalaureat",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/evaluare-nationala/",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/evaluare-nationala",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=302",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=302",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=302",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/olimpiade/",
+    "to": "/ro/admitere/olimpiade",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/olimpiade",
+    "to": "/ro/admitere/olimpiade",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=315",
+    "to": "/ro/admitere/olimpiade",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=315",
+    "to": "/ro/admitere/olimpiade",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=315",
+    "to": "/ro/admitere/olimpiade",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/simulare-examene-nationale/",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/simulare-examene-nationale",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=307",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=307",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=307",
+    "to": "/ro/admitere/evaluare-nationala",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/corigentetransferuri/",
+    "to": "/ro/admitere/transferuri",
+    "code": 301
+  },
+  {
+    "from": "/lic/examene/corigentetransferuri",
+    "to": "/ro/admitere/transferuri",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=656",
+    "to": "/ro/admitere/transferuri",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=656",
+    "to": "/ro/admitere/transferuri",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=656",
+    "to": "/ro/admitere/transferuri",
+    "code": 301
+  },
+  {
+    "from": "/lic/proiecte-programe-parteneriate/",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/proiecte-programe-parteneriate",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=383",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=383",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=383",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/proiecte-programe-parteneriate/activitati/",
+    "to": "/ro/viata-scolara",
+    "code": 301
+  },
+  {
+    "from": "/lic/proiecte-programe-parteneriate/activitati",
+    "to": "/ro/viata-scolara",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=366",
+    "to": "/ro/viata-scolara",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=366",
+    "to": "/ro/viata-scolara",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=366",
+    "to": "/ro/viata-scolara",
+    "code": 301
+  },
+  {
+    "from": "/lic/proiecte-programe-parteneriate/proiecte/",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/proiecte-programe-parteneriate/proiecte",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=852",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=852",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=852",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/erasmus/",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/erasmus",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=3361",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=3361",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=3361",
+    "to": "/ro/educatie/proiecte",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii-2/",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii-2",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=3298",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=3298",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=3298",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii-2/anunturi/",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii-2/anunturi",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=1320",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=1320",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=1320",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii-2/orar/",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/informatii-2/orar",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=3303",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=3303",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=3303",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/galerie/",
+    "to": "/ro/galerie",
+    "code": 301
+  },
+  {
+    "from": "/lic/galerie",
+    "to": "/ro/galerie",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=61",
+    "to": "/ro/galerie",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=61",
+    "to": "/ro/galerie",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=61",
+    "to": "/ro/galerie",
+    "code": 301
+  },
+  {
+    "from": "/lic/clasa-pregatitoare-3/",
+    "to": "/ro/admitere/clasa-pregatitoare",
+    "code": 301
+  },
+  {
+    "from": "/lic/clasa-pregatitoare-3",
+    "to": "/ro/admitere/clasa-pregatitoare",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=3096",
+    "to": "/ro/admitere/clasa-pregatitoare",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=3096",
+    "to": "/ro/admitere/clasa-pregatitoare",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=3096",
+    "to": "/ro/admitere/clasa-pregatitoare",
+    "code": 301
+  },
+  {
+    "from": "/lic/contact/",
+    "to": "/ro/contact",
+    "code": 301
+  },
+  {
+    "from": "/lic/contact",
+    "to": "/ro/contact",
+    "code": 301
+  },
+  {
+    "from": "/lic/?page_id=55",
+    "to": "/ro/contact",
+    "code": 301
+  },
+  {
+    "from": "/lic/?p=55",
+    "to": "/ro/contact",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php?page_id=55",
+    "to": "/ro/contact",
+    "code": 301
+  },
+  {
+    "from": "/lic/index.php",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/category/anunturi/",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/category/anunturi",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/category/uncategorized/",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/category/uncategorized",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/feed/",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/feed",
+    "to": "/ro/noutati",
+    "code": 301
+  },
+  {
+    "from": "/lic/wp-sitemap.xml",
+    "to": "/sitemap.xml",
+    "code": 301
+  },
+  {
+    "from": "/lic/sitemap.xml",
+    "to": "/sitemap.xml",
+    "code": 301
+  },
+  {
+    "from": "/lic/wp-login.php",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/wp-admin/",
+    "to": "/ro/",
+    "code": 301
+  },
+  {
+    "from": "/lic/wp-admin",
+    "to": "/ro/",
+    "code": 301
+  }
+]

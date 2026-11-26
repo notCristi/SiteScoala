@@ -280,7 +280,28 @@ Full machine-readable credits are in `public/media/heritage/credits.json` (field
 - For CC BY / CC BY-SA images, show "Photo: {author}, {license}, via Wikimedia Commons" with links to the source page and the licence. A credits page with all entries is enough, plus an inline caption where practical.
 - CC BY-SA also requires that **modified versions** (crops are generally fine, but derivatives such as colour overlays) are shared under the same licence. Prefer PD/CC0/CC BY images for heavily altered hero graphics.
 
-<!--IMAGE_TABLE-->
+Downloaded by `node scripts/media/fetch-heritage.mjs` as WebP variants (640/1024/1600 px) with dominant-colour placeholders.
+
+| id | Commons file | Author | Licence | Size (largest variant) |
+|---|---|---|---|---|
+| `curtea-honterus` | [Ro Bv Curtea-Honterus.jpg](https://commons.wikimedia.org/wiki/File:Ro_Bv_Curtea-Honterus.jpg) | Itineris55 | CC BY-SA 4.0 | 1600×721 |
+| `curtea-honterus-2` | [Curtea Honterus Johannes 1.jpg](https://commons.wikimedia.org/wiki/File:Curtea_Honterus_Johannes_1.jpg) | Rotaru Florin | CC BY-SA 3.0 ro | 1024×768 |
+| `scoala-a` | [Honterus School Brasov (A).jpg](https://commons.wikimedia.org/wiki/File:Honterus_School_Brasov_(A).jpg) | Itineris55 | CC BY-SA 4.0 | 1600×1125 |
+| `scoala-b` | [Honterus School Brasov (B).jpg](https://commons.wikimedia.org/wiki/File:Honterus_School_Brasov_(B).jpg) | Itineris55 | CC BY-SA 4.0 | 1600×994 |
+| `scoala` | [Honterus School Brasov.jpg](https://commons.wikimedia.org/wiki/File:Honterus_School_Brasov.jpg) | Itineris55 | CC BY-SA 4.0 | 1600×1088 |
+| `statuie` | [Statue des Johannes Honterus.jpg](https://commons.wikimedia.org/wiki/File:Statue_des_Johannes_Honterus.jpg) | Marco Almbauer | Public domain | 1600×3205 |
+| `portret-xilogravura` | [Johannes-Honterus.jpg](https://commons.wikimedia.org/wiki/File:Johannes-Honterus.jpg) | Unknown | Public domain | 426×600 |
+| `portret-septemcastrensis` | [Johann Honterus Septemcastrensis de Corona.jpg](https://commons.wikimedia.org/wiki/File:Johann_Honterus_Septemcastrensis_de_Corona.jpg) | Johannes Honter | Public domain | 1600×1248 |
+| `tipografia` | [Johannes Honterus in seiner Buchdruckerei.jpg](https://commons.wikimedia.org/wiki/File:Johannes_Honterus_in_seiner_Buchdruckerei.jpg) | Friedrich Miess | Public domain | 640×532 |
+| `harta-transilvaniei-1532` | [Chorographia Transylvaniae Sybembürgen 1532.jpg](https://commons.wikimedia.org/wiki/File:Chorographia_Transylvaniae_Sybemb%C3%BCrgen_1532.jpg) | Johannes Honter | Public domain | 1600×1074 |
+| `rudimenta-1542` | [Johannes Honter-RudimentaCosmographica-Brasov1542.jpg](https://commons.wikimedia.org/wiki/File:Johannes_Honter-RudimentaCosmographica-Brasov1542.jpg) | Johannes Honter | Public domain | 1024×816 |
+| `cosmographia-1546` | [Honter Universalis Cosmographia 1546 UTA.jpg](https://commons.wikimedia.org/wiki/File:Honter_Universalis_Cosmographia_1546_UTA.jpg) | Johannes Honter / Heinrich Vogtherr | Public domain | 1024×786 |
+| `stema-1539` | [Historical Brasov CoA 1539.png](https://commons.wikimedia.org/wiki/File:Historical_Brasov_CoA_1539.png) | Unknown | Public domain | 198×248 |
+| `biserica-neagra` | [Exterior of Black Church-Brasov.jpg](https://commons.wikimedia.org/wiki/File:Exterior_of_Black_Church-Brasov.jpg) | Yair-haklai | CC BY-SA 4.0 | 1600×1350 |
+| `biserica-neagra-statuie` | [Crna crkva 18. srpnja 2025.jpg](https://commons.wikimedia.org/wiki/File:Crna_crkva_18._srpnja_2025.jpg) | August Dominus | CC0 | 1600×2133 |
+| `panorama` | [Panorama of Brașov old town with the Black Church and Mount Tâmpa (2025).jpg](https://commons.wikimedia.org/wiki/File:Panorama_of_Bra%C8%99ov_old_town_with_the_Black_Church_and_Mount_T%C3%A2mpa_(2025).jpg) | Paul Colin Hennig firstdorsal.eu | CC BY-SA 4.0 | 1600×1200 |
+| `biserica-neagra-interior` | [Biserica Neagră interior.jpg](https://commons.wikimedia.org/wiki/File:Biserica_Neagr%C4%83_interior.jpg) | Terraflorin | CC BY-SA 4.0 | 1600×1200 |
+| `burzenland-1532` | [Burzenland-JohannesHonterus-1532.jpg](https://commons.wikimedia.org/wiki/File:Burzenland-JohannesHonterus-1532.jpg) | Johannes Honter | Public domain | 1600×2905 |
 
 **Other candidates found but not downloaded** (all PD / CC):
 - *Johannes Honterus Bildnis.jpg* (Friedrich Mieß, PD, 596×840)

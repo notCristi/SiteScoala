@@ -1,0 +1,99 @@
+---
+import { pick, type Locale } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import type { Announcement } from '~/server/content';
+import Icon from '~/components/svg/Icon.astro';
+
+interface Props {
+  locale: Locale;
+  banners: Announcement[];
+}
+const { locale, banners } = Astro.props;
+---
+
+{
+  banners.map((b) => {
+    const text = pick(b, 'bannerText', locale);
+    return (
+      <aside class:list={['notice', `notice--${b.bannerLevel}`]} data-notice={`n${b.id}-${b.rev}`} aria-label={locale === 'ro' ? 'Anunț important' : locale === 'de' ? 'Wichtiger Hinweis' : 'Important notice'}>
+        <div class="wrap notice__row">
+          <Icon name="alert" />
+          <p lang={text.lang}>
+            {text.value}{' '}
+            <a href={url('article', locale, { slug: b.slug })}>{ui(locale, 'readMore')}</a>
+          </p>
+          <button type="button" class="notice__close" data-notice-close>
+            <Icon name="close" />
+            <span class="vh">{ui(locale, 'close')}</span>
+          </button>
+        </div>
+      </aside>
+    );
+  })
+}
+
+<script>
+  // Dismissal is remembered per notice revision in localStorage — never a cookie (keeps HTML cacheable).
+  for (const el of document.querySelectorAll<HTMLElement>('[data-notice]')) {
+    const key = `notice:${el.dataset.notice}`;
+    try {
+      if (localStorage.getItem(key)) el.hidden = true;
+    } catch {}
+    el.querySelector('[data-notice-close]')?.addEventListener('click', () => {
+      el.hidden = true;
+      try {
+        localStorage.setItem(key, '1');
+      } catch {}
+    });
+  }
+</script>
+
+<style>
+  .notice {
+    font-size: var(--t-small);
+    border-bottom: 1px solid var(--rule);
+  }
+  .notice--critical {
+    background: var(--rubric);
+    color: #fff;
+  }
+  .notice--critical a {
+    color: #fff;
+  }
+  .notice--warning {
+    background: var(--paper-sunk);
+    box-shadow: inset 6px 0 0 var(--rubric);
+  }
+  .notice--info {
+    background: var(--lapis-soft);
+  }
+  .notice__row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    min-height: 3rem;
+    padding-block: var(--s-2);
+  }
+  .notice__row > :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: none;
+  }
+  .notice p {
+    flex: 1;
+    font-weight: 600;
+  }
+  .notice__close {
+    background: none;
+    border: 0;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    display: grid;
+    place-items: center;
+  }
+  .notice__close :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+</style>

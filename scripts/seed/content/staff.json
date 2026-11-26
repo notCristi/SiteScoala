@@ -1,0 +1,1473 @@
+{
+  "departments": [
+    {
+      "slug": "invatamant-primar",
+      "name": {
+        "ro": "Învățământ primar",
+        "de": "Grundschule",
+        "en": "Primary education"
+      },
+      "sort_order": 10
+    },
+    {
+      "slug": "limba-si-comunicare",
+      "name": {
+        "ro": "Limbă și comunicare",
+        "de": "Sprache und Kommunikation",
+        "en": "Language and communication"
+      },
+      "sort_order": 20
+    },
+    {
+      "slug": "matematica-si-stiinte",
+      "name": {
+        "ro": "Matematică și științe ale naturii",
+        "de": "Mathematik und Naturwissenschaften",
+        "en": "Mathematics and natural sciences"
+      },
+      "sort_order": 30
+    },
+    {
+      "slug": "om-si-societate",
+      "name": {
+        "ro": "Om și societate",
+        "de": "Mensch und Gesellschaft",
+        "en": "People and society"
+      },
+      "sort_order": 40
+    },
+    {
+      "slug": "arte",
+      "name": {
+        "ro": "Arte",
+        "de": "Künste",
+        "en": "Arts"
+      },
+      "sort_order": 50
+    },
+    {
+      "slug": "educatie-fizica-si-sport",
+      "name": {
+        "ro": "Educație fizică și sport",
+        "de": "Sport",
+        "en": "Physical education and sport"
+      },
+      "sort_order": 60
+    },
+    {
+      "slug": "tehnologii",
+      "name": {
+        "ro": "Tehnologii",
+        "de": "Technologien",
+        "en": "Technologies"
+      },
+      "sort_order": 70
+    }
+  ],
+  "staff": [
+    {
+      "full_name": "Radu Chivărean",
+      "sort_name": "Chivărean Radu",
+      "title_prefix": "prof.",
+      "role": {
+        "ro": "Director",
+        "de": "Schulleiter",
+        "en": "Headteacher"
+      },
+      "category": "conducere",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Geografie",
+        "de": "Geographie",
+        "en": "Geography"
+      },
+      "sort_order": 10
+    },
+    {
+      "full_name": "Raluca Petrăreanu",
+      "sort_name": "Petrăreanu Raluca",
+      "title_prefix": "prof.",
+      "role": {
+        "ro": "Director adjunct",
+        "de": "Stellvertretende Schulleiterin",
+        "en": "Deputy headteacher"
+      },
+      "category": "conducere",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Matematică",
+        "de": "Mathematik",
+        "en": "Mathematics"
+      },
+      "sort_order": 20
+    },
+    {
+      "full_name": "Tünde-Enikö Jozsa",
+      "sort_name": "Jozsa Tünde-Enikö",
+      "title_prefix": "prof. înv. primar",
+      "role": {
+        "ro": "Director adjunct",
+        "de": "Stellvertretende Schulleiterin",
+        "en": "Deputy headteacher"
+      },
+      "category": "conducere",
+      "department_slug": "invatamant-primar",
+      "subject": {
+        "ro": "Învățământ primar",
+        "de": "Grundschule",
+        "en": "Primary education"
+      },
+      "sort_order": 30
+    },
+    {
+      "full_name": "Cristina Sîrbu",
+      "sort_name": "Sîrbu Cristina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Învățătoare",
+        "de": "Grundschullehrerin",
+        "en": "Primary teacher"
+      },
+      "category": "profesori",
+      "department_slug": "invatamant-primar",
+      "subject": {
+        "ro": "Învățământ primar (clasa pregătitoare A, 2025–2026)",
+        "de": "Grundschule (Vorbereitungsklasse A, 2025/26)",
+        "en": "Primary education (preparatory class A, 2025–26)"
+      },
+      "sort_order": 110
+    },
+    {
+      "full_name": "Alexandra Dina",
+      "sort_name": "Dina Alexandra",
+      "title_prefix": null,
+      "role": {
+        "ro": "Învățătoare",
+        "de": "Grundschullehrerin",
+        "en": "Primary teacher"
+      },
+      "category": "profesori",
+      "department_slug": "invatamant-primar",
+      "subject": {
+        "ro": "Învățământ primar (clasa pregătitoare B, 2025–2026)",
+        "de": "Grundschule (Vorbereitungsklasse B, 2025/26)",
+        "en": "Primary education (preparatory class B, 2025–26)"
+      },
+      "sort_order": 120
+    },
+    {
+      "full_name": "Alexandra Bratu-Melzer",
+      "sort_name": "Bratu-Melzer Alexandra",
+      "title_prefix": null,
+      "role": {
+        "ro": "Învățătoare",
+        "de": "Grundschullehrerin",
+        "en": "Primary teacher"
+      },
+      "category": "profesori",
+      "department_slug": "invatamant-primar",
+      "subject": {
+        "ro": "Învățământ primar (clasa pregătitoare C, 2025–2026)",
+        "de": "Grundschule (Vorbereitungsklasse C, 2025/26)",
+        "en": "Primary education (preparatory class C, 2025–26)"
+      },
+      "sort_order": 130
+    },
+    {
+      "full_name": "Alina Ștefan",
+      "sort_name": "Ștefan Alina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Învățătoare",
+        "de": "Grundschullehrerin",
+        "en": "Primary teacher"
+      },
+      "category": "profesori",
+      "department_slug": "invatamant-primar",
+      "subject": {
+        "ro": "Învățământ primar (clasa pregătitoare D, 2025–2026)",
+        "de": "Grundschule (Vorbereitungsklasse D, 2025/26)",
+        "en": "Primary education (preparatory class D, 2025–26)"
+      },
+      "sort_order": 140
+    },
+    {
+      "full_name": "Aurora Anicuța Andronic",
+      "sort_name": "Andronic Aurora Anicuța",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba și literatura română",
+        "de": "Rumänische Sprache und Literatur",
+        "en": "Romanian language and literature"
+      },
+      "sort_order": 1010
+    },
+    {
+      "full_name": "Ana Ardelean",
+      "sort_name": "Ardelean Ana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba și literatura română",
+        "de": "Rumänische Sprache und Literatur",
+        "en": "Romanian language and literature"
+      },
+      "sort_order": 1020
+    },
+    {
+      "full_name": "Sabinica Feldiorean",
+      "sort_name": "Feldiorean Sabinica",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba și literatura română",
+        "de": "Rumänische Sprache und Literatur",
+        "en": "Romanian language and literature"
+      },
+      "sort_order": 1030
+    },
+    {
+      "full_name": "Teodor Ioan Ferezan",
+      "sort_name": "Ferezan Teodor Ioan",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba și literatura română",
+        "de": "Rumänische Sprache und Literatur",
+        "en": "Romanian language and literature"
+      },
+      "sort_order": 1040
+    },
+    {
+      "full_name": "Diana Giuglea",
+      "sort_name": "Giuglea Diana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba și literatura română",
+        "de": "Rumänische Sprache und Literatur",
+        "en": "Romanian language and literature"
+      },
+      "sort_order": 1050
+    },
+    {
+      "full_name": "Naomi Rut Ionică",
+      "sort_name": "Ionică Naomi Rut",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba și literatura română",
+        "de": "Rumänische Sprache und Literatur",
+        "en": "Romanian language and literature"
+      },
+      "sort_order": 1060
+    },
+    {
+      "full_name": "Andreea Jebac",
+      "sort_name": "Jebac Andreea",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba și literatura română",
+        "de": "Rumänische Sprache und Literatur",
+        "en": "Romanian language and literature"
+      },
+      "sort_order": 1070
+    },
+    {
+      "full_name": "Ioana Preda",
+      "sort_name": "Preda Ioana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba și literatura română, limba franceză",
+        "de": "Rumänische Sprache und Literatur, Französisch",
+        "en": "Romanian language and literature, French"
+      },
+      "sort_order": 1080
+    },
+    {
+      "full_name": "Stănica Mărioara Soare",
+      "sort_name": "Soare Stănica Mărioara",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba și literatura română",
+        "de": "Rumänische Sprache und Literatur",
+        "en": "Romanian language and literature"
+      },
+      "sort_order": 1090
+    },
+    {
+      "full_name": "Gabriela Adam",
+      "sort_name": "Adam Gabriela",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba germană",
+        "de": "Deutsch",
+        "en": "German"
+      },
+      "sort_order": 1100
+    },
+    {
+      "full_name": "Marianne Albici",
+      "sort_name": "Albici Marianne",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba germană",
+        "de": "Deutsch",
+        "en": "German"
+      },
+      "sort_order": 1110
+    },
+    {
+      "full_name": "Carmela Gall",
+      "sort_name": "Gall Carmela",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba germană",
+        "de": "Deutsch",
+        "en": "German"
+      },
+      "sort_order": 1120
+    },
+    {
+      "full_name": "Anina Cristina Micleru-Șoană",
+      "sort_name": "Micleru-Șoană Anina Cristina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba germană",
+        "de": "Deutsch",
+        "en": "German"
+      },
+      "sort_order": 1130
+    },
+    {
+      "full_name": "Carolina Melinda Oancea",
+      "sort_name": "Oancea Carolina Melinda",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba germană",
+        "de": "Deutsch",
+        "en": "German"
+      },
+      "sort_order": 1140
+    },
+    {
+      "full_name": "Loredana Mihaela Rădulescu",
+      "sort_name": "Rădulescu Loredana Mihaela",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba germană",
+        "de": "Deutsch",
+        "en": "German"
+      },
+      "sort_order": 1150
+    },
+    {
+      "full_name": "Anca Tudose",
+      "sort_name": "Tudose Anca",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba germană",
+        "de": "Deutsch",
+        "en": "German"
+      },
+      "sort_order": 1160
+    },
+    {
+      "full_name": "Daniela Turcu",
+      "sort_name": "Turcu Daniela",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba germană",
+        "de": "Deutsch",
+        "en": "German"
+      },
+      "sort_order": 1170
+    },
+    {
+      "full_name": "Alice Butnar",
+      "sort_name": "Butnar Alice",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba engleză",
+        "de": "Englisch",
+        "en": "English"
+      },
+      "sort_order": 1180
+    },
+    {
+      "full_name": "Mirela Ioana Ferezan",
+      "sort_name": "Ferezan Mirela Ioana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba engleză",
+        "de": "Englisch",
+        "en": "English"
+      },
+      "sort_order": 1190
+    },
+    {
+      "full_name": "Adina Iliescu",
+      "sort_name": "Iliescu Adina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba engleză",
+        "de": "Englisch",
+        "en": "English"
+      },
+      "sort_order": 1200
+    },
+    {
+      "full_name": "Andreea Sabina Nicoară",
+      "sort_name": "Nicoară Andreea Sabina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba engleză",
+        "de": "Englisch",
+        "en": "English"
+      },
+      "sort_order": 1210
+    },
+    {
+      "full_name": "Anca Melania Paul",
+      "sort_name": "Paul Anca Melania",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba engleză",
+        "de": "Englisch",
+        "en": "English"
+      },
+      "sort_order": 1220
+    },
+    {
+      "full_name": "Liliana Stanciu",
+      "sort_name": "Stanciu Liliana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba engleză",
+        "de": "Englisch",
+        "en": "English"
+      },
+      "sort_order": 1230
+    },
+    {
+      "full_name": "Andreea Ioana Nösner",
+      "sort_name": "Nösner Andreea Ioana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Literatură universală",
+        "de": "Weltliteratur",
+        "en": "World literature"
+      },
+      "sort_order": 1240
+    },
+    {
+      "full_name": "Ramona Alexandra Petroi",
+      "sort_name": "Petroi Ramona Alexandra",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Literatură universală, limba franceză",
+        "de": "Weltliteratur, Französisch",
+        "en": "World literature, French"
+      },
+      "sort_order": 1250
+    },
+    {
+      "full_name": "Anda Roberta Vrabete",
+      "sort_name": "Vrabete Anda Roberta",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba franceză",
+        "de": "Französisch",
+        "en": "French"
+      },
+      "sort_order": 1260
+    },
+    {
+      "full_name": "Cristina Maria Spînu",
+      "sort_name": "Spînu Cristina Maria",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "limba-si-comunicare",
+      "subject": {
+        "ro": "Limba latină",
+        "de": "Latein",
+        "en": "Latin"
+      },
+      "sort_order": 1270
+    },
+    {
+      "full_name": "Dana Bodocan",
+      "sort_name": "Bodocan Dana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Matematică",
+        "de": "Mathematik",
+        "en": "Mathematics"
+      },
+      "sort_order": 1280
+    },
+    {
+      "full_name": "Corina Drăgoiu",
+      "sort_name": "Drăgoiu Corina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Matematică",
+        "de": "Mathematik",
+        "en": "Mathematics"
+      },
+      "sort_order": 1290
+    },
+    {
+      "full_name": "Cristina Ioana Epure",
+      "sort_name": "Epure Cristina Ioana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Matematică",
+        "de": "Mathematik",
+        "en": "Mathematics"
+      },
+      "sort_order": 1300
+    },
+    {
+      "full_name": "Dana Viorela Ilie",
+      "sort_name": "Ilie Dana Viorela",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Matematică",
+        "de": "Mathematik",
+        "en": "Mathematics"
+      },
+      "sort_order": 1310
+    },
+    {
+      "full_name": "Gențiana Mariana Pop",
+      "sort_name": "Pop Gențiana Mariana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Matematică",
+        "de": "Mathematik",
+        "en": "Mathematics"
+      },
+      "sort_order": 1320
+    },
+    {
+      "full_name": "Narcisa Rodica Socianu",
+      "sort_name": "Socianu Narcisa Rodica",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Matematică",
+        "de": "Mathematik",
+        "en": "Mathematics"
+      },
+      "sort_order": 1330
+    },
+    {
+      "full_name": "Adriana Căciuleanu",
+      "sort_name": "Căciuleanu Adriana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Chimie",
+        "de": "Chemie",
+        "en": "Chemistry"
+      },
+      "sort_order": 1340
+    },
+    {
+      "full_name": "Gisella Cioconea",
+      "sort_name": "Cioconea Gisella",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Chimie",
+        "de": "Chemie",
+        "en": "Chemistry"
+      },
+      "sort_order": 1350
+    },
+    {
+      "full_name": "Vanesa Anamaria Iacob",
+      "sort_name": "Iacob Vanesa Anamaria",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Științe, biologie",
+        "de": "Naturwissenschaften, Biologie",
+        "en": "Science, biology"
+      },
+      "sort_order": 1360
+    },
+    {
+      "full_name": "Ionuț Nemțeanu",
+      "sort_name": "Nemțeanu Ionuț",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Științe, biologie",
+        "de": "Naturwissenschaften, Biologie",
+        "en": "Science, biology"
+      },
+      "sort_order": 1370
+    },
+    {
+      "full_name": "Helmut Dieter Adams",
+      "sort_name": "Adams Helmut Dieter",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Fizică",
+        "de": "Physik",
+        "en": "Physics"
+      },
+      "sort_order": 1380
+    },
+    {
+      "full_name": "Daniela Damian",
+      "sort_name": "Damian Daniela",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Fizică",
+        "de": "Physik",
+        "en": "Physics"
+      },
+      "sort_order": 1390
+    },
+    {
+      "full_name": "Victor Nascov",
+      "sort_name": "Nascov Victor",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Fizică",
+        "de": "Physik",
+        "en": "Physics"
+      },
+      "sort_order": 1400
+    },
+    {
+      "full_name": "Doina Dogariu",
+      "sort_name": "Dogariu Doina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Biologie",
+        "de": "Biologie",
+        "en": "Biology"
+      },
+      "sort_order": 1410
+    },
+    {
+      "full_name": "Adriana Khapardey",
+      "sort_name": "Khapardey Adriana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "matematica-si-stiinte",
+      "subject": {
+        "ro": "Biologie",
+        "de": "Biologie",
+        "en": "Biology"
+      },
+      "sort_order": 1420
+    },
+    {
+      "full_name": "Camelia Bătrînu Dragoteanu",
+      "sort_name": "Bătrînu Dragoteanu Camelia",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Geografie",
+        "de": "Geographie",
+        "en": "Geography"
+      },
+      "sort_order": 1430
+    },
+    {
+      "full_name": "Ionuț Cătălin Pătraș Ciocîltei",
+      "sort_name": "Pătraș Ciocîltei Ionuț Cătălin",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Geografie",
+        "de": "Geographie",
+        "en": "Geography"
+      },
+      "sort_order": 1440
+    },
+    {
+      "full_name": "Gabriela Eugenia Popavasile",
+      "sort_name": "Popavasile Gabriela Eugenia",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Geografie",
+        "de": "Geographie",
+        "en": "Geography"
+      },
+      "sort_order": 1450
+    },
+    {
+      "full_name": "Klaus Fabritius",
+      "sort_name": "Fabritius Klaus",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Istorie",
+        "de": "Geschichte",
+        "en": "History"
+      },
+      "sort_order": 1460
+    },
+    {
+      "full_name": "Hrisantis Oceanu",
+      "sort_name": "Oceanu Hrisantis",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Istorie, istoria minorităților",
+        "de": "Geschichte, Geschichte der Minderheiten",
+        "en": "History, history of minorities"
+      },
+      "sort_order": 1470
+    },
+    {
+      "full_name": "Simona Karin Schwedes",
+      "sort_name": "Schwedes Simona Karin",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Istorie",
+        "de": "Geschichte",
+        "en": "History"
+      },
+      "sort_order": 1480
+    },
+    {
+      "full_name": "Peter Jürgen Turcuș",
+      "sort_name": "Turcuș Peter Jürgen",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Istorie, istoria minorităților",
+        "de": "Geschichte, Geschichte der Minderheiten",
+        "en": "History, history of minorities"
+      },
+      "sort_order": 1490
+    },
+    {
+      "full_name": "Iulia Roxana Ilie",
+      "sort_name": "Ilie Iulia Roxana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Științe sociale",
+        "de": "Sozialwissenschaften",
+        "en": "Social sciences"
+      },
+      "sort_order": 1500
+    },
+    {
+      "full_name": "Livia Oswald",
+      "sort_name": "Oswald Livia",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Științe sociale, educație muzicală, educație tehnologică, educație antreprenorială",
+        "de": "Sozialwissenschaften, Musik, Technik, Unternehmerische Bildung",
+        "en": "Social sciences, music, technology education, entrepreneurship education"
+      },
+      "sort_order": 1510
+    },
+    {
+      "full_name": "Alina Popescu",
+      "sort_name": "Popescu Alina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Științe sociale",
+        "de": "Sozialwissenschaften",
+        "en": "Social sciences"
+      },
+      "sort_order": 1520
+    },
+    {
+      "full_name": "Magdalena Maria Puițel",
+      "sort_name": "Puițel Magdalena Maria",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Științe sociale",
+        "de": "Sozialwissenschaften",
+        "en": "Social sciences"
+      },
+      "sort_order": 1530
+    },
+    {
+      "full_name": "Mihaela Vigheciu",
+      "sort_name": "Vigheciu Mihaela",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Științe sociale, educație antreprenorială",
+        "de": "Sozialwissenschaften, Unternehmerische Bildung",
+        "en": "Social sciences, entrepreneurship education"
+      },
+      "sort_order": 1540
+    },
+    {
+      "full_name": "Marius Ionuț Bîzoi",
+      "sort_name": "Bîzoi Marius Ionuț",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Religie",
+        "de": "Religion",
+        "en": "Religious education"
+      },
+      "sort_order": 1550
+    },
+    {
+      "full_name": "Franziska Riemer",
+      "sort_name": "Riemer Franziska",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Religie",
+        "de": "Religion",
+        "en": "Religious education"
+      },
+      "sort_order": 1560
+    },
+    {
+      "full_name": "Klaus Dieter Untsch",
+      "sort_name": "Untsch Klaus Dieter",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "om-si-societate",
+      "subject": {
+        "ro": "Religie",
+        "de": "Religion",
+        "en": "Religious education"
+      },
+      "sort_order": 1570
+    },
+    {
+      "full_name": "Ioana Gliga",
+      "sort_name": "Gliga Ioana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "arte",
+      "subject": {
+        "ro": "Educație plastică",
+        "de": "Kunst",
+        "en": "Art"
+      },
+      "sort_order": 1580
+    },
+    {
+      "full_name": "Maria Petrișor",
+      "sort_name": "Petrișor Maria",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "arte",
+      "subject": {
+        "ro": "Educație plastică",
+        "de": "Kunst",
+        "en": "Art"
+      },
+      "sort_order": 1590
+    },
+    {
+      "full_name": "Anca Liliana Timiș",
+      "sort_name": "Timiș Anca Liliana",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "arte",
+      "subject": {
+        "ro": "Educație plastică, educație muzicală",
+        "de": "Kunst, Musik",
+        "en": "Art, music"
+      },
+      "sort_order": 1600
+    },
+    {
+      "full_name": "Claudia Cristina Mirițescu",
+      "sort_name": "Mirițescu Claudia Cristina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "arte",
+      "subject": {
+        "ro": "Educație muzicală",
+        "de": "Musik",
+        "en": "Music"
+      },
+      "sort_order": 1610
+    },
+    {
+      "full_name": "Rodica Georgescu",
+      "sort_name": "Georgescu Rodica",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "educatie-fizica-si-sport",
+      "subject": {
+        "ro": "Educație fizică",
+        "de": "Sport",
+        "en": "Physical education"
+      },
+      "sort_order": 1620
+    },
+    {
+      "full_name": "Cătălin Petre",
+      "sort_name": "Petre Cătălin",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "educatie-fizica-si-sport",
+      "subject": {
+        "ro": "Educație fizică",
+        "de": "Sport",
+        "en": "Physical education"
+      },
+      "sort_order": 1630
+    },
+    {
+      "full_name": "Marius Alexandru Sabău",
+      "sort_name": "Sabău Marius Alexandru",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "educatie-fizica-si-sport",
+      "subject": {
+        "ro": "Educație fizică",
+        "de": "Sport",
+        "en": "Physical education"
+      },
+      "sort_order": 1640
+    },
+    {
+      "full_name": "Hans Jürgen Tontsch",
+      "sort_name": "Tontsch Hans Jürgen",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "educatie-fizica-si-sport",
+      "subject": {
+        "ro": "Educație fizică",
+        "de": "Sport",
+        "en": "Physical education"
+      },
+      "sort_order": 1650
+    },
+    {
+      "full_name": "Ioana Raluca Țion",
+      "sort_name": "Țion Ioana Raluca",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "educatie-fizica-si-sport",
+      "subject": {
+        "ro": "Educație fizică",
+        "de": "Sport",
+        "en": "Physical education"
+      },
+      "sort_order": 1660
+    },
+    {
+      "full_name": "Ana Atena Butnar",
+      "sort_name": "Butnar Ana Atena",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "tehnologii",
+      "subject": {
+        "ro": "TIC / Informatică",
+        "de": "Informatik / IKT",
+        "en": "ICT / computer science"
+      },
+      "sort_order": 1670
+    },
+    {
+      "full_name": "Carina Colțan",
+      "sort_name": "Colțan Carina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "tehnologii",
+      "subject": {
+        "ro": "TIC / Informatică",
+        "de": "Informatik / IKT",
+        "en": "ICT / computer science"
+      },
+      "sort_order": 1680
+    },
+    {
+      "full_name": "Mihaela Naghi",
+      "sort_name": "Naghi Mihaela",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "tehnologii",
+      "subject": {
+        "ro": "TIC / Informatică",
+        "de": "Informatik / IKT",
+        "en": "ICT / computer science"
+      },
+      "sort_order": 1690
+    },
+    {
+      "full_name": "Eva Olga Schneiduch",
+      "sort_name": "Schneiduch Eva Olga",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "tehnologii",
+      "subject": {
+        "ro": "TIC / Informatică",
+        "de": "Informatik / IKT",
+        "en": "ICT / computer science"
+      },
+      "sort_order": 1700
+    },
+    {
+      "full_name": "Rodica Doina Dan",
+      "sort_name": "Dan Rodica Doina",
+      "title_prefix": null,
+      "role": {
+        "ro": "Profesor",
+        "de": "Lehrkraft",
+        "en": "Teacher"
+      },
+      "category": "profesori",
+      "department_slug": "tehnologii",
+      "subject": {
+        "ro": "Educație tehnologică",
+        "de": "Technik",
+        "en": "Technology education"
+      },
+      "sort_order": 1710
+    }
+  ]
+}

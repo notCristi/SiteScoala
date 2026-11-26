@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Typecheck · lint · build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Typecheck (astro check)
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Migrations and seed apply cleanly (local D1)
+        run: |
+          npm run db:migrate:local
+          npm run db:seed:local
+      - name: No timetable anywhere (CLAUDE.md rule 1)
+        run: |
+          if grep -RInE '\b(orar|stundenplan|timetable)\b' src --include='*.astro' --include='*.ts' -i | grep -viE 'no timetable|hard rule|CLAUDE'; then
+            echo "A timetable reference was found." && exit 1
+          fi

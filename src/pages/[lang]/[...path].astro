@@ -1,0 +1,77 @@
+---
+/**
+ * Public router for /ro/…, /de/…, /en/…
+ * Resolves the localized path via the route table, loads layout data (settings + urgent banner)
+ * in one D1 batch, and renders the matching view. Pages are edge-cached and purged by tag on publish.
+ */
+import { isLocale, type Locale } from '~/i18n/locales';
+import { alternates as altsFor, match, type Match } from '~/i18n/routes';
+import { getArticle, getGallery, getGuide, getLayoutData, getLife, getProject } from '~/server/content';
+import { cacheTagsFor } from '~/server/cache';
+import Home from '~/views/Home.astro';
+import Editorial from '~/views/Editorial.astro';
+import History from '~/views/History.astro';
+import Admissions from '~/views/Admissions.astro';
+import GuideView from '~/views/Guide.astro';
+import Documents from '~/views/Documents.astro';
+import StaffView from '~/views/Staff.astro';
+import NewsList from '~/views/NewsList.astro';
+import Article from '~/views/Article.astro';
+import Education from '~/views/Education.astro';
+import Life from '~/views/Life.astro';
+import Entry from '~/views/Entry.astro';
+import Projects from '~/views/Projects.astro';
+import GalleryList from '~/views/GalleryList.astro';
+import GalleryView from '~/views/Gallery.astro';
+import Contact from '~/views/Contact.astro';
+import Search from '~/views/Search.astro';
+import NotFound from '~/views/NotFound.astro';
+
+const { lang, path = '' } = Astro.params;
+const locale: Locale = isLocale(lang) ? lang : 'ro';
+let m: Match | undefined = isLocale(lang) ? match(locale, path) : undefined;
+
+const layout = await getLayoutData();
+let entity: unknown;
+if (m) {
+  const p = m.params;
+  if (m.id === 'article') entity = await getArticle(p.slug ?? '');
+  else if (m.id === 'project') entity = await getProject(p.slug ?? '');
+  else if (m.id === 'lifeEntry') entity = await getLife(p.slug ?? '');
+  else if (m.id === 'galleryItem') entity = await getGallery(p.slug ?? '');
+  else if (m.id === 'guide') entity = await getGuide(p.kind as never);
+  if (['article', 'project', 'lifeEntry', 'galleryItem', 'guide'].includes(m.id) && !entity) m = undefined;
+}
+
+if (!m) {
+  Astro.response.status = 404;
+  Astro.cache.set({ maxAge: 300, tags: ['site', 'notfound'] });
+} else {
+  Astro.cache.set({ maxAge: 86400, swr: 604800, tags: cacheTagsFor(m) });
+}
+// Browsers revalidate HTML on every visit (cheap 304 at the edge); the edge keeps it for a day + purge.
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+
+const alternates = m ? altsFor(m) : { ro: '/ro/', de: '/de/', en: '/en/' };
+const common = { locale, match: m!, alternates, settings: layout.settings, banners: layout.banners, entity };
+const id = m?.id;
+---
+
+{!m && <NotFound locale={locale} alternates={alternates} settings={layout.settings} banners={layout.banners} />}
+{id === 'home' && <Home {...common} />}
+{id && ['school', 'honterus', 'campus', 'primar', 'gimnaziu', 'liceu', 'german', 'coetus', 'privacy', 'accessibility'].includes(id) && <Editorial {...common} />}
+{id === 'history' && <History {...common} />}
+{id === 'admissions' && <Admissions {...common} />}
+{id === 'guide' && <GuideView {...common} />}
+{id === 'documents' && <Documents {...common} />}
+{id === 'staff' && <StaffView {...common} />}
+{id === 'news' && <NewsList {...common} />}
+{id === 'article' && <Article {...common} />}
+{id === 'education' && <Education {...common} />}
+{id === 'life' && <Life {...common} />}
+{id && ['lifeEntry', 'project'].includes(id) && <Entry {...common} />}
+{id === 'projects' && <Projects {...common} />}
+{id === 'gallery' && <GalleryList {...common} />}
+{id === 'galleryItem' && <GalleryView {...common} />}
+{id === 'contact' && <Contact {...common} />}
+{id === 'search' && <Search {...common} />}

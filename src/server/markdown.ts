@@ -1,0 +1,61 @@
+/**
+ * Markdown → safe HTML, run at SAVE time in /admin (never on public renders).
+ * Raw HTML is escaped, links are restricted to http(s)/mailto/tel/relative,
+ * images only from our own origin paths. Staff cannot break the layout.
+ */
+import { Marked, type Tokens } from 'marked';
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const SAFE_HREF = /^(https?:\/\/|mailto:|tel:|\/(?!\/)|#)/i;
+
+const md = new Marked({
+  gfm: true,
+  breaks: true,
+  async: false,
+  renderer: {
+    html(token: Tokens.HTML | Tokens.Tag) {
+      return esc(token.text);
+    },
+    link(token: Tokens.Link) {
+      const href = token.href.trim();
+      const text = this.parser.parseInline(token.tokens);
+      if (!SAFE_HREF.test(href)) return text;
+      const external = /^https?:\/\//i.test(href);
+      return `<a href="${esc(href)}"${external ? ' rel="noopener" target="_blank"' : ''}>${text}</a>`;
+    },
+    image(token: Tokens.Image) {
+      const src = token.href.trim();
+      if (!/^\/(media|files)\//.test(src)) return esc(token.text);
+      return `<img src="${esc(src)}" alt="${esc(token.text)}" loading="lazy" decoding="async">`;
+    },
+    heading(token: Tokens.Heading) {
+      // h1 belongs to the page: "#" and "##" both become h2; never below h4.
+      const level = Math.min(4, Math.max(2, token.depth));
+      return `<h${level}>${this.parser.parseInline(token.tokens)}</h${level}>`;
+    },
+    table(token: Tokens.Table) {
+      const head = token.header.map((c) => `<th>${this.parser.parseInline(c.tokens)}</th>`).join('');
+      const rows = token.rows.map((r) => `<tr>${r.map((c) => `<td>${this.parser.parseInline(c.tokens)}</td>`).join('')}</tr>`).join('');
+      return `<div class="table-scroll"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+    },
+  },
+});
+
+export function renderMarkdown(src: string | null | undefined): string | null {
+  if (!src || !src.trim()) return null;
+  return md.parse(src.slice(0, 200_000)) as string;
+}
+
+/** Strip markdown/HTML to plain text (search index, meta descriptions). */
+export function plainText(src: string | null | undefined, max = 400): string {
+  if (!src) return '';
+  const s = src
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]+)]\([^)]*\)/g, '$1')
+    .replace(/[#>*_`|~-]+/g, ' ')
+    .replace(/&[a-z]+;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return s.length > max ? `${s.slice(0, max - 1).replace(/\s+\S*$/, '')}…` : s;
+}

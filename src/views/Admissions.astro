@@ -1,0 +1,144 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Icon from '~/components/svg/Icon.astro';
+import EmblemPrimar from '~/components/svg/EmblemPrimar.astro';
+import EmblemGimnaziu from '~/components/svg/EmblemGimnaziu.astro';
+import EmblemLiceu from '~/components/svg/EmblemLiceu.astro';
+import EmblemDSD from '~/components/svg/EmblemDSD.astro';
+import { pick } from '~/i18n/locales';
+import { url, type GuideKind } from '~/i18n/routes';
+import { NAV } from '~/i18n/nav';
+import { getPage, listGuides } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const [page, guides] = await Promise.all([getPage('admissions'), listGuides()]);
+const nav = NAV.find((n) => n.id === 'admitere')!;
+const byKind = new Map(guides.map((g) => [g.kind, g]));
+const title = page ? pick(page, 'title', locale).value : nav.label[locale];
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const emblems: Partial<Record<GuideKind, typeof EmblemPrimar>> = {
+  pregatitoare: EmblemPrimar,
+  'clasa-v': EmblemGimnaziu,
+  'clasa-ix': EmblemLiceu,
+  dsd: EmblemDSD,
+};
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: title }]} />
+  <div class="wrap">
+    {
+      nav.columns!.map((col, ci) => (
+        <section class="group" aria-labelledby={`g-${ci}`}>
+          <h2 id={`g-${ci}`} class="group__title">
+            <span class="group__num">{ci === 0 ? 'I' : 'II'}</span>
+            {col.title[locale]}
+          </h2>
+          <ul role="list" class:list={['entries', ci === 0 && 'entries--primary']}>
+            {col.links.map((ln, i) => {
+              const kind = ln.params!.kind as GuideKind;
+              const g = byKind.get(kind);
+              const E = emblems[kind];
+              return (
+                <li data-reveal style={`--i:${i}`}>
+                  <a class="entry" href={url('guide', locale, { kind })}>
+                    {E && (
+                      <span class="entry__emblem" aria-hidden="true">
+                        <E />
+                      </span>
+                    )}
+                    <span class="entry__t">{ln.label[locale]}</span>
+                    {ln.note && <span class="entry__note">{ln.note[locale]}</span>}
+                    {g && <span class="entry__lead">{pick(g, 'lead', locale).value}</span>}
+                    <span class="entry__go">
+                      <Icon name="arrow-right" />
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .group {
+    margin-bottom: var(--s-8);
+  }
+  .group__title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-4);
+    margin-bottom: var(--s-5);
+  }
+  .group__num {
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    color: var(--rubric);
+    letter-spacing: 0.1em;
+  }
+  .entries {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    border-top: 1px solid var(--ink);
+    border-left: 1px solid var(--rule);
+  }
+  .entries li {
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    height: 100%;
+    padding: var(--s-5);
+    color: var(--ink);
+    text-decoration: none;
+    position: relative;
+    transition: background 200ms;
+  }
+  .entry:hover {
+    background: var(--paper-raised);
+  }
+  .entry__emblem {
+    width: 3.25rem;
+    color: var(--rubric);
+    margin-bottom: var(--s-2);
+  }
+  .entry__t {
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  .entry__note {
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rubric);
+  }
+  .entry__lead {
+    color: var(--ink-2);
+    font-size: var(--t-small);
+  }
+  .entry__go {
+    margin-top: auto;
+    padding-top: var(--s-3);
+    color: var(--lapis);
+  }
+  .entry__go :global(svg) {
+    width: 1.4rem;
+    transition: transform 200ms var(--ease-out);
+  }
+  .entry:hover .entry__go :global(svg) {
+    transform: translateX(4px);
+  }
+</style>

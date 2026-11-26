@@ -1,0 +1,542 @@
+[
+  {
+    "id": "curtea-honterus",
+    "file": "Ro Bv Curtea-Honterus.jpg",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Ro_Bv_Curtea-Honterus.jpg/3840px-Ro_Bv_Curtea-Honterus.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ro_Bv_Curtea-Honterus.jpg",
+    "author": "Itineris55",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "title": "Ro Bv Curtea-Honterus",
+    "width": 1600,
+    "height": 721,
+    "placeholder": "#b8c8d8",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/curtea-honterus-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/curtea-honterus-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/curtea-honterus-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Curtea Johannes Honterus, cu clădirile școlii în jurul Bisericii Negre",
+      "de": "Der Honterushof mit den Schulgebäuden rund um die Schwarze Kirche",
+      "en": "The Honterus Courtyard, with the school buildings around the Black Church"
+    }
+  },
+  {
+    "id": "curtea-honterus-2",
+    "file": "Curtea Honterus Johannes 1.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Curtea_Honterus_Johannes_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Curtea_Honterus_Johannes_1.jpg",
+    "author": "Rotaru Florin",
+    "license": "CC BY-SA 3.0 ro",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/ro/deed.en",
+    "title": "Curtea Honterus Johannes 1",
+    "width": 1024,
+    "height": 768,
+    "placeholder": "#f8f8f8",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/curtea-honterus-2-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/curtea-honterus-2-1024.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Curtea Honterus, vedere spre clădirile colegiului",
+      "de": "Honterushof, Blick auf die Gebäude des Kollegs",
+      "en": "Honterus Courtyard, looking towards the college buildings"
+    }
+  },
+  {
+    "id": "scoala-a",
+    "file": "Honterus School Brasov (A).jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/89/Honterus_School_Brasov_%28A%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Honterus_School_Brasov_(A).jpg",
+    "author": "Itineris55",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "title": "Honterus School Brasov (A)",
+    "width": 1600,
+    "height": 1125,
+    "placeholder": "#f8f8f8",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/scoala-a-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/scoala-a-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/scoala-a-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Clădirea A a Colegiului Național „Johannes Honterus”",
+      "de": "Gebäude A des Honterus-Nationalkollegs",
+      "en": "Building A of the “Johannes Honterus” National College"
+    }
+  },
+  {
+    "id": "scoala-b",
+    "file": "Honterus School Brasov (B).jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/30/Honterus_School_Brasov_%28B%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Honterus_School_Brasov_(B).jpg",
+    "author": "Itineris55",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "title": "Honterus School Brasov (B)",
+    "width": 1600,
+    "height": 994,
+    "placeholder": "#383838",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/scoala-b-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/scoala-b-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/scoala-b-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Clădirea B a colegiului, în Curtea Honterus",
+      "de": "Gebäude B des Kollegs am Honterushof",
+      "en": "Building B of the college, in the Honterus Courtyard"
+    }
+  },
+  {
+    "id": "scoala",
+    "file": "Honterus School Brasov.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/28/Honterus_School_Brasov.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Honterus_School_Brasov.jpg",
+    "author": "Itineris55",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "title": "Honterus School Brasov",
+    "width": 1600,
+    "height": 1088,
+    "placeholder": "#181818",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/scoala-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/scoala-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/scoala-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Fațada colegiului spre Curtea Honterus",
+      "de": "Fassade des Kollegs zum Honterushof",
+      "en": "The college façade facing the Honterus Courtyard"
+    }
+  },
+  {
+    "id": "statuie",
+    "file": "Statue des Johannes Honterus.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/81/Statue_des_Johannes_Honterus.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Statue_des_Johannes_Honterus.jpg",
+    "author": "Marco Almbauer",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "title": "Statue des Johannes Honterus",
+    "width": 1600,
+    "height": 3205,
+    "placeholder": "#181818",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/statuie-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/statuie-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/statuie-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Statuia lui Johannes Honterus de lângă Biserica Neagră",
+      "de": "Das Honterus-Denkmal an der Schwarzen Kirche",
+      "en": "The statue of Johannes Honterus beside the Black Church"
+    }
+  },
+  {
+    "id": "portret-xilogravura",
+    "file": "Johannes-Honterus.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Johannes-Honterus.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Johannes-Honterus.jpg",
+    "author": "Unknown",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "title": "Johannes-Honterus",
+    "width": 426,
+    "height": 600,
+    "placeholder": "#f8f8f8",
+    "variants": [
+      {
+        "w": 426,
+        "key": "/media/heritage/portret-xilogravura-426.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Portretul lui Johannes Honterus, xilogravură din secolul al XVI-lea",
+      "de": "Bildnis des Johannes Honterus, Holzschnitt des 16. Jahrhunderts",
+      "en": "Portrait of Johannes Honterus, sixteenth-century woodcut"
+    }
+  },
+  {
+    "id": "portret-septemcastrensis",
+    "file": "Johann Honterus Septemcastrensis de Corona.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Johann_Honterus_Septemcastrensis_de_Corona.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Johann_Honterus_Septemcastrensis_de_Corona.jpg",
+    "author": "Johannes Honter",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "title": "Johann Honterus Septemcastrensis de Corona",
+    "width": 1600,
+    "height": 1248,
+    "placeholder": "#d8c898",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/portret-septemcastrensis-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/portret-septemcastrensis-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/portret-septemcastrensis-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Johannes Honterus, „Septemcastrensis de Corona”, gravură",
+      "de": "Johannes Honterus, „Septemcastrensis de Corona“, Stich",
+      "en": "Johannes Honterus, “Septemcastrensis de Corona”, engraving"
+    }
+  },
+  {
+    "id": "tipografia",
+    "file": "Johannes Honterus in seiner Buchdruckerei.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/0/01/Johannes_Honterus_in_seiner_Buchdruckerei.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Johannes_Honterus_in_seiner_Buchdruckerei.jpg",
+    "author": "Friedrich Miess",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "title": "Johannes Honterus in seiner Buchdruckerei",
+    "width": 640,
+    "height": 532,
+    "placeholder": "#685848",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/tipografia-640.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Johannes Honterus în tipografia sa, ilustrație istorică",
+      "de": "Johannes Honterus in seiner Buchdruckerei, historische Darstellung",
+      "en": "Johannes Honterus in his printing house, historical illustration"
+    }
+  },
+  {
+    "id": "harta-transilvaniei-1532",
+    "file": "Chorographia Transylvaniae Sybembürgen 1532.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/21/Chorographia_Transylvaniae_Sybemb%C3%BCrgen_1532.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chorographia_Transylvaniae_Sybemb%C3%BCrgen_1532.jpg",
+    "author": "Johannes Honter",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "title": "Chorographia Transylvaniae Sybembürgen 1532",
+    "width": 1600,
+    "height": 1074,
+    "placeholder": "#f8e8e8",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/harta-transilvaniei-1532-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/harta-transilvaniei-1532-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/harta-transilvaniei-1532-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Chorographia Transylvaniae, harta Transilvaniei de Johannes Honterus, 1532",
+      "de": "Chorographia Transylvaniae, Siebenbürgen-Karte des Johannes Honterus, 1532",
+      "en": "Chorographia Transylvaniae, Johannes Honterus’s map of Transylvania, 1532"
+    }
+  },
+  {
+    "id": "rudimenta-1542",
+    "file": "Johannes Honter-RudimentaCosmographica-Brasov1542.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Johannes_Honter-RudimentaCosmographica-Brasov1542.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Johannes_Honter-RudimentaCosmographica-Brasov1542.jpg",
+    "author": "Johannes Honter",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "title": "Johannes Honter-RudimentaCosmographica-Brasov1542",
+    "width": 1024,
+    "height": 816,
+    "placeholder": "#e8e8e8",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/rudimenta-1542-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/rudimenta-1542-1024.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Pagină din Rudimenta Cosmographica, Brașov, 1542",
+      "de": "Seite aus der Rudimenta Cosmographica, Kronstadt 1542",
+      "en": "Page from the Rudimenta Cosmographica, Brașov, 1542"
+    }
+  },
+  {
+    "id": "cosmographia-1546",
+    "file": "Honter Universalis Cosmographia 1546 UTA.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Honter_Universalis_Cosmographia_1546_UTA.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Honter_Universalis_Cosmographia_1546_UTA.jpg",
+    "author": "Johannes Honter / Heinrich Vogtherr",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "title": "Universalis Cosmographia",
+    "width": 1024,
+    "height": 786,
+    "placeholder": "#080808",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/cosmographia-1546-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/cosmographia-1546-1024.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Universalis Cosmographia, harta lumii de Honterus, 1546",
+      "de": "Universalis Cosmographia, Weltkarte des Honterus, 1546",
+      "en": "Universalis Cosmographia, Honterus’s world map, 1546"
+    }
+  },
+  {
+    "id": "stema-1539",
+    "file": "Historical Brasov CoA 1539.png",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/23/Historical_Brasov_CoA_1539.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Historical_Brasov_CoA_1539.png",
+    "author": "Unknown",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "title": "Historical Brasov CoA 1539",
+    "width": 198,
+    "height": 248,
+    "placeholder": "#f8f8f8",
+    "variants": [
+      {
+        "w": 198,
+        "key": "/media/heritage/stema-1539-198.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Stema Brașovului cu coroană și rădăcini, marca tipografică a lui Honterus, 1539",
+      "de": "Kronstädter Wappen mit Krone und Wurzel, Druckerzeichen des Honterus, 1539",
+      "en": "The Brașov crown-and-roots arms, Honterus’s printer’s mark, 1539"
+    }
+  },
+  {
+    "id": "biserica-neagra",
+    "file": "Exterior of Black Church-Brasov.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Exterior_of_Black_Church-Brasov.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Exterior_of_Black_Church-Brasov.jpg",
+    "author": "Yair-haklai",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "title": "Exterior of Black Church-Brasov",
+    "width": 1600,
+    "height": 1350,
+    "placeholder": "#584838",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/biserica-neagra-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/biserica-neagra-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/biserica-neagra-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Biserica Neagră din Brașov, exterior",
+      "de": "Die Schwarze Kirche in Kronstadt, Außenansicht",
+      "en": "The Black Church in Brașov, exterior"
+    }
+  },
+  {
+    "id": "biserica-neagra-statuie",
+    "file": "Crna crkva 18. srpnja 2025.jpg",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Crna_crkva_18._srpnja_2025.jpg/1920px-Crna_crkva_18._srpnja_2025.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Crna_crkva_18._srpnja_2025.jpg",
+    "author": "August Dominus",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "title": "Crna crkva 18. srpnja 2025",
+    "width": 1600,
+    "height": 2133,
+    "placeholder": "#b8b8b8",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/biserica-neagra-statuie-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/biserica-neagra-statuie-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/biserica-neagra-statuie-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Biserica Neagră și statuia lui Honterus",
+      "de": "Die Schwarze Kirche mit dem Honterus-Denkmal",
+      "en": "The Black Church with the Honterus statue"
+    }
+  },
+  {
+    "id": "panorama",
+    "file": "Panorama of Brașov old town with the Black Church and Mount Tâmpa (2025).jpg",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3b/Panorama_of_Bra%C8%99ov_old_town_with_the_Black_Church_and_Mount_T%C3%A2mpa_%282025%29.jpg/3840px-Panorama_of_Bra%C8%99ov_old_town_with_the_Black_Church_and_Mount_T%C3%A2mpa_%282025%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Panorama_of_Bra%C8%99ov_old_town_with_the_Black_Church_and_Mount_T%C3%A2mpa_(2025).jpg",
+    "author": "Paul Colin Hennig firstdorsal.eu",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "title": "Panorama of Brașov old town with the Black Church and Mount Tâmpa (2025)",
+    "width": 1600,
+    "height": 1200,
+    "placeholder": "#b8c8d8",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/panorama-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/panorama-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/panorama-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Centrul vechi al Brașovului cu Biserica Neagră și Tâmpa",
+      "de": "Die Kronstädter Altstadt mit Schwarzer Kirche und Zinne",
+      "en": "Brașov old town with the Black Church and Mount Tâmpa"
+    }
+  },
+  {
+    "id": "biserica-neagra-interior",
+    "file": "Biserica Neagră interior.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Biserica_Neagr%C4%83_interior.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Biserica_Neagr%C4%83_interior.jpg",
+    "author": "Terraflorin",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "title": "Biserica Neagră interior",
+    "width": 1600,
+    "height": 1200,
+    "placeholder": "#383818",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/biserica-neagra-interior-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/biserica-neagra-interior-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/biserica-neagra-interior-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Interiorul Bisericii Negre",
+      "de": "Innenraum der Schwarzen Kirche",
+      "en": "Interior of the Black Church"
+    }
+  },
+  {
+    "id": "burzenland-1532",
+    "file": "Burzenland-JohannesHonterus-1532.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Burzenland-JohannesHonterus-1532.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Burzenland-JohannesHonterus-1532.jpg",
+    "author": "Johannes Honter",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "title": "Burzenland-JohannesHonterus-1532",
+    "width": 1600,
+    "height": 2905,
+    "placeholder": "#f8f8f8",
+    "variants": [
+      {
+        "w": 640,
+        "key": "/media/heritage/burzenland-1532-640.webp"
+      },
+      {
+        "w": 1024,
+        "key": "/media/heritage/burzenland-1532-1024.webp"
+      },
+      {
+        "w": 1600,
+        "key": "/media/heritage/burzenland-1532-1600.webp"
+      }
+    ],
+    "alt": {
+      "ro": "Țara Bârsei pe harta lui Honterus din 1532",
+      "de": "Das Burzenland auf der Honterus-Karte von 1532",
+      "en": "The Burzenland on Honterus’s 1532 map"
+    }
+  }
+]

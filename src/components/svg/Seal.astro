@@ -1,0 +1,155 @@
+---
+/**
+ * <Seal> — the full school seal, inlined from src/brand/seal-geometry.json.
+ *
+ * variant  color  red/blue rings, white field, ink legend + crest (master)
+ *          ink    one colour (currentColor) on transparent; rings split by a hairline gap
+ *          light  for dark surfaces: rings + legend in currentColor (paper), crest keeps a
+ *                 paper backing and stays ink so the woodcut never reads as a negative
+ * animate  ink-draw reveal: rings draw (600 ms), legend fades in, crest opens through an
+ *          expanding circular clip. Pure CSS — plays on load by default. With
+ *          trigger="view" it waits for the page to add `is-inked` (only when scripting is
+ *          enabled; without JS the final state is shown). Reduced motion → final state.
+ *
+ * Weight: the crest is ~140 KB of woodcut path data. Inline it only where it is needed
+ * (hero, OG); elsewhere use /brand/honterus-seal*.svg via <img> or <CrestMark>.
+ */
+import geometry from '../../brand/seal-geometry.json';
+
+interface Props {
+  class?: string;
+  /** Accessible name. Pass an empty string to make the seal decorative. */
+  title?: string;
+  variant?: 'color' | 'ink' | 'light';
+  animate?: boolean;
+  /** `load` (default) plays the reveal immediately; `view` waits for `.is-inked`. */
+  trigger?: 'load' | 'view';
+  /** Width/height in px (number) or any CSS length (string). */
+  size?: number | string;
+}
+
+const {
+  class: className,
+  title = 'Colegiul Național „Johannes Honterus” Brașov — Honterus-Nationalkolleg Kronstadt',
+  variant = 'color',
+  animate = false,
+  trigger = 'load',
+  size,
+} = Astro.props;
+
+const { ring, legendTop, legendBottom, crest, crestBack } = geometry;
+const R = ring.r;
+const t = ring.t;
+const C = 500;
+const PAPER = '#F7F3EA';
+const INK = '#15171E';
+
+// In one-colour variants the two bands would merge into one heavy ring; a 4-unit gap
+// keeps them legible as two rings (a quotation of the site's double rule).
+const split = variant === 'color' ? 0 : 2;
+const bands = [
+  { r: R - t / 2 - split / 2, w: t - split, color: variant === 'color' ? ring.red : 'currentColor' },
+  { r: R - t * 1.5 + split / 2, w: t - split, color: variant === 'color' ? ring.blue : 'currentColor' },
+];
+const keyline = variant === 'color' ? '#111111' : 'currentColor';
+const legendFill = variant === 'color' ? '#111111' : 'currentColor';
+const crestFill = variant === 'color' ? '#111111' : variant === 'light' ? INK : 'currentColor';
+const crestBacking = variant === 'light' ? PAPER : null;
+
+const dim = typeof size === 'number' ? `${size}px` : size;
+const decorative = title === '';
+---
+
+<svg
+  class:list={['seal', `seal--${variant}`, animate && 'ink', animate && trigger === 'view' && 'ink--view', className]}
+  viewBox={geometry.viewBox}
+  width={dim}
+  height={dim}
+  role={decorative ? undefined : 'img'}
+  aria-label={decorative ? undefined : title}
+  aria-hidden={decorative ? 'true' : undefined}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  {!decorative && <title>{title}</title>}
+  {variant === 'color' && <circle cx={C} cy={C} r={R} fill="#FFFFFF" class="field" />}
+  <g class="rings" fill="none" transform={`rotate(-90 ${C} ${C})`}>
+    {bands.map((b) => <circle cx={C} cy={C} r={b.r} stroke={b.color} stroke-width={b.w} pathLength="1" />)}
+    {variant === 'color' && (
+      <>
+        <circle class="key" cx={C} cy={C} r={R} stroke={keyline} stroke-width={ring.hair} pathLength="1" />
+        <circle class="key" cx={C} cy={C} r={R - 2 * t} stroke={keyline} stroke-width={ring.hair} pathLength="1" />
+      </>
+    )}
+  </g>
+  <path class="legend" fill={legendFill} d={legendTop + legendBottom} />
+  <g class="crest">
+    {crestBacking && <path fill={crestBacking} d={crestBack} />}
+    <path fill={crestFill} fill-rule="evenodd" d={crest} />
+  </g>
+</svg>
+
+<style>
+  .seal {
+    display: block;
+    overflow: visible;
+  }
+
+  @keyframes seal-ring {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes seal-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes seal-open {
+    from {
+      clip-path: circle(0% at 50% 50%);
+    }
+    to {
+      clip-path: circle(75% at 50% 50%);
+    }
+  }
+
+  .ink .rings circle {
+    stroke-dasharray: 1 1;
+    animation: seal-ring 600ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+  .ink .rings circle + circle {
+    animation-delay: 60ms;
+  }
+  .ink .rings .key {
+    animation-delay: 120ms;
+  }
+  .ink .field {
+    animation: seal-fade 300ms ease-out both;
+  }
+  .ink .legend {
+    animation: seal-fade 300ms ease-out 450ms both;
+  }
+  .ink .crest {
+    animation: seal-open 500ms cubic-bezier(0.2, 0.7, 0.2, 1) 550ms both;
+  }
+
+  /* trigger="view": hold the first frame until the page marks the seal as in view.
+     Only when scripting is on — without JS the animation simply plays on load. */
+  @media (scripting: enabled) {
+    .ink--view:not(.is-inked) :is(.rings circle, .field, .legend, .crest) {
+      animation-play-state: paused;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ink :is(.rings circle, .field, .legend, .crest) {
+      animation: none;
+    }
+  }
+</style>

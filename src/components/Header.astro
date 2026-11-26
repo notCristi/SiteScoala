@@ -1,0 +1,685 @@
+---
+import { LOCALES, LOCALE_META, type Locale } from '~/i18n/locales';
+import { NAV } from '~/i18n/nav';
+import { url, type RouteId } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import Icon from '~/components/svg/Icon.astro';
+import CrestMark from '~/components/svg/CrestMark.astro';
+import type { SiteSettings } from '~/server/content';
+
+interface Props {
+  locale: Locale;
+  current?: RouteId;
+  alternates: Record<Locale, string>;
+  settings: SiteSettings;
+}
+const { locale, current, alternates, settings } = Astro.props;
+const L = (k: string) => ui(locale, k);
+---
+
+<header class="site-header" data-header>
+  <div class="utility">
+    <div class="wrap utility__row">
+      <p class="utility__tag">{L('founded')}</p>
+      <ul class="utility__links" role="list">
+        <li>
+          <a href={settings.links.noteInCatalog} rel="noopener" target="_blank">
+            NoteInCatalog<Icon name="external" /><span class="vh">{L('external')}</span>
+          </a>
+        </li>
+        <li>
+          <a href={settings.links.classroom} rel="noopener" target="_blank">
+            Classroom<Icon name="external" /><span class="vh">{L('external')}</span>
+          </a>
+        </li>
+        <li><a href={url('documents', locale)}>{L('documents')}</a></li>
+      </ul>
+      <nav class="lang" aria-label={L('language')}>
+        <ul role="list">
+          {
+            LOCALES.map((l) => (
+              <li>
+                <a
+                  href={alternates[l]}
+                  hreflang={LOCALE_META[l].htmlLang}
+                  lang={LOCALE_META[l].htmlLang}
+                  aria-current={l === locale ? 'true' : undefined}
+                  data-lang-link
+                >
+                  <span class="lang__long">{LOCALE_META[l].endonym}</span>
+                  <span class="lang__short" aria-hidden="true">{LOCALE_META[l].short}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="masthead">
+    <div class="wrap masthead__row">
+      <a class="brand" href={url('home', locale)} aria-label={`${ui(locale, 'schoolFull')} — ${L('home')}`}>
+        <CrestMark class="brand__crest" />
+        <span class="brand__text">
+          <span class="brand__kicker">{L('schoolKicker')}</span>
+          <span class="brand__name">Johannes Honterus</span>
+        </span>
+      </a>
+
+      <nav class="primary" aria-label={locale === 'ro' ? 'Navigație principală' : locale === 'de' ? 'Hauptnavigation' : 'Main navigation'}>
+        <ul role="list" class="primary__list">
+          {
+            NAV.map((item) => {
+              const isCurrent = current ? item.match.includes(current) : false;
+              return (
+                <li class="primary__item">
+                  {item.columns ? (
+                    <>
+                      <button
+                        class="primary__link"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls={`mega-${item.id}`}
+                        data-mega-toggle
+                        data-current={isCurrent ? 'true' : undefined}
+                      >
+                        {item.label[locale]}
+                        <Icon name="chevron-down" />
+                      </button>
+                      <div class="mega" id={`mega-${item.id}`} hidden>
+                        <div class="wrap mega__grid">
+                          <div class="mega__intro">
+                            <a class="mega__overview" href={url(item.route, locale)}>
+                              {item.label[locale]}
+                              <Icon name="arrow-right" />
+                            </a>
+                          </div>
+                          {item.columns.map((col) => (
+                            <div class="mega__col">
+                              <p class="kicker">{col.title[locale]}</p>
+                              <ul role="list">
+                                {col.links.map((ln) => (
+                                  <li>
+                                    <a href={url(ln.route, locale, ln.params)}>
+                                      <span>{ln.label[locale]}</span>
+                                      {ln.note && <small>{ln.note[locale]}</small>}
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                          {item.feature && (
+                            <a class="mega__feature" href={url(item.feature.route, locale, item.feature.params)}>
+                              <span class="kicker">{item.feature.kicker[locale]}</span>
+                              <span class="mega__feature-text">{item.feature.text[locale]}</span>
+                              <Icon name="arrow-right" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <a class="primary__link" href={url(item.route, locale)} aria-current={isCurrent ? 'page' : undefined}>
+                      {item.label[locale]}
+                    </a>
+                  )}
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+
+      <div class="masthead__actions">
+        <button class="search-trigger" type="button" data-search-open aria-haspopup="dialog">
+          <Icon name="search" />
+          <span class="search-trigger__label">{L('search')}</span>
+          <kbd class="search-trigger__kbd" data-kbd>Ctrl K</kbd>
+        </button>
+        <button class="menu-trigger" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+          <Icon name="menu" />
+          <span>{L('menu')}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <dialog class="mobile-menu" id="mobile-menu" aria-label={L('menu')} data-mobile-menu>
+    <div class="mobile-menu__head">
+      <nav class="lang lang--menu" aria-label={L('language')}>
+        <ul role="list">
+          {
+            LOCALES.map((l) => (
+              <li>
+                <a href={alternates[l]} hreflang={LOCALE_META[l].htmlLang} lang={LOCALE_META[l].htmlLang} aria-current={l === locale ? 'true' : undefined}>
+                  {LOCALE_META[l].endonym}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <button class="icon-btn" type="button" data-menu-close>
+        <Icon name="close" /><span class="vh">{L('close')}</span>
+      </button>
+    </div>
+    <ul role="list" class="mobile-menu__list">
+      {
+        NAV.map((item) => (
+          <li>
+            {item.columns ? (
+              <details>
+                <summary>
+                  {item.label[locale]}
+                  <Icon name="chevron-down" />
+                </summary>
+                <ul role="list">
+                  <li>
+                    <a href={url(item.route, locale)}>{item.label[locale]} — {locale === 'ro' ? 'prezentare' : locale === 'de' ? 'Übersicht' : 'overview'}</a>
+                  </li>
+                  {item.columns.flatMap((c) => c.links).map((ln) => (
+                    <li>
+                      <a href={url(ln.route, locale, ln.params)}>{ln.label[locale]}</a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <a class="mobile-menu__top" href={url(item.route, locale)}>
+                {item.label[locale]}
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    <div class="mobile-menu__actions">
+      <a class="btn btn--block" href={settings.links.noteInCatalog} rel="noopener" target="_blank">NoteInCatalog <Icon name="external" /></a>
+      <a class="btn btn--ghost btn--block" href={settings.links.classroom} rel="noopener" target="_blank">Google Classroom <Icon name="external" /></a>
+      <a class="btn btn--ghost btn--block" href={url('documents', locale)}>{L('documents')}</a>
+      <a class="btn btn--ghost btn--block" href={`tel:${settings.contact.phones[0]?.replace(/\s/g, '')}`}><Icon name="phone" /> {settings.contact.phones[0]}</a>
+    </div>
+  </dialog>
+</header>
+
+<script>
+  // Mega-menus: click to open (not hover-only), Esc / outside click closes, one open at a time.
+  const toggles = [...document.querySelectorAll<HTMLButtonElement>('[data-mega-toggle]')];
+  const closeAll = (except?: HTMLButtonElement) => {
+    for (const b of toggles) {
+      if (b === except) continue;
+      b.setAttribute('aria-expanded', 'false');
+      document.getElementById(b.getAttribute('aria-controls')!)!.hidden = true;
+    }
+  };
+  for (const b of toggles) {
+    b.addEventListener('click', () => {
+      const open = b.getAttribute('aria-expanded') === 'true';
+      closeAll(b);
+      b.setAttribute('aria-expanded', String(!open));
+      document.getElementById(b.getAttribute('aria-controls')!)!.hidden = open;
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const open = toggles.find((b) => b.getAttribute('aria-expanded') === 'true');
+      closeAll();
+      open?.focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('.primary')) closeAll();
+  });
+
+  // Mobile menu as a modal <dialog> (focus trap + Esc for free).
+  const dlg = document.querySelector<HTMLDialogElement>('[data-mobile-menu]');
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  openBtn?.addEventListener('click', () => {
+    dlg?.showModal();
+    openBtn.setAttribute('aria-expanded', 'true');
+  });
+  dlg?.querySelector('[data-menu-close]')?.addEventListener('click', () => dlg.close());
+  dlg?.addEventListener('close', () => openBtn?.setAttribute('aria-expanded', 'false'));
+
+  // Condense header after scrolling.
+  const header = document.querySelector('[data-header]');
+  let ticking = false;
+  addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        header?.classList.toggle('is-condensed', scrollY > 80);
+        ticking = false;
+      });
+    },
+    { passive: true },
+  );
+
+  // Show ⌘K on Apple platforms.
+  if (/Mac|iPhone|iPad/.test(navigator.platform)) document.querySelectorAll('[data-kbd]').forEach((k) => (k.textContent = '⌘ K'));
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    view-transition-name: site-header;
+  }
+  /* utility bar */
+  .utility {
+    background: var(--lapis-deep);
+    color: var(--on-dark);
+    font-size: var(--t-small);
+  }
+  .utility__row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    min-height: 2.5rem;
+  }
+  .utility__tag {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--on-dark-2);
+    margin-right: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .utility__links {
+    display: flex;
+    gap: var(--s-5);
+    margin: 0;
+  }
+  .utility a {
+    color: var(--on-dark);
+    text-decoration-color: rgb(247 243 234 / 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    min-height: 2.5rem;
+  }
+  .utility a :global(svg) {
+    width: 0.95em;
+    height: 0.95em;
+  }
+  .lang ul {
+    display: flex;
+    gap: 0.15rem;
+    margin: 0;
+  }
+  .lang a {
+    padding-inline: 0.5rem;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+  .lang a[aria-current='true'] {
+    border-bottom-color: var(--seal-red);
+    font-weight: 700;
+  }
+  .lang__short {
+    display: none;
+  }
+  @media (max-width: 70rem) {
+    .utility__tag {
+      display: none;
+    }
+    .utility__row {
+      justify-content: space-between;
+    }
+  }
+  @media (max-width: 40rem) {
+    .utility__links li:nth-child(n + 2) {
+      display: none;
+    }
+    .lang__long {
+      display: none;
+    }
+    .lang__short {
+      display: inline;
+    }
+  }
+
+  /* masthead */
+  .masthead {
+    background: color-mix(in srgb, var(--paper) 96%, transparent);
+    backdrop-filter: saturate(1.2) blur(6px);
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .masthead::after {
+    /* second keyline — the seal's double ring as a rule */
+    content: '';
+    position: absolute;
+    inset: auto 0 -4px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .masthead__row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    min-height: var(--header-h);
+    transition: min-height 200ms var(--ease-out);
+  }
+  .is-condensed .masthead__row {
+    min-height: 3.5rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--ink);
+    text-decoration: none;
+    margin-right: auto;
+    min-height: 3rem;
+  }
+  .brand :global(.brand__crest) {
+    width: 2.4rem;
+    height: auto;
+    flex: none;
+    transition: width 200ms var(--ease-out);
+  }
+  .is-condensed .brand :global(.brand__crest) {
+    width: 1.9rem;
+  }
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .brand__kicker {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .brand__name {
+    font-family: var(--font-serif);
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-top: 0.15rem;
+  }
+
+  .primary__list {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0;
+  }
+  .primary__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 2.75rem;
+    padding: 0 0.7rem;
+    background: none;
+    border: 0;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--ink);
+    text-decoration: none;
+    position: relative;
+  }
+  .primary__link :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 200ms;
+  }
+  .primary__link[aria-expanded='true'] :global(svg) {
+    transform: rotate(180deg);
+  }
+  .primary__link::after {
+    content: '';
+    position: absolute;
+    left: 0.7rem;
+    right: 0.7rem;
+    bottom: 0.35rem;
+    height: 2px;
+    background: var(--rubric);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 220ms var(--ease-out);
+  }
+  .primary__link:hover::after,
+  .primary__link[aria-current='page']::after,
+  .primary__link[data-current='true']::after,
+  .primary__link[aria-expanded='true']::after {
+    transform: scaleX(1);
+  }
+
+  .mega {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: var(--paper);
+    border-bottom: 1px solid var(--ink);
+    box-shadow: 0 30px 40px -30px rgb(11 27 77 / 0.35);
+    padding-block: var(--s-6) var(--s-7);
+  }
+  .mega__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr 1.3fr 1.4fr;
+    gap: var(--s-6);
+  }
+  .mega__overview {
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+    color: var(--ink);
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    text-decoration: none;
+  }
+  .mega__overview :global(svg) {
+    width: 1.2rem;
+  }
+  .mega__col ul {
+    margin-top: var(--s-3);
+    display: grid;
+    gap: 0.1rem;
+  }
+  .mega__col a {
+    display: flex;
+    flex-direction: column;
+    padding: 0.55rem 0;
+    min-height: 2.75rem;
+    justify-content: center;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    font-weight: 600;
+  }
+  .mega__col a:hover span {
+    text-decoration: underline;
+    text-decoration-color: var(--rubric);
+    text-underline-offset: 0.2em;
+  }
+  .mega__col small {
+    font-weight: 400;
+    color: var(--ink-2);
+    font-size: 0.85rem;
+  }
+  .mega__feature {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding: var(--s-5);
+    background: var(--paper-sunk);
+    border-left: 3px solid var(--rubric);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .mega__feature-text {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+  .mega__feature :global(svg) {
+    width: 1.3rem;
+    color: var(--lapis);
+  }
+
+  .masthead__actions {
+    display: flex;
+    gap: var(--s-2);
+  }
+  .search-trigger,
+  .menu-trigger,
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0 0.8rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .search-trigger:hover,
+  .menu-trigger:hover {
+    border-color: var(--ink);
+  }
+  .search-trigger :global(svg),
+  .menu-trigger :global(svg),
+  .icon-btn :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .search-trigger__kbd {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    border: 1px solid var(--rule);
+    padding: 0.1rem 0.35rem;
+    border-radius: 2px;
+  }
+  .menu-trigger {
+    display: none;
+  }
+
+  @media (max-width: 75rem) {
+    .search-trigger__kbd {
+      display: none;
+    }
+    .primary__link {
+      padding: 0 0.5rem;
+    }
+  }
+  @media (max-width: 64rem) {
+    .primary {
+      display: none;
+    }
+    .menu-trigger {
+      display: inline-flex;
+    }
+    .search-trigger,
+    .menu-trigger {
+      min-height: 3rem;
+    }
+  }
+  @media (max-width: 30rem) {
+    .search-trigger__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    .brand__name {
+      font-size: 1.35rem;
+    }
+    .brand__kicker {
+      font-size: 0.65rem;
+    }
+  }
+
+  /* mobile menu */
+  .mobile-menu {
+    margin: 0 0 0 auto;
+    height: 100dvh;
+    max-height: none;
+    width: min(26rem, 100vw);
+    border: 0;
+    border-left: 1px solid var(--ink);
+    background: var(--paper);
+    padding: 0;
+    color: var(--ink);
+  }
+  .mobile-menu::backdrop {
+    background: rgb(11 27 77 / 0.45);
+  }
+  .mobile-menu__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--s-3) var(--s-4);
+    border-bottom: 1px solid var(--rule);
+  }
+  .lang--menu a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .mobile-menu__list {
+    margin: 0;
+    padding: var(--s-2) var(--s-4);
+  }
+  .mobile-menu__list > li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .mobile-menu summary,
+  .mobile-menu__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 3.5rem;
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    color: var(--ink);
+    text-decoration: none;
+    list-style: none;
+    cursor: pointer;
+  }
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .mobile-menu summary :global(svg) {
+    width: 1.2rem;
+    transition: transform 200ms;
+  }
+  .mobile-menu details[open] summary :global(svg) {
+    transform: rotate(180deg);
+  }
+  .mobile-menu details ul {
+    padding-bottom: var(--s-3);
+    margin: 0;
+  }
+  .mobile-menu details a {
+    display: flex;
+    align-items: center;
+    min-height: 3rem;
+    padding-left: var(--s-3);
+    border-left: 2px solid var(--rule);
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .mobile-menu__actions {
+    display: grid;
+    gap: var(--s-2);
+    padding: var(--s-4);
+  }
+</style>

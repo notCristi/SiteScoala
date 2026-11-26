@@ -1,0 +1,38 @@
+---
+/** Day in large old-style numerals + month in small caps — the rubric gutter of news entries. */
+import { dateParts, type Locale } from '~/i18n/locales';
+interface Props {
+  ms: number;
+  locale: Locale;
+  withYear?: boolean;
+}
+const { ms, locale, withYear = true } = Astro.props;
+const p = dateParts(ms, locale);
+---
+
+<time class="datemark" datetime={p.iso.slice(0, 10)}>
+  <span class="datemark__d">{p.day}</span>
+  <span class="datemark__m">{p.month}{withYear && <> {p.year}</>}</span>
+</time>
+
+<style>
+  .datemark {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    color: var(--rubric);
+  }
+  .datemark__d {
+    font-family: var(--font-serif);
+    font-size: 2.6rem;
+    font-variant-numeric: oldstyle-nums;
+  }
+  .datemark__m {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    color: var(--ink-2);
+  }
+</style>

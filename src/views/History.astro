@@ -1,0 +1,274 @@
+---
+/**
+ * "Annales" — the 1388 → today timeline as a semantic <ol> with <time>, anchors per year (#1543),
+ * era headings, an ink line that draws as you read, and the woodcut crown on highlights (AT-16).
+ */
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Picture from '~/components/Picture.astro';
+import CrestMark from '~/components/svg/CrestMark.astro';
+import { pick } from '~/i18n/locales';
+import { caption } from '~/lib/media';
+import { getMediaMap, getPage, listTimeline, type TimelineEvent } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const [page, events] = await Promise.all([getPage('history'), listTimeline()]);
+const media = await getMediaMap(events.map((e) => e.mediaId));
+const ERA: Record<TimelineEvent['era'], Record<typeof locale, string>> = {
+  origins: { ro: 'Începuturi', de: 'Anfänge', en: 'Origins' },
+  honterus: { ro: 'Epoca lui Honterus', de: 'Die Zeit des Honterus', en: 'The age of Honterus' },
+  saxon: { ro: 'Gimnaziul săsesc', de: 'Das sächsische Gymnasium', en: 'The Saxon gymnasium' },
+  modern: { ro: 'Secolul XX', de: 'Das 20. Jahrhundert', en: 'The twentieth century' },
+  today: { ro: 'Astăzi', de: 'Heute', en: 'Today' },
+};
+const eras = (['origins', 'honterus', 'saxon', 'modern', 'today'] as const).map((era) => ({ era, items: events.filter((e) => e.era === era) })).filter((x) => x.items.length);
+const title = page ? pick(page, 'title', locale).value : ({ ro: 'Istorie', de: 'Geschichte', en: 'History' } as const)[locale];
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const body = page ? pick(page, 'bodyHtml', locale) : undefined;
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} kicker="Annales Scholae Coronensis" title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: ({ ro: 'Școala', de: 'Schule', en: 'Our school' } as const)[locale], route: 'school' }, { label: title }]} />
+
+  <div class="wrap annales">
+    <nav class="eras" aria-label={locale === 'ro' ? 'Epoci' : locale === 'de' ? 'Epochen' : 'Eras'}>
+      <ol role="list">
+        {
+          eras.map((e) => (
+            <li>
+              <a href={`#era-${e.era}`}>
+                <span>{ERA[e.era][locale]}</span>
+                <span class="eras__y">
+                  {e.items[0]!.yearLabel ?? e.items[0]!.year}–{e.era === 'today' ? '' : (e.items.at(-1)!.yearLabel ?? e.items.at(-1)!.year)}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <div class="tl">
+      {body?.value && <div class="prose tl__intro" lang={body.lang} set:html={body.value} />}
+      {
+        eras.map((e) => (
+          <section id={`era-${e.era}`} aria-labelledby={`h-${e.era}`} class="era">
+            <h2 id={`h-${e.era}`} class="era__title">{ERA[e.era][locale]}</h2>
+            <ol role="list" class="events">
+              {e.items.map((ev, i) => {
+                const t = pick(ev, 'title', locale);
+                const b = pick(ev, 'body', locale);
+                const m = ev.mediaId ? media.get(ev.mediaId) : undefined;
+                return (
+                  <li id={String(ev.year)} class:list={['ev', ev.highlight && 'ev--hl']} data-reveal style={`--i:${i % 4}`}>
+                    <div class="ev__year">
+                      <time datetime={String(ev.year).padStart(4, '0')}>{ev.yearLabel ?? ev.year}</time>
+                      {ev.highlight && (
+                        <span class="ev__mark" aria-hidden="true">
+                          <CrestMark />
+                        </span>
+                      )}
+                    </div>
+                    <div class="ev__body">
+                      <h3 lang={t.lang}>{t.value}</h3>
+                      {b.value && <p lang={b.lang}>{b.value}</p>}
+                      {m && (
+                        <figure class="ev__fig">
+                          <div class="plate">
+                            <Picture media={m} locale={locale} sizes="(min-width: 60rem) 34rem, 100vw" />
+                          </div>
+                          <figcaption>
+                            {caption(m, locale)}
+                            {m.credit && <span class="credit">{m.credit}{m.license ? ` · ${m.license}` : ''}</span>}
+                          </figcaption>
+                        </figure>
+                      )}
+                      {ev.sourceUrl && (
+                        <p class="ev__src">
+                          <a href={ev.sourceUrl} target="_blank" rel="noopener">{locale === 'ro' ? 'Sursă' : locale === 'de' ? 'Quelle' : 'Source'}</a>
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</Base>
+
+<script>
+  // The ink line grows with reading progress (transform only; off under reduced motion via CSS).
+  const tl = document.querySelector<HTMLElement>('.tl');
+  if (tl && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = tl.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / r.height));
+      tl.style.setProperty('--progress', p.toFixed(3));
+    };
+    addEventListener('scroll', () => (raf ||= requestAnimationFrame(update)), { passive: true });
+    update();
+  }
+</script>
+
+<style>
+  .annales {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+    padding-bottom: var(--s-8);
+  }
+  @media (min-width: 64rem) {
+    .annales {
+      grid-template-columns: 14rem minmax(0, 1fr);
+    }
+    .eras {
+      position: sticky;
+      top: calc(var(--header-h) + 3rem);
+      align-self: start;
+    }
+  }
+  .eras ol {
+    margin: 0;
+    border-top: 1px solid var(--ink);
+  }
+  @media (max-width: 63.99rem) {
+    .eras ol {
+      display: flex;
+      overflow-x: auto;
+      gap: var(--s-2);
+      border: 0;
+    }
+    .eras li {
+      flex: none;
+    }
+    .eras a {
+      border: 1px solid var(--rule-strong) !important;
+      padding: 0.4rem 0.8rem !important;
+    }
+  }
+  .eras a {
+    display: flex;
+    flex-direction: column;
+    padding: 0.6rem 0;
+    min-height: 2.75rem;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .eras__y {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--rubric);
+    font-variant-numeric: oldstyle-nums;
+  }
+  .tl {
+    position: relative;
+    --progress: 1;
+  }
+  .tl::before,
+  .tl::after {
+    content: '';
+    position: absolute;
+    left: calc(7.5rem + 1px);
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+  .tl::after {
+    background: var(--rubric);
+    transform-origin: top;
+    transform: scaleY(var(--progress));
+  }
+  @media (max-width: 40rem) {
+    .tl::before,
+    .tl::after {
+      left: 4.5rem;
+    }
+  }
+  .tl__intro {
+    margin: 0 0 var(--s-6) 9.5rem;
+  }
+  .era {
+    margin-bottom: var(--s-7);
+  }
+  .era__title {
+    margin: 0 0 var(--s-5) 9.5rem;
+    font-size: var(--t-h2);
+  }
+  .events {
+    margin: 0;
+  }
+  .ev {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 40rem);
+    gap: var(--s-5);
+    padding-bottom: var(--s-6);
+    scroll-margin-top: 9rem;
+  }
+  @media (max-width: 40rem) {
+    .ev {
+      grid-template-columns: 4.5rem minmax(0, 1fr);
+      gap: var(--s-4);
+    }
+    .tl__intro,
+    .era__title {
+      margin-left: 0;
+    }
+  }
+  .ev__year {
+    text-align: right;
+    position: relative;
+  }
+  .ev__year time {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.75rem);
+    line-height: 1;
+    font-variant-numeric: oldstyle-nums;
+    color: var(--ink);
+  }
+  .ev--hl .ev__year time {
+    color: var(--rubric);
+  }
+  .ev__mark {
+    display: block;
+    width: 1.9rem;
+    margin: 0.5rem 0 0 auto;
+    color: var(--rubric);
+  }
+  .ev__body {
+    padding-top: 0.35rem;
+    border-top: 1px solid var(--rule-strong);
+  }
+  .ev--hl .ev__body {
+    border-top-color: var(--rubric);
+  }
+  .ev__body h3 {
+    font-size: var(--t-h3);
+  }
+  .ev__body p {
+    margin-top: var(--s-2);
+    font-family: var(--font-serif);
+    font-size: var(--t-body);
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .ev__fig {
+    margin-top: var(--s-4);
+    max-width: 34rem;
+  }
+  .ev__src {
+    font-size: var(--t-small);
+  }
+  .ev:target .ev__body {
+    background: var(--rubric-soft);
+  }
+</style>
