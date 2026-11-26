@@ -264,7 +264,7 @@ export const DOCUMENT_CATEGORIES = [
   'achizitii',
   'formulare',
   'burse',
-  'calendar', // structura anului școlar (NOT a timetable)
+  'calendar', // structura anului școlar (dates only; the site has no class schedule)
   'gdpr',
   'alte',
 ] as const;

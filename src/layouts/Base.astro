@@ -45,6 +45,9 @@ const org = {
     addressCountry: 'RO',
   },
 };
+/** JSON for an inline <script>: escape characters that could close the element or break parsing (stored-XSS guard). */
+const safeJson = (v: unknown) =>
+  JSON.stringify(v).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 ---
 
 <!doctype html>
@@ -74,7 +77,7 @@ const org = {
     <meta property="og:locale" content={LOCALE_META[locale].ogLocale} />
     <meta name="twitter:card" content="summary_large_image" />
     <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd ?? org)} />
+    <script type="application/ld+json" set:html={safeJson(jsonLd ?? org)} />
   </head>
   <body>
     <a class="skip-link" href="#main">{ui(locale, 'skip')}</a>
