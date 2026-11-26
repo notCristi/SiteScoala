@@ -71,6 +71,20 @@ const slugify = (s) =>
     .replace(/^-+|-+$/g, '')
     .slice(0, 80);
 
+// Links in Markdown to old WordPress uploads → the migrated R2 copies (no redirect hop).
+const FILES = existsSync(join(C, 'documents-files.json')) ? JSON.parse(readFileSync(join(C, 'documents-files.json'), 'utf8')) : {};
+const FILE_BY_PATH = new Map(Object.entries(FILES).map(([u, f]) => [decodeURI(new URL(u).pathname).toLowerCase(), `/${f.r2_key}`]));
+const rewriteLegacyLinks = (md) =>
+  md.replace(/(?:https?:\/\/(?:www\.)?liceulhonterusbrasov\.ro)?(\/lic\/wp-content\/uploads\/[^\s)"'<>]+)/gi, (m, path) => {
+    let key;
+    try {
+      key = decodeURI(path).toLowerCase();
+    } catch {
+      key = path.toLowerCase();
+    }
+    return FILE_BY_PATH.get(key) ?? m;
+  });
+
 /** Flatten one content object into a { column: value } row for `table`. */
 function flatten(table, obj) {
   const cols = COLS[table];
@@ -81,8 +95,9 @@ function flatten(table, obj) {
     if (k === 'body_md' && isLoc(v)) {
       for (const l of L) {
         if (v[l] == null || v[l] === '') continue;
-        row[`body_md_${l}`] = v[l];
-        row[`body_html_${l}`] = renderMarkdown(v[l]);
+        const md = rewriteLegacyLinks(v[l]);
+        row[`body_md_${l}`] = md;
+        row[`body_html_${l}`] = renderMarkdown(md);
       }
     } else if (k.endsWith('_json') && v !== null && typeof v === 'object') {
       row[k] = JSON.stringify(v);

@@ -47,7 +47,7 @@ try {
 }
 const heroId = home?.heroMediaId ?? settings.hero.mediaId;
 // The film's poster: a still of the courtyard rather than YouTube's automatic mid-sentence frame.
-const posterId = data.video?.id ? (data.video.posterMediaId ?? 'h-curtea-honterus-2') : undefined;
+const posterId = data.video?.id ? (data.video.posterMediaId ?? 'h-scoala-a') : undefined;
 const media = await getMediaMap([heroId, data.heritageMediaId, posterId]);
 const posterImg = posterId ? media.get(posterId) : undefined;
 const hero = heroId ? media.get(heroId) : undefined;

@@ -18,7 +18,7 @@ export const CATEGORY_LABELS: Record<DocumentCategory, L> = {
   dezbateri: l('Dezbateri publice', 'Öffentliche Konsultationen', 'Public consultations'),
   achizitii: l('Achiziții publice', 'Öffentliche Beschaffung', 'Public procurement'),
   formulare: l('Formulare și cereri', 'Formulare und Anträge', 'Forms and applications'),
-  burse: l('Burse', 'Stipendien', 'Grants and bursaries'),
+  burse: l('Burse', 'Stipendien', 'Scholarships and grants'),
   calendar: l('Structura anului școlar', 'Gliederung des Schuljahres', 'School-year calendar'),
   gdpr: l('Protecția datelor', 'Datenschutz', 'Data protection'),
   alte: l('Alte documente', 'Weitere Dokumente', 'Other documents'),

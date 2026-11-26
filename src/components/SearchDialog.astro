@@ -205,8 +205,11 @@ const emptyHint = {
     background: rgb(21 23 30 / 0.4);
   }
   .search__form {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
+    box-sizing: border-box;
+    width: 100%;
     gap: var(--s-3);
     padding: 0 var(--s-4);
     border-bottom: 1px solid var(--ink);
@@ -218,7 +221,8 @@ const emptyHint = {
     color: var(--ink-2);
   }
   .search input {
-    flex: 1;
+    min-width: 0;
+    width: 100%;
     min-height: 3.75rem;
     border: 0;
     background: none;

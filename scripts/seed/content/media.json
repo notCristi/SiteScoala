@@ -215,7 +215,8 @@
     "credit": "Marco Almbauer",
     "license": "Public domain",
     "source_url": "https://commons.wikimedia.org/wiki/File:Statue_des_Johannes_Honterus.jpg",
-    "original_filename": "Statue des Johannes Honterus.jpg"
+    "original_filename": "Statue des Johannes Honterus.jpg",
+    "focal_y": 0.25
   },
   {
     "id": "h-portret-xilogravura",
@@ -516,7 +517,8 @@
     "credit": "August Dominus",
     "license": "CC0",
     "source_url": "https://commons.wikimedia.org/wiki/File:Crna_crkva_18._srpnja_2025.jpg",
-    "original_filename": "Crna crkva 18. srpnja 2025.jpg"
+    "original_filename": "Crna crkva 18. srpnja 2025.jpg",
+    "focal_y": 0.2
   },
   {
     "id": "h-panorama",

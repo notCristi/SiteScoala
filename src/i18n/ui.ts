@@ -86,7 +86,7 @@ export const UI = {
   publicInfo: d('Informații de interes public', 'Öffentliche Informationen', 'Public information'),
   privacy: d('Confidențialitate', 'Datenschutz', 'Privacy'),
   accessibility: d('Accesibilitate', 'Barrierefreiheit', 'Accessibility'),
-  audiencesTitle: d('Pentru cine căutați informații?', 'Für wen suchen Sie Informationen?', 'Who are you looking for information for?'),
+  audiencesTitle: d('Pentru cine căutați informații?', 'Für wen suchen Sie Informationen?', 'Information for…'),
   steps: d('Pașii', 'Schritte', 'Steps'),
   step: d('Pasul', 'Schritt', 'Step'),
   when: d('Când', 'Wann', 'When'),
@@ -132,7 +132,7 @@ export const UI = {
     liceal: d('Învățământ liceal', 'Lyzealstufe', 'Upper secondary'),
   },
   grades: {
-    primar: d('Clasa pregătitoare – a IV-a', 'Vorbereitungsklasse – 4. Klasse', 'Preparatory year – Year 4'),
+    primar: d('Clasa pregătitoare – a IV-a', 'Vorbereitungsklasse – 4. Klasse', 'Preparatory class – Year 4'),
     gimnazial: d('Clasele a V-a – a VIII-a', '5. – 8. Klasse', 'Years 5 – 8'),
     liceal: d('Clasele a IX-a – a XII-a', '9. – 12. Klasse', 'Years 9 – 12'),
   },

@@ -628,8 +628,7 @@ const L = (k: string) => ui(locale, k);
       overflow: hidden;
       clip: rect(0 0 0 0);
     }
-    /* phones: crest + "Honterus" (spec §7.3); the full name stays in the link's aria-label */
-    .brand__kicker,
+    /* phones: crest + "Colegiul Național / Honterus" (D-18); "Johannes" and, below 360 px, the kicker drop out */
     .brand__given {
       display: none;
     }
@@ -643,6 +642,9 @@ const L = (k: string) => ui(locale, k);
     }
   }
   @media (max-width: 22.5rem) {
+    .brand__kicker {
+      display: none;
+    }
     .menu-trigger__label {
       position: absolute;
       width: 1px;
