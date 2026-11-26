@@ -1,0 +1,93 @@
+---
+/**
+ * Ordered list of structured rows (FAQ, facts, notes, related links) — the editor never sees JSON.
+ * Inputs are named `<prefix>[i][field]`; admin-client.ts renumbers them after add / move / remove.
+ * Without JavaScript one empty row is always present, so new rows can still be added.
+ */
+import type { T } from '~/server/admin/i18n';
+
+export interface Col {
+  key: string;
+  label: string;
+  /** localized: renders _ro/_de/_en inputs */
+  localized?: boolean;
+  textarea?: boolean;
+  options?: { value: string; label: string }[];
+  /** translator may edit */
+  roOnly?: boolean;
+}
+interface Props {
+  prefix: string;
+  legend: string;
+  cols: Col[];
+  rows: Record<string, string>[];
+  t: T;
+  translatorMode?: boolean;
+}
+const { prefix, legend, cols, rows, t, translatorMode } = Astro.props;
+const all = translatorMode ? rows : [...rows, {}];
+const L = ['ro', 'de', 'en'] as const;
+const lockRo = (l: string) => translatorMode && l === 'ro';
+---
+
+<fieldset class="card" data-repeater={prefix}>
+  <legend>{legend}</legend>
+  <div data-rows>
+    {
+      all.map((r, i) => (
+        <div class="rep-row" data-row>
+          <div class="rep-tools">
+            <span class="rep-num" data-num>{i + 1}</span>
+            {!translatorMode && (
+              <>
+                <button type="button" class="btn btn--sm btn--quiet" data-up aria-label={t('moveUp')}>▲</button>
+                <button type="button" class="btn btn--sm btn--quiet" data-down aria-label={t('moveDown')}>▼</button>
+                <button type="button" class="btn btn--sm btn--danger" data-remove>{t('remove')}</button>
+              </>
+            )}
+          </div>
+          {cols.map((c) =>
+            c.localized ? (
+              <div class="grid-2">
+                {L.map((l) => (
+                  <div class="f">
+                    <label for={`${prefix}-${i}-${c.key}-${l}`}>
+                      {c.label} <span class="lang-tag">· {l.toUpperCase()}</span>
+                    </label>
+                    {c.textarea ? (
+                      <textarea id={`${prefix}-${i}-${c.key}-${l}`} name={`${prefix}[${i}][${c.key}_${l}]`} rows="3" lang={l} readonly={lockRo(l)}>{r[`${c.key}_${l}`] ?? ''}</textarea>
+                    ) : (
+                      <input type="text" id={`${prefix}-${i}-${c.key}-${l}`} name={`${prefix}[${i}][${c.key}_${l}]`} value={r[`${c.key}_${l}`] ?? ''} lang={l} readonly={lockRo(l)} />
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : c.options ? (
+              <div class="f">
+                <label for={`${prefix}-${i}-${c.key}`}>{c.label}</label>
+                <select id={`${prefix}-${i}-${c.key}`} name={`${prefix}[${i}][${c.key}]`} disabled={translatorMode}>
+                  <option value="">{t('none')}</option>
+                  {c.options.map((o) => (
+                    <option value={o.value} selected={o.value === r[c.key]}>{o.label}</option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div class="f">
+                <label for={`${prefix}-${i}-${c.key}`}>{c.label}</label>
+                <input type="text" id={`${prefix}-${i}-${c.key}`} name={`${prefix}[${i}][${c.key}]`} value={r[c.key] ?? ''} readonly={translatorMode} />
+              </div>
+            ),
+          )}
+        </div>
+      ))
+    }
+  </div>
+  {
+    !translatorMode && (
+      <button type="button" class="btn btn--sm" data-add>
+        + {t('addRow')}
+      </button>
+    )
+  }
+</fieldset>

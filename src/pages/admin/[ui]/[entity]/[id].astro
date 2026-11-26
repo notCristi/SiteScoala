@@ -1,0 +1,213 @@
+---
+/** Generic editor (GET shows the form, POST saves and redirects — or re-renders with errors). */
+import { asc, eq } from 'drizzle-orm';
+import Admin from '~/layouts/Admin.astro';
+import EntityForm from '~/components/admin/EntityForm.astro';
+import Flash from '~/components/admin/Flash.astro';
+import { db, schema as s } from '~/server/db';
+import { entityByKey } from '~/server/admin/entities';
+import { ACTIONS, getRow, saveEntity, type Action, type Row } from '~/server/admin/crud';
+import { can } from '~/server/admin/audit';
+import { translator } from '~/server/admin/i18n';
+import { flashFrom, mediaThumb, pickerData, publicUrlFor } from '~/server/admin/view';
+import { currentAcademicYear, fmtDate } from '~/server/admin/util';
+
+const def = entityByKey(Astro.params.entity);
+if (!def) return new Response('Not found', { status: 404 });
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+const isNew = Astro.params.id === 'nou';
+const id = isNew ? null : Number(Astro.params.id);
+if (!isNew && (!Number.isInteger(id) || id! <= 0)) return new Response('Not found', { status: 404 });
+if (isNew && !can(user, 'content')) return Astro.redirect(`/admin/${def.key}?err=errForbidden`, 303);
+
+let parentId: number | undefined = def.parent ? Number(Astro.url.searchParams.get('ghid') ?? 0) || undefined : undefined;
+let errors: Record<string, string> = {};
+let row: Row | undefined;
+let flashErr: string | undefined;
+
+if (Astro.request.method === 'POST') {
+  const fd = await Astro.request.formData();
+  const a = String(fd.get('_action') ?? 'save') as Action;
+  const action: Action = ACTIONS.includes(a) ? a : 'save';
+  if (def.parent) parentId = Number(fd.get('parentId') ?? 0) || parentId;
+  const existingParent = id ? ((await getRow(def, id))?.[def.parent?.field ?? ''] as number | undefined) : undefined;
+  const res = await saveEntity(Astro, def, id, fd, action, parentId);
+  if (res.ok) {
+    if (action === 'delete') {
+      const back = def.parent && existingParent ? `/admin/${def.parent.entity}/${existingParent}` : `/admin/${def.key}`;
+      return Astro.redirect(`${back}?ok=${res.flash}`, 303);
+    }
+    return Astro.redirect(`/admin/${def.key}/${res.id}?ok=${res.flash}`, 303);
+  }
+  errors = res.errors;
+  row = res.values;
+  flashErr = res.flashError;
+}
+
+if (!row) {
+  if (id) {
+    row = await getRow(def, id);
+    if (!row) return Astro.redirect(`/admin/${def.key}?err=errNotFound`, 303);
+  } else {
+    row = {};
+    for (const f of def.fields) if (f.defaultValue !== undefined) row[f.name] = f.defaultValue;
+    if (def.fields.some((f) => f.name === 'academicYear')) row.academicYear = currentAcademicYear();
+    if (def.key === 'anunturi') row.bannerUntil = Date.now() + 3 * 86400_000;
+  }
+}
+if (def.parent && !parentId && row[def.parent.field]) parentId = Number(row[def.parent.field]);
+const parent = def.parent && parentId ? await getRow(entityByKey(def.parent.entity)!, parentId) : undefined;
+
+const data = await pickerData(def, row);
+const titleKey = def.titleLocalized ? `${def.titleField}Ro` : def.titleField;
+const heading = isNew ? def.newLabel[user.uiLocale === 'de' ? 1 : 0] : String(row[titleKey] ?? '') || `#${id}`;
+const flash = flashFrom(Astro.url);
+
+// sub-lists shown under the form
+const steps = def.key === 'ghiduri' && id ? await db().select().from(s.guideSteps).where(eq(s.guideSteps.guideId, id)).orderBy(asc(s.guideSteps.sortOrder)) : [];
+const galleryItems =
+  def.key === 'galerii' && id
+    ? await db()
+        .select({ media: s.mediaAssets, sortOrder: s.galleryItems.sortOrder })
+        .from(s.galleryItems)
+        .innerJoin(s.mediaAssets, eq(s.mediaAssets.id, s.galleryItems.mediaId))
+        .where(eq(s.galleryItems.galleryId, id))
+        .orderBy(asc(s.galleryItems.sortOrder))
+    : [];
+const backHref = def.parent && parentId ? `/admin/${def.parent.entity}/${parentId}` : `/admin/${def.key}`;
+---
+
+<Admin title={heading} active={def.parent?.entity ?? def.key}>
+  <header class="adm-head">
+    <div>
+      <span class="kicker"><a href={backHref}>← {def.parent ? t('backToGuide') : t(def.label)}</a>{parent ? ` · ${String(parent.titleRo ?? '')}` : ''}</span>
+      <h1>{heading}</h1>
+    </div>
+  </header>
+  <Flash t={t} ok={flash.ok} err={flashErr ?? flash.err} />
+  {
+    def.parent && !parentId ? (
+      <p class="flash flash--error">{t('step_saveGuideFirst')}</p>
+    ) : (
+      <EntityForm def={def} row={row} isNew={isNew} errors={errors} t={t} user={user} data={data} parentId={parentId} publicUrl={publicUrlFor(def, row)} />
+    )
+  }
+
+  {
+    def.key === 'ghiduri' && (
+      <section>
+        <h2 class="sec">{t('steps')}</h2>
+        {!id ? (
+          <p class="help">{t('step_saveGuideFirst')}</p>
+        ) : (
+          <>
+            {steps.length > 0 && (
+              <div class="table-wrap">
+                <table class="t cards" id="steps" data-reorder={can(user, 'content') ? 'pasi' : undefined}>
+                  <thead>
+                    <tr>
+                      <th>
+                        <span class="sr-only">{t('f_sortOrder')}</span>
+                      </th>
+                      <th>#</th>
+                      <th>{t('f_title')}</th>
+                      <th>{t('step_when')}</th>
+                      <th>{t('step_ends')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {steps.map((st, i) => (
+                      <tr data-id={String(st.id)}>
+                        <td>
+                          <button type="button" class="handle" draggable="true" data-handle aria-hidden="true" tabindex="-1">
+                            ⠿
+                          </button>
+                          <button type="button" class="btn btn--sm btn--quiet" data-up aria-label={t('moveUp')}>
+                            ▲
+                          </button>
+                          <button type="button" class="btn btn--sm btn--quiet" data-down aria-label={t('moveDown')}>
+                            ▼
+                          </button>
+                        </td>
+                        <td class="num" data-num>
+                          {i + 1}
+                        </td>
+                        <td class="title">
+                          <a href={`/admin/pasi/${st.id}`}>{st.titleRo}</a>
+                          {st.isDeadline && <span class="chip chip--critical">!</span>}
+                        </td>
+                        <td data-l={t('step_when')}>{st.whenRo ?? ''}</td>
+                        <td data-l={t('step_ends')}>{st.endsAt ? fmtDate(st.endsAt, user.uiLocale) : ''}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            <p class="btn-row" style="margin-top: var(--s-3)">
+              <button type="button" class="btn btn--primary" data-save-order hidden>
+                {t('saveOrder')}
+              </button>
+              {can(user, 'content') && (
+                <a class="btn" href={`/admin/pasi/nou?ghid=${id}`}>
+                  + {t('step_new')}
+                </a>
+              )}
+            </p>
+          </>
+        )}
+      </section>
+    )
+  }
+
+  {
+    def.key === 'galerii' && id && (
+      <section data-gallery={id}>
+        <h2 class="sec">{t('g_items')}</h2>
+        {galleryItems.length > 0 && (
+          <div class="table-wrap">
+            <table class="t" id="gal-items" data-reorder="galerie">
+              <tbody>
+                {galleryItems.map(({ media }) => (
+                  <tr data-id={media.id}>
+                    <td>
+                      <button type="button" class="handle" draggable="true" data-handle aria-hidden="true" tabindex="-1">
+                        ⠿
+                      </button>
+                      <button type="button" class="btn btn--sm btn--quiet" data-up aria-label={t('moveUp')}>
+                        ▲
+                      </button>
+                      <button type="button" class="btn btn--sm btn--quiet" data-down aria-label={t('moveDown')}>
+                        ▼
+                      </button>
+                    </td>
+                    <td>
+                      <img src={mediaThumb(media)} alt="" width="120" height="80" style="width:120px;height:80px;object-fit:cover" loading="lazy" />
+                    </td>
+                    <td class="title">
+                      <a href={`/admin/media/${media.id}`}>{media.altRo || t('m_noAlt')}</a>
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn--sm btn--danger" data-gallery-remove={media.id}>
+                        {t('remove')}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <p class="btn-row" style="margin-top: var(--s-3)">
+          <button type="button" class="btn btn--primary" data-save-order hidden>
+            {t('saveOrder')}
+          </button>
+          <button type="button" class="btn" data-gallery-add>
+            + {t('g_add')}
+          </button>
+        </p>
+      </section>
+    )
+  }
+</Admin>

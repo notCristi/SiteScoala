@@ -1,0 +1,185 @@
+---
+/** Users (admin only): invite → one-time link to copy, change role, deactivate / reactivate, reset link. */
+import { asc, eq } from 'drizzle-orm';
+import Admin from '~/layouts/Admin.astro';
+import Flash from '~/components/admin/Flash.astro';
+import { db, schema as s } from '~/server/db';
+import { ROLES, type Role } from '~/db/schema';
+import { createInviteToken, revokeSessions } from '~/server/auth';
+import { audit, can } from '~/server/admin/audit';
+import { translator } from '~/server/admin/i18n';
+import { flashFrom } from '~/server/admin/view';
+import { fmtDate, str } from '~/server/admin/util';
+
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+if (!can(user, 'admin')) return Astro.redirect('/admin?err=errForbidden', 303);
+
+let link = '';
+let linkKind: 'u_link' | 'u_resetLink' = 'u_link';
+let error = '';
+if (Astro.request.method === 'POST') {
+  const fd = await Astro.request.formData();
+  const act = str(fd.get('_action'), 20);
+  const role = (ROLES as readonly string[]).includes(str(fd.get('role'), 20)) ? (str(fd.get('role'), 20) as Role) : 'editor';
+  if (act === 'invite') {
+    const email = str(fd.get('email'), 200).toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) error = 'errEmail';
+    else {
+      const [exists] = await db().select().from(s.adminUsers).where(eq(s.adminUsers.email, email)).limit(1);
+      if (exists && exists.status !== 'invited') error = 'u_exists';
+      else {
+        const id = exists?.id ?? crypto.randomUUID();
+        if (!exists) await db().insert(s.adminUsers).values({ id, email, displayName: email.split('@')[0]!, role, status: 'invited' });
+        else await db().update(s.adminUsers).set({ role, updatedAt: Date.now() }).where(eq(s.adminUsers.id, id));
+        link = `${Astro.url.origin}/admin/activare?t=${await createInviteToken(id, 'invite', user.id)}`;
+        await audit(Astro, 'invite', 'user', id, `${email} (${role})`);
+      }
+    }
+  } else {
+    const id = str(fd.get('id'), 64);
+    const [target] = await db().select().from(s.adminUsers).where(eq(s.adminUsers.id, id)).limit(1);
+    if (!target) error = 'errNotFound';
+    else if (target.id === user.id) error = 'u_self';
+    else if (act === 'role') {
+      await db().update(s.adminUsers).set({ role, updatedAt: Date.now() }).where(eq(s.adminUsers.id, id));
+      await revokeSessions(id);
+      await audit(Astro, 'role', 'user', id, `${target.email}: ${target.role} → ${role}`);
+      return Astro.redirect('/admin/utilizatori?ok=okSaved', 303);
+    } else if (act === 'disable' || act === 'enable') {
+      await db()
+        .update(s.adminUsers)
+        .set({ status: act === 'disable' ? 'disabled' : target.passwordHash ? 'active' : 'invited', updatedAt: Date.now() })
+        .where(eq(s.adminUsers.id, id));
+      if (act === 'disable') await revokeSessions(id);
+      await audit(Astro, act, 'user', id, target.email);
+      return Astro.redirect('/admin/utilizatori?ok=okSaved', 303);
+    } else if (act === 'reset') {
+      const purpose = target.status === 'invited' ? 'invite' : 'reset';
+      link = `${Astro.url.origin}/admin/activare?t=${await createInviteToken(id, purpose, user.id)}`;
+      linkKind = purpose === 'invite' ? 'u_link' : 'u_resetLink';
+      await audit(Astro, purpose === 'invite' ? 'invite' : 'reset_link', 'user', id, target.email);
+    }
+  }
+}
+const users = await db().select().from(s.adminUsers).orderBy(asc(s.adminUsers.status), asc(s.adminUsers.displayName));
+const flash = flashFrom(Astro.url);
+---
+
+<Admin title={t('users')} active="utilizatori">
+  <header class="adm-head"><h1>{t('users')}</h1></header>
+  <Flash t={t} ok={flash.ok} err={error || flash.err} />
+  {
+    link && (
+      <section class="card card--lapis" style="margin-bottom: var(--s-5)">
+        <p>
+          <strong>{t(linkKind)}</strong>
+        </p>
+        <div class="copybox">
+          <input type="text" id="invite-link" value={link} readonly aria-label={t(linkKind)} />
+          <button type="button" class="btn btn--primary" data-copy="#invite-link">
+            {t('copy')}
+          </button>
+        </div>
+      </section>
+    )
+  }
+
+  <form method="post" class="card" style="margin-bottom: var(--s-5)">
+    <h2>{t('u_invite')}</h2>
+    <input type="hidden" name="_csrf" value={user.csrf} />
+    <div class="grid-2">
+      <div class="f">
+        <label for="inv-email">{t('email')}</label>
+        <input type="email" id="inv-email" name="email" required autocomplete="off" />
+      </div>
+      <div class="f">
+        <label for="inv-role">{t('u_role')}</label>
+        <select id="inv-role" name="role">
+          {
+            ROLES.map((r) => (
+              <option value={r} selected={r === 'editor'}>
+                {t(`role_${r}`)} — {t(`role_${r}_help`)}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+    </div>
+    <button class="btn btn--primary" name="_action" value="invite">{t('u_create')}</button>
+  </form>
+
+  <div class="table-wrap">
+    <table class="t cards">
+      <thead>
+        <tr>
+          <th>{t('displayName')}</th>
+          <th>{t('u_role')}</th>
+          <th>{t('status')}</th>
+          <th>{t('u_lastLogin')}</th>
+          <th><span class="sr-only">{t('edit')}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          users.map((u) => (
+            <tr>
+              <td class="title">
+                <strong>{u.displayName}</strong>
+                <small>{u.email}</small>
+              </td>
+              <td data-l={t('u_role')}>
+                {u.id === user.id ? (
+                  t(`role_${u.role}`)
+                ) : (
+                  <form method="post" class="btn-row">
+                    <input type="hidden" name="_csrf" value={user.csrf} />
+                    <input type="hidden" name="id" value={u.id} />
+                    <select name="role" aria-label={t('u_role')} style="width:auto">
+                      {ROLES.map((r) => (
+                        <option value={r} selected={r === u.role}>
+                          {t(`role_${r}`)}
+                        </option>
+                      ))}
+                    </select>
+                    <button class="btn btn--sm" name="_action" value="role">
+                      {t('u_changeRole')}
+                    </button>
+                  </form>
+                )}
+              </td>
+              <td data-l={t('status')}>
+                <span class={`chip chip--${u.status}`}>{t(`st_${u.status}`)}</span>
+              </td>
+              <td data-l={t('u_lastLogin')}>
+                <time>{fmtDate(u.lastLoginAt, user.uiLocale)}</time>
+              </td>
+              <td>
+                {u.id !== user.id && (
+                  <form method="post" class="btn-row">
+                    <input type="hidden" name="_csrf" value={user.csrf} />
+                    <input type="hidden" name="id" value={u.id} />
+                    {u.status !== 'disabled' && (
+                      <button class="btn btn--sm" name="_action" value="reset">
+                        {t('u_reset')}
+                      </button>
+                    )}
+                    {u.status === 'disabled' ? (
+                      <button class="btn btn--sm" name="_action" value="enable">
+                        {t('u_reactivate')}
+                      </button>
+                    ) : (
+                      <button class="btn btn--sm btn--danger" name="_action" value="disable" data-confirm={t('u_deactivate') + '?'}>
+                        {t('u_deactivate')}
+                      </button>
+                    )}
+                  </form>
+                )}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</Admin>

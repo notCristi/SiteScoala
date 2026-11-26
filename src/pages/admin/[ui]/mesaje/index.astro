@@ -1,0 +1,60 @@
+---
+/** Contact messages from the public form. */
+import { desc, eq, sql } from 'drizzle-orm';
+import Admin from '~/layouts/Admin.astro';
+import Flash from '~/components/admin/Flash.astro';
+import { db, schema as s } from '~/server/db';
+import { translator } from '~/server/admin/i18n';
+import { flashFrom } from '~/server/admin/view';
+import { fmtDate } from '~/server/admin/util';
+
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+const st = Astro.url.searchParams.get('status');
+const status = st === 'read' || st === 'archived' || st === 'new' ? st : st === 'all' ? '' : 'inbox';
+const rows = await db()
+  .select()
+  .from(s.contactMessages)
+  .where(status === 'inbox' ? sql`${s.contactMessages.status} <> 'archived'` : status ? eq(s.contactMessages.status, status) : undefined)
+  .orderBy(desc(s.contactMessages.createdAt))
+  .limit(200);
+const flash = flashFrom(Astro.url);
+---
+
+<Admin title={t('messages')} active="mesaje">
+  <header class="adm-head"><h1>{t('messages')}</h1></header>
+  <Flash t={t} ok={flash.ok} err={flash.err} />
+  <form class="toolbar" method="get">
+    <div class="f">
+      <label for="status">{t('status')}</label>
+      <select id="status" name="status" data-autosubmit>
+        <option value="inbox" selected={status === 'inbox'}>{t('st_new')} + {t('st_read')}</option>
+        {['new', 'read', 'archived'].map((x) => <option value={x} selected={status === x}>{t(`st_${x}`)}</option>)}
+        <option value="all" selected={status === ''}>{t('all')}</option>
+      </select>
+    </div>
+    <div class="f grow"><label for="q">{t('search')}</label><input type="search" id="q" data-filter-table="#msgs" /></div>
+  </form>
+  {
+    rows.length === 0 ? (
+      <div class="card empty"><p>{t('noMessages')}</p></div>
+    ) : (
+      <div class="table-wrap">
+        <table class="t cards" id="msgs">
+          <thead><tr><th>{t('msg_from')}</th><th>{t('msg_topic')}</th><th>{t('f_body')}</th><th>{t('status')}</th><th>{t('f_date')}</th></tr></thead>
+          <tbody>
+            {rows.map((m) => (
+              <tr>
+                <td class="title"><a href={`/admin/mesaje/${m.id}`}>{m.status === 'new' ? <strong>{m.name}</strong> : m.name}</a><small>{m.email}</small></td>
+                <td data-l={t('msg_topic')}>{t(`topic_${m.topic}`)}</td>
+                <td data-l={t('f_body')}>{m.message.slice(0, 110)}{m.message.length > 110 ? '…' : ''}</td>
+                <td><span class={`chip chip--${m.status}`}>{t(`st_${m.status}`)}</span></td>
+                <td><time>{fmtDate(m.createdAt, user.uiLocale)}</time></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+</Admin>

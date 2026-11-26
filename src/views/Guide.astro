@@ -105,7 +105,7 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
     <div class="guide__main">
       <ol class="steps" role="list" data-guide={guide.slug}>
         {
-          steps.map((s) => {
+          steps.map((s, i) => {
             const st = stateOf(s);
             const items = checklistOf(s);
             const doc = s.documentId ? docs.get(s.documentId) : undefined;
@@ -114,7 +114,7 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
             return (
               <li class="step" id={`step-${s.sortOrder}`} data-state={st ?? undefined} data-reveal>
                 <div class="step__num">
-                  <RubricNumeral n={s.sortOrder} />
+                  <RubricNumeral n={i + 1} />
                 </div>
                 <div class="step__body">
                   <header class="step__head">

@@ -1,0 +1,187 @@
+---
+/**
+ * One form field of the generic editor. Localized fields are drawn once per language by EntityForm
+ * (name = column, e.g. titleDe). Errors are linked with aria-describedby.
+ */
+import type { FieldDef } from '~/server/admin/entities';
+import type { T } from '~/server/admin/i18n';
+import { optionLabel, type MediaLite } from '~/server/admin/view';
+import { toInput } from '~/server/admin/util';
+import MediaPicker from './MediaPicker.astro';
+
+export interface PickerData {
+  media: Map<string, MediaLite>;
+  docs: Map<number, string>;
+  departments: { id: number; name: string }[];
+  galleries: { id: number; title: string }[];
+}
+interface Props {
+  f: FieldDef;
+  name: string;
+  value: unknown;
+  error?: string | undefined;
+  t: T;
+  lang?: 'ro' | 'de' | 'en';
+  refText?: string | null | undefined;
+  data: PickerData;
+  disabled?: boolean;
+  /** RO title, used by the slug field to auto-generate */
+  current?: Record<string, unknown>;
+}
+const { f, name, value, error, t, lang, refText, data, disabled } = Astro.props;
+const id = `f-${name}`;
+const errId = `${id}-err`;
+const helpId = `${id}-help`;
+const describedBy = [error ? errId : '', f.help ? helpId : ''].filter(Boolean).join(' ') || undefined;
+const required = f.required && (!f.localized || lang === 'ro');
+const str = value == null ? '' : String(value);
+const label = t(f.label);
+const errText = (() => {
+  if (!error) return '';
+  if (error.startsWith('doc_dupe|')) {
+    const [, title] = error.split('|');
+    return `${t('doc_dupe')} „${title}”`;
+  }
+  return t(error);
+})();
+const dupeId = error?.startsWith('doc_dupe|') ? error.split('|')[2] : undefined;
+const invalid = error ? 'true' : undefined;
+const langAttr = lang ?? undefined;
+---
+
+{
+  f.type === 'checkbox' ? (
+    <div class="f">
+      <label class="check">
+        <input type="checkbox" name={name} id={id} checked={!!value} disabled={disabled} aria-describedby={describedBy} />
+        <span>{label}</span>
+      </label>
+      {f.help && <p class="help" id={helpId}>{t(f.help)}</p>}
+      {error && <p class="err" id={errId}>{errText}</p>}
+    </div>
+  ) : f.type === 'multiselect' ? (
+    <fieldset class="f">
+      <legend class="lbl">{label}</legend>
+      <div class="checks">
+        {f.options?.map((o) => (
+          <label class="check">
+            <input type="checkbox" name={name} value={o} checked={str.split(',').includes(o)} disabled={disabled} />
+            <span>{optionLabel(f, o, t)}</span>
+          </label>
+        ))}
+      </div>
+      {f.help && <p class="help" id={helpId}>{t(f.help)}</p>}
+    </fieldset>
+  ) : f.type === 'media' ? (
+    <div class="f">
+      <span class="lbl" id={`${id}-lbl`}>{label}</span>
+      <MediaPicker name={name} value={str} media={str ? data.media.get(str) : undefined} t={t} disabled={disabled} />
+      {f.help && <p class="help" id={helpId}>{t(f.help)}</p>}
+      {error && <p class="err" id={errId}>{errText}</p>}
+    </div>
+  ) : f.type === 'document' ? (
+    <div class="f picker" data-docpicker>
+      <span class="lbl">{label}</span>
+      <input type="hidden" name={name} value={str} data-value />
+      <p class="doc-name" data-name>{str ? (data.docs.get(Number(str)) ?? `#${str}`) : t('none')}</p>
+      <div class="btn-row">
+        <button type="button" class="btn btn--sm" data-pick-doc disabled={disabled}>{t('m_pickDoc')}</button>
+        <button type="button" class="btn btn--sm btn--quiet" data-clear disabled={disabled}>{t('remove')}</button>
+      </div>
+    </div>
+  ) : f.type === 'department' || f.type === 'gallery' ? (
+    <div class="f">
+      <label for={id}>{label}</label>
+      <select name={name} id={id} disabled={disabled}>
+        <option value="">{t('none')}</option>
+        {(f.type === 'department' ? data.departments.map((d) => ({ id: d.id, l: d.name })) : data.galleries.map((g) => ({ id: g.id, l: g.title }))).map((o) => (
+          <option value={o.id} selected={String(o.id) === str}>{o.l}</option>
+        ))}
+      </select>
+    </div>
+  ) : f.type === 'file' ? (
+    <div class="f">
+      <label for={id}>{label}</label>
+      <input type="file" name="file" id={id} accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.jpg,.jpeg,.png" aria-describedby={describedBy} aria-invalid={invalid} disabled={disabled} data-docfile />
+      {f.help && <p class="help" id={helpId}>{t(f.help)}</p>}
+      {error && (
+        <p class="err" id={errId}>
+          {errText} {dupeId && <a href={`/admin/documente/${dupeId}`}>#{dupeId}</a>}
+        </p>
+      )}
+    </div>
+  ) : (
+    <div class="f">
+      <label for={id}>
+        {label}
+        {lang && <span class="lang-tag"> · {lang.toUpperCase()}</span>}
+        {required && <span class="req">{t('required')}</span>}
+      </label>
+      {refText && (
+        <div class="ref" lang="ro">
+          <span class="sr-only">{t('trRef')}: </span>
+          {refText}
+        </div>
+      )}
+      {f.type === 'textarea' || f.type === 'checklist' ? (
+        <textarea name={name} id={id} rows={f.type === 'checklist' ? 5 : (f.rows ?? 3)} maxlength={f.max} required={required} aria-invalid={invalid} aria-describedby={describedBy} lang={langAttr} disabled={disabled} data-count={f.max}>{str}</textarea>
+      ) : f.type === 'markdown' ? (
+        <div class="md-wrap" data-md>
+          <div class="md-tools" role="toolbar" aria-label={t('formatting')} aria-controls={id}>
+            <button type="button" data-fmt="bold" title={t('fmt_bold')} aria-label={t('fmt_bold')}><b>B</b></button>
+            <button type="button" data-fmt="italic" title={t('fmt_italic')} aria-label={t('fmt_italic')}><i>I</i></button>
+            <button type="button" data-fmt="heading" title={t('fmt_heading')}>{t('fmt_heading')}</button>
+            <button type="button" data-fmt="list" title={t('fmt_list')}>• {t('fmt_list')}</button>
+            <button type="button" data-fmt="olist" title={t('fmt_olist')}>1. {t('fmt_olist')}</button>
+            <button type="button" data-fmt="link" title={t('fmt_link')} data-prompt={t('fmt_linkPrompt')}>{t('fmt_link')}</button>
+            <span class="sep" />
+            <button type="button" data-preview aria-expanded="false">{t('preview')}</button>
+          </div>
+          <textarea class="md" name={name} id={id} rows="14" maxlength={f.max} aria-invalid={invalid} aria-describedby={describedBy} lang={langAttr} disabled={disabled}>{str}</textarea>
+          <div class="md-preview" hidden data-preview-out aria-live="polite">
+            <p class="label">{t('preview')}</p>
+            <div class="prose" lang={langAttr} />
+          </div>
+        </div>
+      ) : f.type === 'select' ? (
+        <select name={name} id={id} required={required} aria-describedby={describedBy} disabled={disabled}>
+          {f.options?.map((o) => (
+            <option value={o} selected={o === (str || f.defaultValue)}>{optionLabel(f, o, t)}</option>
+          ))}
+        </select>
+      ) : f.type === 'date' || f.type === 'datetime' ? (
+        <input
+          type={f.type === 'date' ? 'date' : 'datetime-local'}
+          name={name}
+          id={id}
+          value={typeof value === 'number' ? toInput(value, f.type === 'datetime') : str}
+          required={required}
+          aria-invalid={invalid}
+          aria-describedby={describedBy}
+          disabled={disabled}
+        />
+      ) : f.type === 'number' ? (
+        <input type="number" inputmode="numeric" step="1" name={name} id={id} value={str} required={required} aria-invalid={invalid} aria-describedby={describedBy} disabled={disabled} />
+      ) : f.type === 'slug' ? (
+        <input type="text" name={name} id={id} value={str} maxlength={f.max} pattern="[a-z0-9-]*" aria-invalid={invalid} aria-describedby={describedBy} disabled={disabled} data-slug autocomplete="off" spellcheck="false" />
+      ) : (
+        <input
+          type={f.type === 'email' ? 'email' : 'text'}
+          inputmode={f.type === 'url' ? 'url' : undefined}
+          name={name}
+          id={id}
+          value={str}
+          maxlength={f.max}
+          required={required}
+          aria-invalid={invalid}
+          aria-describedby={describedBy}
+          lang={langAttr}
+          disabled={disabled}
+          data-title={f.name === 'title' && lang === 'ro' ? '' : undefined}
+        />
+      )}
+      {f.help && <p class="help" id={helpId}>{t(f.help)}</p>}
+      {error && <p class="err" id={errId}>{errText}</p>}
+    </div>
+  )
+}

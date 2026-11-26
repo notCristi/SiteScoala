@@ -1,0 +1,135 @@
+---
+/**
+ * /admin shell: sidebar (≤ 7 links per group), utility row (UI language, site link, account, logout).
+ * Never cached (middleware sets private, no-store + noindex).
+ */
+import '~/styles/global.css';
+import '~/styles/admin.css';
+import { eq, sql } from 'drizzle-orm';
+import { db, schema as s } from '~/server/db';
+import { can } from '~/server/admin/audit';
+import { translator } from '~/server/admin/i18n';
+import { publicAdminPath } from '~/server/auth';
+
+interface Props {
+  title: string;
+  active?: string;
+}
+const { title, active } = Astro.props;
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+const [msg] = await db()
+  .select({ n: sql<number>`count(*)` })
+  .from(s.contactMessages)
+  .where(eq(s.contactMessages.status, 'new'));
+const newMessages = Number(msg?.n ?? 0);
+
+type Item = { key: string; href: string; label: string; count?: number };
+const groups: { label: string; items: Item[] }[] = [
+  {
+    label: t('groupContent'),
+    items: [
+      { key: 'dashboard', href: '/admin', label: t('dashboard') },
+      { key: 'anunturi', href: '/admin/anunturi', label: t('announcements') },
+      { key: 'documente', href: '/admin/documente', label: t('documents') },
+      { key: 'ghiduri', href: '/admin/ghiduri', label: t('guidesShort') },
+      { key: 'pagini', href: '/admin/pagini', label: t('pages') },
+      { key: 'proiecte', href: '/admin/proiecte', label: t('projects') },
+      { key: 'viata-scolara', href: '/admin/viata-scolara', label: t('life') },
+    ],
+  },
+  {
+    label: t('groupPeople'),
+    items: [
+      { key: 'personal', href: '/admin/personal', label: t('staff') },
+      { key: 'catedre', href: '/admin/catedre', label: t('departments') },
+      { key: 'istorie', href: '/admin/istorie', label: t('timeline') },
+      { key: 'mesaje', href: '/admin/mesaje', label: t('messages'), count: newMessages },
+    ],
+  },
+  {
+    label: t('groupMedia'),
+    items: [
+      { key: 'media', href: '/admin/media', label: t('media') },
+      { key: 'galerii', href: '/admin/galerii', label: t('galleries') },
+    ],
+  },
+];
+if (can(user, 'admin'))
+  groups.push({
+    label: t('groupAdmin'),
+    items: [
+      { key: 'redirectionari', href: '/admin/redirectionari', label: t('redirects') },
+      { key: 'setari', href: '/admin/setari', label: t('settings') },
+      { key: 'utilizatori', href: '/admin/utilizatori', label: t('users') },
+      { key: 'jurnal', href: '/admin/jurnal', label: t('auditLog') },
+    ],
+  });
+const here = publicAdminPath(Astro.url.pathname) + Astro.url.search;
+const other = user.uiLocale === 'de' ? 'ro' : 'de';
+---
+
+<!doctype html>
+<html lang={user.uiLocale} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="csrf" content={user.csrf} />
+    <title>{title} · {t('appName')}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
+  </head>
+  <body data-ui={user.uiLocale}>
+    <a class="skip-link" href="#main">{t('skip')}</a>
+    <div class="adm">
+      <aside class="adm-side" id="side">
+        <div class="adm-bar">
+          <a class="adm-brand" href="/admin">
+            <img src="/brand/honterus-seal.svg" alt="" width="40" height="40" />
+            <span><small>Honterus</small><b>{t('appName')}</b></span>
+          </a>
+          <button class="adm-menu-btn" type="button" aria-expanded="false" aria-controls="adm-nav" data-menu>{t('menu')}</button>
+        </div>
+        <nav class="adm-nav" id="adm-nav" aria-label={t('menu')}>
+          {
+            groups.map((g) => (
+              <>
+                <h2>{g.label}</h2>
+                <ul>
+                  {g.items.map((i) => (
+                    <li>
+                      <a href={i.href} aria-current={i.key === active ? 'page' : undefined}>
+                        <span>{i.label}</span>
+                        {i.count ? <span class="count">{i.count}</span> : null}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ))
+          }
+        </nav>
+      </aside>
+      <div class="adm-main">
+        <div class="adm-util">
+          <a href={`/admin/ui?l=${other}&next=${encodeURIComponent(here)}`} lang={other} hreflang={other}>{other === 'de' ? 'Deutsch' : 'Română'}</a>
+          <a href="/ro/" target="_blank" rel="noopener">{t('viewSite')}</a>
+          <a href="/admin/cont">{user.name} · {t('account')}</a>
+          <form method="post" action="/admin/logout">
+            <input type="hidden" name="_csrf" value={user.csrf} />
+            <button class="linklike" type="submit">{t('logout')}</button>
+          </form>
+        </div>
+        <main class="adm-content" id="main" tabindex="-1">
+          <slot />
+        </main>
+      </div>
+    </div>
+    <div class="toast" role="status" aria-live="polite" data-toast></div>
+    <script>
+      import '~/components/admin/admin-client';
+    </script>
+  </body>
+</html>

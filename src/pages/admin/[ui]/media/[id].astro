@@ -1,0 +1,170 @@
+---
+/** One image / video: alt ×3 (RO required), caption ×3, credit, licence, focal point, replace, usage, delete. */
+import { eq } from 'drizzle-orm';
+import Admin from '~/layouts/Admin.astro';
+import Flash from '~/components/admin/Flash.astro';
+import { db, schema as s } from '~/server/db';
+import { audit, can } from '~/server/admin/audit';
+import { purge } from '~/server/admin/purge';
+import { translator } from '~/server/admin/i18n';
+import { flashFrom, mediaThumb, mediaUsage } from '~/server/admin/view';
+import { fmtDate, str } from '~/server/admin/util';
+
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+const id = String(Astro.params.id ?? '');
+let [m] = await db().select().from(s.mediaAssets).where(eq(s.mediaAssets.id, id)).limit(1);
+if (!m) return Astro.redirect('/admin/media?err=errNotFound', 303);
+const usage = await mediaUsage(id);
+const errors: Record<string, string> = {};
+let flashErr = '';
+
+if (Astro.request.method === 'POST') {
+  const fd = await Astro.request.formData();
+  const act = str(fd.get('_action'), 20);
+  const translatorOnly = user.role === 'translator';
+  if (act === 'delete') {
+    if (!can(user, 'content')) return Astro.redirect(`/admin/media/${id}?err=errForbidden`, 303);
+    if (usage.length) flashErr = 'errInUse';
+    else {
+      await db().delete(s.mediaAssets).where(eq(s.mediaAssets.id, id));
+      await audit(Astro, 'delete', 'media', id, m.altRo ?? m.originalFilename ?? '');
+      return Astro.redirect('/admin/media?ok=okDeleted', 303);
+    }
+  } else {
+    const v = (k: string, max: number) => str(fd.get(k), max) || null;
+    const upd: Partial<typeof s.mediaAssets.$inferInsert> = {
+      altDe: v('altDe', 300),
+      altEn: v('altEn', 300),
+      captionDe: v('captionDe', 500),
+      captionEn: v('captionEn', 500),
+    };
+    if (!translatorOnly) {
+      Object.assign(upd, {
+        altRo: v('altRo', 300),
+        captionRo: v('captionRo', 500),
+        credit: v('credit', 200),
+        license: v('license', 100),
+        sourceUrl: /^https?:\/\/\S+$/i.test(str(fd.get('sourceUrl'), 500)) ? str(fd.get('sourceUrl'), 500) : null,
+        focalX: Math.min(1, Math.max(0, Number(fd.get('focalX')) || 0.5)),
+        focalY: Math.min(1, Math.max(0, Number(fd.get('focalY')) || 0.5)),
+      });
+      if (!upd.altRo) errors.altRo = 'errRequired';
+    }
+    if (!Object.keys(errors).length) {
+      await db().update(s.mediaAssets).set(upd).where(eq(s.mediaAssets.id, id));
+      await audit(Astro, 'update', 'media', id, upd.altRo ?? m.altRo ?? '');
+      if (usage.length) await purge(Astro, ['media']);
+      return Astro.redirect(`/admin/media/${id}?ok=okSaved`, 303);
+    }
+    m = { ...m, ...upd };
+  }
+}
+const thumb = mediaThumb(m);
+let variants: { w: number; key: string }[] = [];
+try {
+  variants = m.variantsJson ? (JSON.parse(m.variantsJson) as { w: number; key: string }[]) : [];
+} catch {
+  variants = [];
+}
+const big = variants.at(-1)?.key ? `/${variants.at(-1)!.key}` : thumb;
+const flash = flashFrom(Astro.url);
+const ro = user.role === 'translator';
+const L = ['ro', 'de', 'en'] as const;
+const Suf = { ro: 'Ro', de: 'De', en: 'En' } as const;
+---
+
+<Admin title={m.altRo || t('media')} active="media">
+  <header class="adm-head">
+    <div>
+      <span class="kicker"><a href="/admin/media">← {t('media')}</a></span>
+      <h1>{m.altRo || t('m_noAlt')}</h1>
+    </div>
+  </header>
+  <Flash t={t} ok={flash.ok} err={flashErr || flash.err || (Object.keys(errors).length ? 'errorsTitle' : undefined)} />
+  <form method="post" class="edit">
+    <input type="hidden" name="_csrf" value={user.csrf} />
+    <div class="edit__main">
+      <section class="card">
+        {
+          m.kind === 'image' ? (
+            <>
+              <h2>{t('m_focal')}</h2>
+              <p class="help">{t('m_focalHelp')}</p>
+              <div class="focal" data-focal tabindex="0" role="application" aria-label={t('m_focal')} style="margin-top: var(--s-3)">
+                <img src={big} alt={m.altRo ?? ''} width={m.width ?? undefined} height={m.height ?? undefined} style={m.placeholder ? `background:${m.placeholder}` : undefined} />
+                <span class="dot" />
+              </div>
+              <input type="hidden" name="focalX" value={m.focalX} />
+              <input type="hidden" name="focalY" value={m.focalY} />
+            </>
+          ) : (
+            <img src={thumb} alt="" width="320" height="180" />
+          )
+        }
+      </section>
+      <fieldset class="card">
+        <legend>{t('m_alt')}</legend>
+        <p class="help" style="margin-bottom: var(--s-3)">{t('m_altHelp')}</p>
+        {
+          L.map((l) => (
+            <div class="f">
+              <label for={`alt${Suf[l]}`}>
+                {t('m_alt')} <span class="lang-tag">· {l.toUpperCase()}</span>
+                {l === 'ro' && <span class="req">{t('required')}</span>}
+              </label>
+              <input type="text" id={`alt${Suf[l]}`} name={`alt${Suf[l]}`} value={(m as Record<string, unknown>)[`alt${Suf[l]}`] as string ?? ''} maxlength="300" lang={l} readonly={ro && l === 'ro'} aria-invalid={errors[`alt${Suf[l]}`] ? 'true' : undefined} />
+              {errors[`alt${Suf[l]}`] && <p class="err">{t('errRequired')}</p>}
+            </div>
+          ))
+        }
+        {
+          L.map((l) => (
+            <div class="f">
+              <label for={`caption${Suf[l]}`}>
+                {t('m_caption')} <span class="lang-tag">· {l.toUpperCase()}</span>
+              </label>
+              <input type="text" id={`caption${Suf[l]}`} name={`caption${Suf[l]}`} value={(m as Record<string, unknown>)[`caption${Suf[l]}`] as string ?? ''} maxlength="500" lang={l} readonly={ro && l === 'ro'} />
+            </div>
+          ))
+        }
+      </fieldset>
+    </div>
+    <aside class="edit__side">
+      <section class="card card--lapis actions actions-bar">
+        <button class="btn btn--primary" name="_action" value="save">{t('save')}</button>
+        {can(user, 'content') && <button class="btn btn--sm btn--danger" name="_action" value="delete" data-confirm={t('confirmDelete')} disabled={usage.length > 0}>{t('delete')}</button>}
+        <p class="meta">{fmtDate(m.createdAt, user.uiLocale)}{m.width ? ` · ${m.width} × ${m.height} px` : ''}{m.sizeBytes ? ` · ${Math.round(m.sizeBytes / 1024)} KB` : ''}</p>
+      </section>
+      <section class="card">
+        <div class="f"><label for="credit">{t('m_credit')}</label><input type="text" id="credit" name="credit" value={m.credit ?? ''} readonly={ro} /></div>
+        <div class="f"><label for="license">{t('m_license')}</label><input type="text" id="license" name="license" value={m.license ?? ''} readonly={ro} /></div>
+        <div class="f"><label for="sourceUrl">{t('m_source')}</label><input type="text" inputmode="url" id="sourceUrl" name="sourceUrl" value={m.sourceUrl ?? ''} readonly={ro} /></div>
+      </section>
+      <section class="card">
+        <h3>{t('m_usedIn')}</h3>
+        {usage.length === 0 ? <p class="help">{t('m_unused')}</p> : (
+          <ul class="list-plain">
+            {usage.map((u) => <li><a href={u.id ? `/admin/${u.key}/${u.id}` : `/admin/${u.key}`}>{u.title}</a></li>)}
+          </ul>
+        )}
+      </section>
+    </aside>
+  </form>
+  {
+    m.kind === 'image' && can(user, 'content') && (
+      <section class="card" style="margin-top: var(--s-5)">
+        <h2>{t('m_replace')}</h2>
+        <p class="help">{t('m_replaceHelp')}</p>
+        <div class="f" style="margin-top: var(--s-3)">
+          <label for="replace" class="sr-only">{t('m_replace')}</label>
+          <input type="file" id="replace" accept="image/jpeg,image/png,image/webp" data-replace={m.id} />
+          <p class="help" data-replace-state aria-live="polite"></p>
+        </div>
+      </section>
+    )
+  }
+  <script>
+    import '~/components/admin/media-client';
+  </script>
+</Admin>

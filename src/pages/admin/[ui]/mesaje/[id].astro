@@ -1,0 +1,50 @@
+---
+/** One contact message: opening it marks it read; reply by e-mail; archive. */
+import { eq } from 'drizzle-orm';
+import Admin from '~/layouts/Admin.astro';
+import { db, schema as s } from '~/server/db';
+import { audit } from '~/server/admin/audit';
+import { translator } from '~/server/admin/i18n';
+import { fmtDate, str } from '~/server/admin/util';
+
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+const id = Number(Astro.params.id);
+const [m] = Number.isInteger(id) ? await db().select().from(s.contactMessages).where(eq(s.contactMessages.id, id)).limit(1) : [];
+if (!m) return Astro.redirect('/admin/mesaje?err=errNotFound', 303);
+if (Astro.request.method === 'POST') {
+  const fd = await Astro.request.formData();
+  const next = str(fd.get('_action'), 20);
+  if (next === 'archive' || next === 'new' || next === 'read') {
+    await db().update(s.contactMessages).set({ status: next === 'archive' ? 'archived' : next }).where(eq(s.contactMessages.id, id));
+    await audit(Astro, `message_${next}`, 'contact_messages', id);
+  }
+  return Astro.redirect(next === 'archive' ? '/admin/mesaje?ok=okArchived' : `/admin/mesaje/${id}?ok=okSaved`, 303);
+}
+if (m.status === 'new') await db().update(s.contactMessages).set({ status: 'read' }).where(eq(s.contactMessages.id, id));
+const subject = encodeURIComponent(`Re: ${t(`topic_${m.topic}`)} — Colegiul Național „Johannes Honterus”`);
+---
+
+<Admin title={m.name} active="mesaje">
+  <header class="adm-head">
+    <div>
+      <span class="kicker"><a href="/admin/mesaje">← {t('messages')}</a></span>
+      <h1>{m.name}</h1>
+    </div>
+  </header>
+  <div class="edit">
+    <article class="card">
+      <p class="help">{t(`topic_${m.topic}`)} · {fmtDate(m.createdAt, user.uiLocale)} · {m.locale.toUpperCase()}</p>
+      <p style="white-space: pre-line; margin-top: var(--s-3); font-size: 1.1rem" lang={m.locale}>{m.message}</p>
+    </article>
+    <aside class="card actions">
+      <p><strong>{t('msg_from')}:</strong> {m.name}<br /><a href={`mailto:${m.email}`}>{m.email}</a>{m.phone && <><br /><a href={`tel:${m.phone}`}>{m.phone}</a></>}</p>
+      <a class="btn btn--primary" href={`mailto:${m.email}?subject=${subject}`}>{t('msg_reply')}</a>
+      <form method="post" class="actions">
+        <input type="hidden" name="_csrf" value={user.csrf} />
+        {m.status !== 'archived' ? <button class="btn" name="_action" value="archive">{t('msg_archive')}</button> : <button class="btn" name="_action" value="read">{t('st_read')}</button>}
+        <button class="btn btn--quiet" name="_action" value="new">{t('st_new')}</button>
+      </form>
+    </aside>
+  </div>
+</Admin>

@@ -1,0 +1,13 @@
+---
+import type { T } from '~/server/admin/i18n';
+interface Props {
+  t: T;
+  ok?: string | undefined;
+  err?: string | undefined;
+}
+const { t, ok, err } = Astro.props;
+const known = (k?: string) => !!k && /^(ok|err|set_|m_|u_|pw|r_|doc_|orderSaved)/.test(k) && t(k) !== k;
+---
+
+{known(ok) && <p class="flash" role="status" data-focus tabindex="-1">{t(ok!)}</p>}
+{known(err) && <p class="flash flash--error" role="alert" data-focus tabindex="-1">{t(err!)}</p>}

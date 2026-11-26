@@ -15,6 +15,11 @@ export default [
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/no-non-null-assertion': 'off',
       'no-empty': ['error', { allowEmptyCatch: true }],
+      // `let x = fallback; try { x = parse() } catch {}` is the house pattern for untrusted JSON
+      'no-useless-assignment': 'off',
+      '@typescript-eslint/no-unused-expressions': ['error', { allowShortCircuit: true, allowTernary: true }],
+      // upload validation deliberately matches control bytes in file headers
+      'no-control-regex': 'off',
     },
   },
 ];

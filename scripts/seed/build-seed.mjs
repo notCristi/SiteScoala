@@ -84,10 +84,10 @@ function flatten(table, obj) {
         row[`body_md_${l}`] = v[l];
         row[`body_html_${l}`] = renderMarkdown(v[l]);
       }
-    } else if (isLoc(v)) {
-      for (const l of L) if (v[l] != null && v[l] !== '') row[`${k}_${l}`] = v[l];
     } else if (k.endsWith('_json') && v !== null && typeof v === 'object') {
       row[k] = JSON.stringify(v);
+    } else if (isLoc(v)) {
+      for (const l of L) if (v[l] != null && v[l] !== '') row[`${k}_${l}`] = v[l];
     } else if (DATE_COLS.test(k)) {
       row[k] = toMs(v);
     } else {
@@ -164,10 +164,17 @@ for (const s of settingsRows) insert('settings', { key: s.key, value_json: JSON.
 
 // ───────── documents ─────────
 const docs = load('documents');
+const files = load('documents-files', {}); // legacy URL → R2 object (scripts/media/import-legacy-documents.mjs)
+const legacyFileRedirects = [];
 const docIdBySlug = new Map();
 docs.forEach((d, i) => {
   const id = d.id ?? i + 1;
   const { slug, cycles, ...rest } = d;
+  const f = d.external_url ? files[d.external_url] : undefined;
+  if (f) {
+    Object.assign(rest, { r2_key: f.r2_key, size_bytes: f.size_bytes, sha256: f.sha256, mime: f.mime, external_url: null });
+    legacyFileRedirects.push({ from: new URL(d.external_url).pathname, to: `/${f.r2_key}` });
+  }
   if (slug) docIdBySlug.set(slug, id);
   insert('documents', flatten('documents', { ...rest, id, cycles: Array.isArray(cycles) ? cycles.join(',') : (cycles ?? '') }));
 });
@@ -245,7 +252,7 @@ const normalizePath = (path) => {
   return keep.length ? `${p}?${keep.join('&')}` : p;
 };
 const seenFrom = new Set();
-for (const r of load('redirects')) {
+for (const r of [...load('redirects'), ...legacyFileRedirects]) {
   const from = normalizePath(r.from ?? r.from_path);
   if (from === '/' || seenFrom.has(from)) continue; // "/" is handled by middleware
   seenFrom.add(from);

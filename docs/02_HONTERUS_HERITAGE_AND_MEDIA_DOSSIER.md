@@ -274,7 +274,7 @@ The search found **no verified Latin aphorism by Honterus himself** in the sourc
 
 ## 9. Image catalog (downloaded to `public/media/heritage/`)
 
-Full machine-readable credits are in `public/media/heritage/credits.json` (fields: file, title, author, license, licenseUrl, sourceUrl, width, height, alt_ro/de/en).
+Full machine-readable credits are in `public/media/heritage/credits.json` (fields: id, file, url, sourceUrl, author, license, licenseUrl, title, width, height, placeholder, variants[], alt{ro,de,en}).
 
 **Attribution rule:**
 - For CC BY / CC BY-SA images, show "Photo: {author}, {license}, via Wikimedia Commons" with links to the source page and the licence. A credits page with all entries is enough, plus an inline caption where practical.
@@ -303,17 +303,31 @@ Downloaded by `node scripts/media/fetch-heritage.mjs` as WebP variants (640/1024
 | `biserica-neagra-interior` | [Biserica Neagră interior.jpg](https://commons.wikimedia.org/wiki/File:Biserica_Neagr%C4%83_interior.jpg) | Terraflorin | CC BY-SA 4.0 | 1600×1200 |
 | `burzenland-1532` | [Burzenland-JohannesHonterus-1532.jpg](https://commons.wikimedia.org/wiki/File:Burzenland-JohannesHonterus-1532.jpg) | Johannes Honter | Public domain | 1600×2905 |
 
+**Catalogue caveats:**
+- `portret-septemcastrensis` is **not a portrait**. It is a hand-coloured woodcut **map** of Transylvania and its neighbours, of uncertain edition (its Commons source line is only "the citizens of Sibiu"). Label it as a map, and do not date it 1532.
+- `tipografia` is a historicist illustration by Friedrich Mieß (1854–1935), not a 16th-century picture. Caption it accordingly.
+- `portret-xilogravura` (c. 1550) carries the banner *VIGILATE ET ORATE*. At 426 px it should be used small only.
+- `stema-1539` (198 px) is a reference for redrawing the printer's mark as SVG. Do not display it as is.
+
 **Other candidates found but not downloaded** (all PD / CC):
 - *Johannes Honterus Bildnis.jpg* (Friedrich Mieß, PD, 596×840)
 - *Die Gartenlaube (1898) b 0673 1.jpg* (statue engraving, PD)
 - *Fostul gimnaziu evanghelic 2021.jpg* and *Fosta școală de băieți 2021 01.jpg* (Leontin l, CC BY-SA 4.0, 4032×3024)
 - *BVHonterusStatueRight.jpg* (communion relief, CC0)
-- *Crna crkva 18. srpnja 2025.jpg* (Black Church with statue, CC0, 3060×4080)
 - *Brasov Panorama.jpg* (ThE cRaCkEr, CC BY-SA 3.0, 5018×1217)
 - *RO Brasov from DN1E.jpg* (CC0)
 - *Black Church, Brasov, Romania (5681073575).jpg* (yeowatzup, CC BY 2.0, statue close-up)
 - 13 *Fotothek df tg 00051xx* scans of the Rudimenta maps (PD, ~800 px)
 - The Internet Archive scan *rudimentacosmogr00hont* (full Rudimenta Cosmographica, PD)
+- *Johannes Honterus School Brasov Building C part 2.JPG* (ThE cRaCkEr, CC BY 3.0, 2592×1944). This is the best photo of **Building C**, which the set does not cover yet.
+- *BVHonterusStatueLeft.jpg* (printing-shop relief on the plinth, CC0, 2096×1800)
+- *ETH-BIB-Brasov, Honterus-Denkmal mit Baum-Dia 247-10068.tif* (Leo Wehrli, historic photo, CC BY-SA 4.0)
+- *Brassó (11).jpg* (Austro-Hungarian postcard of the statue, PD)
+- *2021 — Zweite Julireise Mateus2019 Batch (61).jpg* (the 1532 star charts, PD artwork, 3574×1985). Strongly recommended as a source for constellation motifs.
+- *Transylvania1532Map.jpg* (coloured version of the 1532 map; the colouring is modern, from a postcard)
+- *Biserica Neagră Brașov interior – Innere Schwarze Kirche (2023) – img 06.jpg* (Chainwit., CC BY 4.0, guild pews)
+- *Romania-2004 – Johannes Honterus (7664397508).jpg* (Dennis G. Jarvis, CC BY-SA 2.0, statue)
+- *ROU BV Brasov CoA.svg* (Brașov arms, PD) and *Historical Brasov CoA – Relief Black Church exterior (cca. 1400).jpg* (CC0)
 - *Bibliotheca Scholae Coronensis.jpg* — **do not use**. Its Commons description says it shows the "house where Paul Richter was born", so the identification is unclear.
 
 ---

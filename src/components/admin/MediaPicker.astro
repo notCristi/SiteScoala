@@ -1,0 +1,26 @@
+---
+/** Image picker: hidden input + thumbnail; the dialog is shared (admin-client.ts, data-pick-media). */
+import type { T } from '~/server/admin/i18n';
+import type { MediaLite } from '~/server/admin/view';
+
+interface Props {
+  name: string;
+  value: string;
+  media: MediaLite | undefined;
+  t: T;
+  disabled?: boolean | undefined;
+}
+const { name, value, media, t, disabled } = Astro.props;
+---
+
+<div class="picker" data-mediapicker>
+  <input type="hidden" name={name} value={value} data-value />
+  <img class="thumb" src={media?.thumb ?? ''} alt={media?.alt ?? ''} width="288" height="192" hidden={!media} data-thumb />
+  {value && !media && <p class="help">#{value}</p>}
+  <p class="help" data-alt>{media ? media.alt || t('m_noAlt') : t('none')}</p>
+  <div class="btn-row">
+    <button type="button" class="btn btn--sm" data-pick-media disabled={disabled}>{t('m_pick')}</button>
+    <button type="button" class="btn btn--sm btn--quiet" data-clear disabled={disabled}>{t('remove')}</button>
+    {value && <a class="btn btn--sm btn--quiet" href={`/admin/media/${value}`} data-edit-link>{t('edit')}</a>}
+  </div>
+</div>

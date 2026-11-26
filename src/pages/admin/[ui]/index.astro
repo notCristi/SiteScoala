@@ -1,0 +1,239 @@
+---
+/** Dashboard: active banner (stop / extend), quick actions, counts, translation queue, new messages, activity. */
+import { and, desc, eq, gt, ne, or, sql } from 'drizzle-orm';
+import Admin from '~/layouts/Admin.astro';
+import Flash from '~/components/admin/Flash.astro';
+import { db, schema as s } from '~/server/db';
+import { ENTITIES } from '~/server/admin/entities';
+import { audit, can } from '~/server/admin/audit';
+import { purge } from '~/server/admin/purge';
+import { translator } from '~/server/admin/i18n';
+import { flashFrom } from '~/server/admin/view';
+import { fmtDate, str } from '~/server/admin/util';
+
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+const now = Date.now();
+
+if (Astro.request.method === 'POST') {
+  const fd = await Astro.request.formData();
+  const id = Number(fd.get('id'));
+  const act = str(fd.get('_action'), 20);
+  if (!can(user, 'banner') || !id) return Astro.redirect('/admin?err=errForbidden', 303);
+  const [a] = await db().select().from(s.announcements).where(eq(s.announcements.id, id)).limit(1);
+  if (!a) return Astro.redirect('/admin?err=errNotFound', 303);
+  const until = act === 'extend' ? Math.max(a.bannerUntil ?? now, now) + 86400_000 : now;
+  await db()
+    .update(s.announcements)
+    .set({ bannerUntil: until, ...(act === 'extend' ? {} : { pinnedBanner: false }), updatedAt: now, updatedBy: user.id })
+    .where(eq(s.announcements.id, id));
+  await audit(Astro, act === 'extend' ? 'banner_extend' : 'banner_stop', 'announcements', id, a.titleRo);
+  await purge(Astro, ['banner', 'announcements']);
+  return Astro.redirect('/admin?ok=okSaved', 303);
+}
+
+const d = db();
+const withStatus = ENTITIES.filter((e) => e.hasStatus);
+const [banners, messages, activity, ...counts] = await Promise.all([
+  d
+    .select()
+    .from(s.announcements)
+    .where(and(eq(s.announcements.status, 'published'), eq(s.announcements.pinnedBanner, true), gt(s.announcements.bannerUntil, now)))
+    .orderBy(desc(s.announcements.publishedAt)),
+  d.select().from(s.contactMessages).where(eq(s.contactMessages.status, 'new')).orderBy(desc(s.contactMessages.createdAt)).limit(5),
+  d
+    .select({ at: s.auditLog.at, action: s.auditLog.action, entityType: s.auditLog.entityType, entityId: s.auditLog.entityId, summary: s.auditLog.summary, who: s.adminUsers.displayName })
+    .from(s.auditLog)
+    .leftJoin(s.adminUsers, eq(s.adminUsers.id, s.auditLog.userId))
+    .where(and(ne(s.auditLog.action, 'login_fail'), ne(s.auditLog.action, 'login')))
+    .orderBy(desc(s.auditLog.id))
+    .limit(8),
+  ...withStatus.map((e) =>
+    d
+      .select({
+        pub: sql<number>`sum(case when ${e.table.status} = 'published' then 1 else 0 end)`,
+        draft: sql<number>`sum(case when ${e.table.status} = 'draft' then 1 else 0 end)`,
+        trDe: sql<number>`sum(case when ${e.table.status} = 'published' and ${e.table.deState} <> 'done' then 1 else 0 end)`,
+        trEn: sql<number>`sum(case when ${e.table.status} = 'published' and ${e.table.enState} <> 'done' then 1 else 0 end)`,
+      })
+      .from(e.table),
+  ),
+]);
+const stats = withStatus.map((e, i) => {
+  const c = (counts[i] as { pub: number | null; draft: number | null; trDe: number | null; trEn: number | null }[])[0];
+  return { e, pub: Number(c?.pub ?? 0), draft: Number(c?.draft ?? 0), trDe: Number(c?.trDe ?? 0), trEn: Number(c?.trEn ?? 0) };
+});
+const missing = await d
+  .select({ id: s.announcements.id, title: s.announcements.titleRo, de: s.announcements.deState, en: s.announcements.enState })
+  .from(s.announcements)
+  .where(and(eq(s.announcements.status, 'published'), or(ne(s.announcements.deState, 'done'), ne(s.announcements.enState, 'done'))))
+  .orderBy(desc(s.announcements.publishedAt))
+  .limit(6);
+const flash = flashFrom(Astro.url);
+const trTotal = stats.reduce((n, x) => n + x.trDe + x.trEn, 0);
+const ENTITY_KEY: Record<string, string> = Object.fromEntries(ENTITIES.filter((e) => !e.hidden).map((e) => [e.entityType, e.key]));
+---
+
+<Admin title={t('dashboard')} active="dashboard">
+  <header class="adm-head">
+    <div>
+      <span class="kicker">{fmtDate(now, user.uiLocale, false)}</span>
+      <h1>{t('hello')}, {user.name}</h1>
+    </div>
+    {
+      can(user, 'content') && (
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/admin/anunturi/nou">
+            + {t('newAnnouncement')}
+          </a>
+          <a class="btn" href="/admin/documente/nou">
+            {t('uploadDocument')}
+          </a>
+          <a class="btn" href="/admin/media#upload">
+            {t('uploadImage')}
+          </a>
+        </div>
+      )
+    }
+  </header>
+  <Flash t={t} ok={flash.ok} err={flash.err} />
+  {
+    user.mustChangePassword && (
+      <p class="flash flash--error" role="alert">
+        {t('changePwNotice')} <a href="/admin/cont">{t('account')} →</a>
+      </p>
+    )
+  }
+
+  <div class="dash">
+    <section class="card card--rubric">
+      <h2>{t('activeBanner')}</h2>
+      {
+        banners.length === 0 ? (
+          <p class="help">{t('noBanner')}</p>
+        ) : (
+          banners.map((b) => (
+            <div class="stack" style="--stack: var(--s-2); margin-bottom: var(--s-4)">
+              <p class="banner-preview">{b.bannerTextRo ?? b.titleRo}</p>
+              <p class="help">
+                <span class={`chip chip--${b.bannerLevel}`}>{t(`lvl_${b.bannerLevel}`)}</span> {t('bannerUntil')}: {fmtDate(b.bannerUntil, user.uiLocale)} ·{' '}
+                <a href={`/admin/anunturi/${b.id}`}>{t('edit')}</a>
+              </p>
+              {can(user, 'banner') && (
+                <form method="post" class="btn-row">
+                  <input type="hidden" name="_csrf" value={user.csrf} />
+                  <input type="hidden" name="id" value={b.id} />
+                  <button class="btn btn--sm btn--danger" name="_action" value="stop">
+                    {t('stopBanner')}
+                  </button>
+                  <button class="btn btn--sm" name="_action" value="extend">
+                    {t('extendBanner')}
+                  </button>
+                </form>
+              )}
+            </div>
+          ))
+        )
+      }
+    </section>
+
+    <section class="card">
+      <h2>{t('latestMessages')}</h2>
+      {
+        messages.length === 0 ? (
+          <p class="help">{t('noMessages')}</p>
+        ) : (
+          <ul class="list-plain">
+            {messages.map((m) => (
+              <li>
+                <a href={`/admin/mesaje/${m.id}`}>{m.name}</a> — {m.message.slice(0, 90)}
+                {m.message.length > 90 ? '…' : ''}
+                <small>
+                  {t(`topic_${m.topic}`)} · {fmtDate(m.createdAt, user.uiLocale)}
+                </small>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+  </div>
+
+  <h2 class="sec">{t('overview')}</h2>
+  <div class="stats">
+    {
+      stats.map((x) => (
+        <a href={`/admin/${x.e.key}`}>
+          <b>{x.pub}</b>
+          <span>{t(x.e.label)}</span>
+          <small>
+            {' '}
+            · {x.draft} {t('drafts')}
+          </small>
+        </a>
+      ))
+    }
+  </div>
+
+  <div class="dash" style="margin-top: var(--s-5)">
+    <section class="card">
+      <h2>{t('missingTranslations')}</h2>
+      {
+        trTotal === 0 ? (
+          <p class="help">{t('allDone')}</p>
+        ) : (
+          <>
+            <ul class="list-plain">
+              {stats
+                .filter((x) => x.trDe + x.trEn > 0)
+                .map((x) => (
+                  <li>
+                    <a href={`/admin/${x.e.key}?status=published`}>{t(x.e.label)}</a>
+                    <small>
+                      DE: {x.trDe} · EN: {x.trEn}
+                    </small>
+                  </li>
+                ))}
+            </ul>
+            {missing.length > 0 && (
+              <>
+                <h3 style="font-size:1.1rem; margin-top: var(--s-4)">{t('announcements')}</h3>
+                <ul class="list-plain">
+                  {missing.map((m) => (
+                    <li>
+                      <a href={`/admin/anunturi/${m.id}`}>{m.title}</a>
+                      <small>
+                        DE: {t(`tr_${m.de}`)} · EN: {t(`tr_${m.en}`)}
+                      </small>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </>
+        )
+      }
+    </section>
+    <section class="card">
+      <h2>{t('recentActivity')}</h2>
+      <ul class="list-plain">
+        {
+          activity.map((a) => (
+            <li>
+              {a.who ?? '—'} · {a.action}{' '}
+              {a.entityType && ENTITY_KEY[a.entityType] && a.entityId ? <a href={`/admin/${ENTITY_KEY[a.entityType]}/${a.entityId}`}>{a.summary ?? `#${a.entityId}`}</a> : (a.summary ?? '')}
+              <small>{fmtDate(a.at, user.uiLocale)}</small>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        can(user, 'admin') && (
+          <p>
+            <a href="/admin/jurnal">{t('auditLog')} →</a>
+          </p>
+        )
+      }
+    </section>
+  </div>
+</Admin>

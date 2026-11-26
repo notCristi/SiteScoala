@@ -1,0 +1,180 @@
+---
+/** Media library: grid with search, client-resized uploads (alt text required), YouTube by link. */
+import { and, desc, eq, like, or, sql } from 'drizzle-orm';
+import Admin from '~/layouts/Admin.astro';
+import Flash from '~/components/admin/Flash.astro';
+import { db, schema as s } from '~/server/db';
+import { youtubeId } from '~/server/admin/crud';
+import { audit, can } from '~/server/admin/audit';
+import { translator } from '~/server/admin/i18n';
+import { flashFrom, mediaThumb } from '~/server/admin/view';
+import { str } from '~/server/admin/util';
+
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+let ytError = '';
+if (Astro.request.method === 'POST') {
+  if (!can(user, 'content')) return Astro.redirect('/admin/media?err=errForbidden', 303);
+  const fd = await Astro.request.formData();
+  const yid = youtubeId(str(fd.get('youtube'), 300));
+  const alt = str(fd.get('altRo'), 300);
+  if (!yid) ytError = 'errUrl';
+  else if (!alt) ytError = 'errRequired';
+  else {
+    const [dupe] = await db().select({ id: s.mediaAssets.id }).from(s.mediaAssets).where(eq(s.mediaAssets.youtubeId, yid)).limit(1);
+    if (dupe) return Astro.redirect(`/admin/media/${dupe.id}`, 303);
+    const id = crypto.randomUUID();
+    await db()
+      .insert(s.mediaAssets)
+      .values({ id, kind: 'youtube', youtubeId: yid, altRo: alt, altDe: str(fd.get('altDe'), 300) || null, altEn: str(fd.get('altEn'), 300) || null, width: 1280, height: 720, uploadedBy: user.id });
+    await audit(Astro, 'create', 'media', id, `YouTube ${yid}`);
+    return Astro.redirect(`/admin/media/${id}?ok=okCreated`, 303);
+  }
+}
+const sp = Astro.url.searchParams;
+const q = (sp.get('q') ?? '').trim().slice(0, 100).replace(/[%_]/g, '');
+const kind = sp.get('kind') === 'youtube' ? 'youtube' : sp.get('kind') === 'image' ? 'image' : '';
+const noalt = sp.get('noalt') === '1';
+const page = Math.max(1, Number(sp.get('p') ?? 1) || 1);
+const where = and(
+  kind ? eq(s.mediaAssets.kind, kind) : undefined,
+  q ? or(like(s.mediaAssets.altRo, `%${q}%`), like(s.mediaAssets.captionRo, `%${q}%`), like(s.mediaAssets.credit, `%${q}%`), like(s.mediaAssets.originalFilename, `%${q}%`)) : undefined,
+  noalt ? sql`coalesce(${s.mediaAssets.altRo}, '') = ''` : undefined,
+);
+const per = 60;
+const [rows, [cnt]] = await db().batch([
+  db().select().from(s.mediaAssets).where(where).orderBy(desc(s.mediaAssets.createdAt)).limit(per).offset((page - 1) * per),
+  db().select({ n: sql<number>`count(*)` }).from(s.mediaAssets).where(where),
+]);
+const pages = Math.max(1, Math.ceil(Number(cnt?.n ?? 0) / per));
+const flash = flashFrom(Astro.url);
+const qs = (p: number) => {
+  const u = new URLSearchParams(sp);
+  u.set('p', String(p));
+  return `?${u}`;
+};
+---
+
+<Admin title={t('media')} active="media">
+  <header class="adm-head"><h1>{t('media')}</h1></header>
+  <Flash t={t} ok={flash.ok} err={flash.err} />
+
+  {
+    can(user, 'content') && (
+      <div class="dash" style="margin-bottom: var(--s-5)">
+        <section class="card card--lapis" id="upload">
+          <h2>{t('m_upload')}</h2>
+          <p class="help">{t('m_uploadHelp')}</p>
+          <div class="f" style="margin-top: var(--s-3)">
+            <label for="files" class="sr-only">{t('m_upload')}</label>
+            <input type="file" id="files" accept="image/jpeg,image/png,image/webp" multiple data-upload-input />
+          </div>
+          <div class="upl-list" data-upload-list />
+          <p style="margin-top: var(--s-3)">
+            <button type="button" class="btn btn--primary" data-upload-go hidden>
+              {t('m_uploadAll')}
+            </button>
+          </p>
+        </section>
+        <form method="post" class="card">
+          <h2>{t('m_youtube')}</h2>
+          <input type="hidden" name="_csrf" value={user.csrf} />
+          {ytError && <p class="flash flash--error">{t(ytError)}</p>}
+          <div class="f">
+            <label for="yt">{t('m_youtubeUrl')}</label>
+            <input type="text" inputmode="url" id="yt" name="youtube" placeholder="https://www.youtube.com/watch?v=…" required />
+          </div>
+          <div class="f">
+            <label for="yt-alt">
+              {t('m_youtubeTitle')}
+              <span class="req">{t('required')}</span>
+            </label>
+            <input type="text" id="yt-alt" name="altRo" required maxlength="300" />
+          </div>
+          <div class="grid-2">
+            <div class="f">
+              <label for="yt-de">DE</label>
+              <input type="text" id="yt-de" name="altDe" lang="de" maxlength="300" />
+            </div>
+            <div class="f">
+              <label for="yt-en">EN</label>
+              <input type="text" id="yt-en" name="altEn" lang="en" maxlength="300" />
+            </div>
+          </div>
+          <button class="btn" type="submit">{t('m_youtube')}</button>
+        </form>
+      </div>
+    )
+  }
+
+  <template id="upl-tpl">
+    <div class="upl-item">
+      <div>
+        <img alt="" width="192" height="128" />
+        <p class="help" data-name></p>
+        <button type="button" class="btn btn--sm btn--quiet" data-remove>{t('remove')}</button>
+      </div>
+      <div>
+        <div class="f">
+          <label for="u-alt">{t('m_alt')} · RO <span class="req">{t('required')}</span></label>
+          <input type="text" id="u-alt" name="altRo" maxlength="300" lang="ro" />
+          <p class="help">{t('m_altHelp')}</p>
+          <p class="err" data-alt-err hidden>{t('errRequired')}</p>
+        </div>
+        <div class="grid-2">
+          <div class="f"><label for="u-altde">{t('m_alt')} · DE</label><input type="text" id="u-altde" name="altDe" maxlength="300" lang="de" /></div>
+          <div class="f"><label for="u-alten">{t('m_alt')} · EN</label><input type="text" id="u-alten" name="altEn" maxlength="300" lang="en" /></div>
+          <div class="f"><label for="u-cap">{t('m_caption')} · RO</label><input type="text" id="u-cap" name="captionRo" maxlength="500" lang="ro" /></div>
+          <div class="f"><label for="u-credit">{t('m_credit')}</label><input type="text" id="u-credit" name="credit" maxlength="200" /></div>
+          <div class="f"><label for="u-lic">{t('m_license')}</label><input type="text" id="u-lic" name="license" maxlength="100" /></div>
+          <div class="f"><label for="u-src">{t('m_source')}</label><input type="text" inputmode="url" id="u-src" name="sourceUrl" maxlength="500" /></div>
+        </div>
+        <p class="help" data-state aria-live="polite"></p>
+        <progress max="1" value="0" hidden></progress>
+      </div>
+    </div>
+  </template>
+
+  <form class="toolbar" method="get">
+    <div class="f grow"><label for="q">{t('search')}</label><input type="search" id="q" name="q" value={q} /></div>
+    <div class="f">
+      <label for="kind">{t('f_type')}</label>
+      <select id="kind" name="kind" data-autosubmit>
+        <option value="">{t('all')}</option>
+        <option value="image" selected={kind === 'image'}>{t('m_kind_image')}</option>
+        <option value="youtube" selected={kind === 'youtube'}>{t('m_kind_youtube')}</option>
+      </select>
+    </div>
+    <label class="check"><input type="checkbox" name="noalt" value="1" checked={noalt} data-autosubmit-check />{t('m_noAlt')}</label>
+    <button class="btn" type="submit">{t('filter')}</button>
+  </form>
+
+  {
+    rows.length === 0 ? (
+      <div class="card empty"><p>{q || kind || noalt ? t('noResults') : t('emptyList')}</p></div>
+    ) : (
+      <div class="media-grid">
+        {rows.map((m) => (
+          <a href={`/admin/media/${m.id}`}>
+            <img class="ph" src={mediaThumb(m)} alt="" width="320" height="213" loading="lazy" style={m.placeholder ? `background:${m.placeholder}` : undefined} />
+            <p class="cap">
+              {m.kind === 'youtube' && <span class="chip">YouTube</span>} {m.altRo ? m.altRo : <span class="noalt">{t('m_noAlt')}</span>}
+            </p>
+          </a>
+        ))}
+      </div>
+    )
+  }
+  {
+    pages > 1 && (
+      <nav class="pager" aria-label={t('page')}>
+        {page > 1 && <a href={qs(page - 1)}>← {t('prev')}</a>}
+        <span>{t('page')} {page} {t('of')} {pages}</span>
+        {page < pages && <a href={qs(page + 1)}>{t('next')} →</a>}
+      </nav>
+    )
+  }
+  <script>
+    import '~/components/admin/media-client';
+  </script>
+</Admin>

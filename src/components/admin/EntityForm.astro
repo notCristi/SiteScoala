@@ -1,0 +1,385 @@
+---
+/**
+ * Generic two-column editor: content in RO / DE / EN tabs on the left, status + publishing on the right.
+ * Plain POST form (works without JS); admin-client.ts adds tabs, toolbar, preview, pickers, slug sync.
+ */
+import type { EntityDef, FieldDef } from '~/server/admin/entities';
+import type { T } from '~/server/admin/i18n';
+import type { AdminUser } from '~/server/auth';
+import { flattenPageData, type Row } from '~/server/admin/crud';
+import { trGlyph, trState } from '~/server/admin/view';
+import { fmtDate } from '~/server/admin/util';
+import { LOCALES, SUFFIX, type Locale } from '~/i18n/locales';
+import { ROUTES } from '~/i18n/routes';
+import Field, { type PickerData } from './Field.astro';
+import Repeater from './Repeater.astro';
+import MediaPicker from './MediaPicker.astro';
+
+interface Props {
+  def: EntityDef;
+  row: Row;
+  isNew: boolean;
+  errors: Record<string, string>;
+  t: T;
+  user: AdminUser;
+  data: PickerData;
+  parentId?: number | undefined;
+  publicUrl?: string | undefined;
+}
+const { def, row, isNew, errors, t, user, data, parentId, publicUrl } = Astro.props;
+const translatorMode = user.role === 'translator';
+const canPublish = user.role !== 'translator';
+const status = (row.status as string | undefined) ?? 'draft';
+const col = (f: FieldDef, l: Locale) => `${f.name}${SUFFIX[l]}`;
+const valueOf = (f: FieldDef, l?: Locale): unknown => {
+  if (f.type === 'checklist' && l) {
+    try {
+      const c = row[f.column ?? 'checklistJson'];
+      const o = typeof c === 'string' ? (JSON.parse(c) as Record<string, string[]>) : {};
+      return (o[l] ?? []).join('\n');
+    } catch {
+      return '';
+    }
+  }
+  return l ? row[col(f, l)] : row[f.name];
+};
+const errOf = (f: FieldDef, l?: Locale) => errors[l ? col(f, l) : f.name];
+const disabledFor = (f: FieldDef, l?: Locale) => (translatorMode ? !(f.localized && l && l !== 'ro') : !!f.adminOnly && user.role !== 'admin');
+
+const tabFields = def.fields.filter((f) => f.localized && f.place === 'content');
+const topFields = def.fields.filter((f) => !f.localized && f.place === 'content' && !['faq', 'pagedata'].includes(f.type));
+const sideFields = def.fields.filter((f) => f.place === 'side');
+const bannerFields = def.fields.filter((f) => f.place === 'banner');
+const eventFields = def.fields.filter((f) => f.place === 'event');
+const advFields = def.fields.filter((f) => f.place === 'advanced');
+const faq = def.fields.find((f) => f.type === 'faq');
+const pagedata = def.fields.find((f) => f.type === 'pagedata');
+const multipart = def.fields.some((f) => f.type === 'file');
+
+const chips = LOCALES.map((l) => ({ l, st: trState(def, row, l) }));
+const errorList = Object.entries(errors);
+
+let faqRows: Record<string, string>[] = [];
+if (faq) {
+  try {
+    faqRows = row.faqJson ? (JSON.parse(String(row.faqJson)) as Record<string, string>[]) : [];
+  } catch {
+    faqRows = [];
+  }
+}
+const pd = pagedata ? flattenPageData(row.dataJson as string | undefined) : undefined;
+const routeOptions = (Object.keys(ROUTES) as (keyof typeof ROUTES)[]).map((r) => ({ value: r, label: `/${ROUTES[r].ro || ''}` }));
+const fieldLabel = (k: string) => {
+  const base = k.replace(/(Ro|De|En)$/, '');
+  const f = def.fields.find((x) => x.name === base || x.name === k);
+  const lang = /(Ro|De|En)$/.exec(k)?.[1];
+  return f ? `${t(f.label)}${lang ? ` (${lang.toUpperCase()})` : ''}` : k;
+};
+const updated = row.updatedAt as number | undefined;
+let rawJson = '';
+try {
+  rawJson = row.dataJson ? JSON.stringify(JSON.parse(String(row.dataJson)), null, 2) : '';
+} catch {
+  rawJson = String(row.dataJson ?? '');
+}
+---
+
+<form method="post" class="edit" novalidate enctype={multipart ? 'multipart/form-data' : undefined} data-entity-form data-dirty-guard>
+  <input type="hidden" name="_csrf" value={user.csrf} />
+  {parentId && <input type="hidden" name="parentId" value={parentId} />}
+
+  <div class="edit__main">
+    {
+      errorList.length > 0 && (
+        <div class="flash flash--error" role="alert" tabindex="-1" data-focus>
+          <strong>{t('errorsTitle')}</strong>
+          <ul>
+            {errorList.map(([k]) => (
+              <li>
+                <a href={`#f-${k}`} data-goto={k}>{fieldLabel(k)}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+    {translatorMode && <p class="flash">{t('translatorNote')}</p>}
+
+    {
+      topFields.length > 0 && (
+        <section class="card">
+          {topFields.map((f) => (
+            <>
+              {f.type === 'file' && row.r2Key && (
+                <p class="help">
+                  {t('doc_current')}:{' '}
+                  <a href={`/${String(row.r2Key)}`} target="_blank" rel="noopener">
+                    {String(row.originalFilename ?? row.r2Key)}
+                  </a>{' '}
+                  · {String(row.fileExt ?? '').toUpperCase()} · {Math.round(Number(row.sizeBytes ?? 0) / 1024)} KB{row.pages ? ` · ${row.pages} p.` : ''}
+                </p>
+              )}
+              <Field f={f.type === 'file' && row.r2Key ? { ...f, label: 'doc_replace' } : f} name={f.name} value={valueOf(f)} error={errOf(f)} t={t} data={data} disabled={disabledFor(f)} />
+              {f.type === 'file' && (
+                <Field f={{ name: 'externalUrl', type: 'url', label: 'doc_external', place: 'content' }} name="externalUrl" value={row.externalUrl} error={errors.externalUrl} t={t} data={data} disabled={translatorMode} />
+              )}
+            </>
+          ))}
+        </section>
+      )
+    }
+
+    {
+      tabFields.length > 0 && (
+        <section class="card" data-tabs>
+          <div class="tabs" role="tablist" aria-label={t('translations')}>
+            {chips.map(({ l, st }, i) => (
+              <button type="button" role="tab" id={`tab-${l}`} aria-controls={`panel-${l}`} aria-selected={i === (translatorMode ? 1 : 0) ? 'true' : 'false'} tabindex={i === (translatorMode ? 1 : 0) ? 0 : -1}>
+                {l.toUpperCase()}
+                <span class={`chip chip--${st}`} title={t(`tr_${st === 'filled' ? 'done' : st}`)}>
+                  {trGlyph(st)} {l === 'ro' ? '' : t(`tr_${st === 'filled' ? 'done' : st}`)}
+                </span>
+              </button>
+            ))}
+          </div>
+          {LOCALES.map((l, i) => (
+            <div class="tabpanel" role="tabpanel" id={`panel-${l}`} aria-labelledby={`tab-${l}`} hidden={i !== (translatorMode ? 1 : 0)} lang={l}>
+              {l !== 'ro' && def.hasTranslationState && (
+                <div class="f">
+                  <label for={`f-${l}State`}>
+                    {t('trState')} · {l.toUpperCase()}
+                  </label>
+                  <select name={`${l}State`} id={`f-${l}State`}>
+                    {['missing', 'draft', 'done'].map((st) => (
+                      <option value={st} selected={(row[`${l}State`] ?? 'missing') === st}>
+                        {t(`tr_${st}`)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {tabFields.map((f) => (
+                <Field
+                  f={f}
+                  name={f.type === 'checklist' ? `${f.name}_${l}` : col(f, l)}
+                  value={valueOf(f, l)}
+                  error={errOf(f, l)}
+                  t={t}
+                  lang={l}
+                  data={data}
+                  disabled={disabledFor(f, l)}
+                  refText={l !== 'ro' && f.type !== 'markdown' ? (valueOf(f, 'ro') as string | null) : null}
+                />
+              ))}
+            </div>
+          ))}
+        </section>
+      )
+    }
+
+    {
+      faq && (
+        <Repeater
+          prefix="faq"
+          legend={t('faq')}
+          t={t}
+          translatorMode={translatorMode}
+          rows={faqRows}
+          cols={[
+            { key: 'q', label: t('faq_q'), localized: true },
+            { key: 'a', label: t('faq_a'), localized: true, textarea: true },
+          ]}
+        />
+      )
+    }
+
+    {
+      pd && (
+        <>
+          <input type="hidden" name="pd_present" value="1" />
+          <Repeater
+            prefix="pd_facts"
+            legend={t('page_facts')}
+            t={t}
+            translatorMode={translatorMode}
+            rows={pd.facts}
+            cols={[
+              { key: 'label', label: t('page_fact_label'), localized: true },
+              { key: 'value', label: t('page_fact_value'), localized: true },
+            ]}
+          />
+          <Repeater
+            prefix="pd_notes"
+            legend={t('page_notes')}
+            t={t}
+            translatorMode={translatorMode}
+            rows={pd.notes}
+            cols={[
+              { key: 'title', label: t('page_note_title'), localized: true },
+              { key: 'text', label: t('page_note_text'), localized: true, textarea: true },
+            ]}
+          />
+          <Repeater
+            prefix="pd_related"
+            legend={t('page_related')}
+            t={t}
+            translatorMode={translatorMode}
+            rows={pd.related}
+            cols={[
+              { key: 'route', label: t('page_related_route'), options: routeOptions },
+              { key: 'slug', label: 'slug' },
+              { key: 'label', label: t('page_related_label'), localized: true },
+            ]}
+          />
+          {row.key === 'home' && (
+            <fieldset class="card">
+              <legend>{t('page_video')}</legend>
+              <div class="f">
+                <label for="f-pd_videoId">{t('page_video')}</label>
+                <input type="text" id="f-pd_videoId" name="pd_videoId" value={pd.videoId} readonly={translatorMode} />
+              </div>
+              <div class="grid-2">
+                {LOCALES.map((l) => (
+                  <div class="f">
+                    <label for={`f-pd_videoTitle_${l}`}>
+                      {t('page_video_title')} <span class="lang-tag">· {l.toUpperCase()}</span>
+                    </label>
+                    <input type="text" id={`f-pd_videoTitle_${l}`} name={`pd_videoTitle_${l}`} value={pd.videoTitle[`title_${l}`] ?? ''} lang={l} readonly={translatorMode && l === 'ro'} />
+                  </div>
+                ))}
+              </div>
+              <div class="f">
+                <span class="lbl">{t('page_heritage')}</span>
+                <MediaPicker name="pd_heritageMediaId" value={pd.heritageMediaId} media={data.media.get(pd.heritageMediaId)} t={t} disabled={translatorMode} />
+              </div>
+            </fieldset>
+          )}
+        </>
+      )
+    }
+
+    {
+      bannerFields.length > 0 && (
+        <fieldset class="card card--rubric" data-banner>
+          <legend>{t('bannerSection')}</legend>
+          {bannerFields.map((f) =>
+            f.localized ? (
+              <div class="grid-2">
+                {LOCALES.map((l) => (
+                  <Field f={f} name={col(f, l)} value={valueOf(f, l)} error={errOf(f, l)} t={t} lang={l} data={data} disabled={disabledFor(f, l)} />
+                ))}
+              </div>
+            ) : (
+              <Field f={f} name={f.name} value={valueOf(f)} error={errOf(f)} t={t} data={data} disabled={disabledFor(f)} />
+            ),
+          )}
+        </fieldset>
+      )
+    }
+
+    {
+      eventFields.length > 0 && (
+        <fieldset class="card">
+          <legend>{t('eventSection')}</legend>
+          <div class="grid-2">
+            {eventFields.map((f) => (
+              <Field f={f} name={f.name} value={valueOf(f)} error={errOf(f)} t={t} data={data} disabled={disabledFor(f)} />
+            ))}
+          </div>
+        </fieldset>
+      )
+    }
+
+    {
+      (advFields.length > 0 || (pagedata && user.role === 'admin')) && (
+        <details class="adv" open={advFields.some((f) => errors[f.name]) || !!errors.dataJson_raw}>
+          <summary>{t('advanced')}</summary>
+          {advFields.map((f) => (
+            <Field f={f} name={f.name} value={valueOf(f)} error={errOf(f)} t={t} data={data} disabled={disabledFor(f)} />
+          ))}
+          {pagedata && user.role === 'admin' && (
+            <div class="f">
+              <label for="f-dataJson_raw">{t('rawJson')}</label>
+              <textarea id="f-dataJson_raw" name="dataJson_raw" rows="8" spellcheck="false" aria-invalid={errors.dataJson_raw ? 'true' : undefined}>
+                {rawJson}
+              </textarea>
+              <input type="hidden" name="dataJson_raw_orig" value={rawJson} />
+              {errors.dataJson_raw && <p class="err">{t(errors.dataJson_raw)}</p>}
+            </div>
+          )}
+        </details>
+      )
+    }
+  </div>
+
+  <aside class="edit__side">
+    <section class="card card--lapis actions actions-bar">
+      {
+        def.hasStatus && (
+          <p>
+            {t('status')}: <span class={`chip chip--${status}`}>{t(`st_${status}`)}</span>
+          </p>
+        )
+      }
+      {
+        translatorMode || !def.hasStatus ? (
+          <button class="btn btn--primary" name="_action" value="save">
+            {t('save')}
+          </button>
+        ) : status === 'published' ? (
+          <>
+            <button class="btn btn--primary" name="_action" value="publish">
+              {t('save')}
+            </button>
+            <button class="btn" name="_action" value="unpublish">
+              {t('unpublish')}
+            </button>
+          </>
+        ) : (
+          <>
+            <button class="btn btn--primary" name="_action" value="publish">
+              {isNew ? t('saveAndPublish') : t('publish')}
+            </button>
+            <button class="btn" name="_action" value="save">
+              {t('saveDraft')}
+            </button>
+          </>
+        )
+      }
+      {
+        !isNew && canPublish && (
+          <div class="btn-row">
+            {def.hasStatus && status !== 'archived' && (
+              <button class="btn btn--sm" name="_action" value="archive">
+                {t('archive')}
+              </button>
+            )}
+            <button class="btn btn--sm btn--danger" name="_action" value="delete" data-confirm={t('confirmDelete')}>
+              {t('delete')}
+            </button>
+          </div>
+        )
+      }
+      {publicUrl && status === 'published' && (
+        <a href={publicUrl} target="_blank" rel="noopener">
+          {t('openOnSite')} ↗
+        </a>
+      )}
+      {updated && (
+        <p class="meta">
+          {t('f_updated')}: {fmtDate(updated, user.uiLocale)}
+        </p>
+      )}
+    </section>
+    {
+      sideFields.length > 0 && (
+        <section class="card">
+          {sideFields.map((f) => (
+            <Field f={f} name={f.name} value={valueOf(f)} error={errOf(f)} t={t} data={data} disabled={disabledFor(f)} />
+          ))}
+        </section>
+      )
+    }
+    <slot name="side" />
+  </aside>
+</form>

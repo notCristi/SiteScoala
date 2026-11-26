@@ -48,6 +48,9 @@
     "setup": "npm run db:migrate:local && npm run db:seed:local",
     "deploy": "wrangler deploy && npm run db:migrate:prod",
     "media:heritage": "node scripts/media/fetch-heritage.mjs",
-    "brand:logo": "node scripts/brand/build-logo.mjs"
+    "brand:logo": "node scripts/brand/build-logo.mjs",
+    "media:legacy-docs": "node scripts/media/import-legacy-documents.mjs download",
+    "media:legacy-docs:local": "node scripts/media/import-legacy-documents.mjs upload --local",
+    "media:legacy-docs:prod": "node scripts/media/import-legacy-documents.mjs upload --remote"
   }
 }

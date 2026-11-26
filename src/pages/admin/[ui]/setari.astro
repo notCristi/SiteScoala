@@ -1,0 +1,143 @@
+---
+/** Site settings (admin only): contact block, external links, home hero image, cache. */
+import { eq } from 'drizzle-orm';
+import Admin from '~/layouts/Admin.astro';
+import Flash from '~/components/admin/Flash.astro';
+import MediaPicker from '~/components/admin/MediaPicker.astro';
+import { db, schema as s } from '~/server/db';
+import { getSettings } from '~/server/content';
+import { audit, can } from '~/server/admin/audit';
+import { purge, purgeEverything } from '~/server/admin/purge';
+import { translator } from '~/server/admin/i18n';
+import { flashFrom, mediaLite } from '~/server/admin/view';
+import { str } from '~/server/admin/util';
+
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+if (!can(user, 'admin')) return Astro.redirect('/admin?err=errForbidden', 303);
+const URL_RE = /^https?:\/\/[^\s<>"]+$/i;
+const errors: Record<string, string> = {};
+
+if (Astro.request.method === 'POST') {
+  const fd = await Astro.request.formData();
+  if (fd.get('_action') === 'purge') {
+    const ok = await purgeEverything(Astro);
+    await audit(Astro, 'purge_all', 'settings', null);
+    return Astro.redirect(`/admin/setari?ok=${ok ? 'set_purged' : 'set_purgeQueued'}`, 303);
+  }
+  const url = (k: string) => {
+    const v = str(fd.get(k), 500);
+    if (v && !URL_RE.test(v)) errors[k] = 'errUrl';
+    return v || undefined;
+  };
+  const email = str(fd.get('email'), 200);
+  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) errors.email = 'errEmail';
+  const admissionsEmail = str(fd.get('admissionsEmail'), 200);
+  const contact = {
+    street: str(fd.get('street'), 200),
+    postalCode: str(fd.get('postalCode'), 20),
+    city: str(fd.get('city'), 80) || 'Brașov',
+    phones: str(fd.get('phones'), 400).split('\n').map((x) => x.trim()).filter(Boolean).slice(0, 6),
+    fax: str(fd.get('fax'), 40) || undefined,
+    email,
+    admissionsEmail: admissionsEmail || undefined,
+    hours: { ro: str(fd.get('hours_ro'), 200), de: str(fd.get('hours_de'), 200) || undefined, en: str(fd.get('hours_en'), 200) || undefined },
+    mapUrl: url('mapUrl') ?? '',
+    lat: Number(fd.get('lat')) || 45.641,
+    lng: Number(fd.get('lng')) || 25.588,
+  };
+  const links = {
+    noteInCatalog: url('noteInCatalog') ?? '',
+    classroom: url('classroom') ?? '',
+    youtube: url('youtube'),
+    facebook: url('facebook'),
+    instagram: url('instagram'),
+  };
+  const heroId = str(fd.get('heroMediaId'), 64);
+  if (!Object.keys(errors).length) {
+    const now = Date.now();
+    const rows = [
+      { key: 'contact', valueJson: JSON.stringify(contact) },
+      { key: 'links', valueJson: JSON.stringify(links) },
+      { key: 'hero', valueJson: JSON.stringify(heroId ? { mediaId: heroId } : {}) },
+    ];
+    for (const r of rows)
+      await db()
+        .insert(s.settings)
+        .values({ ...r, updatedAt: now, updatedBy: user.id })
+        .onConflictDoUpdate({ target: s.settings.key, set: { valueJson: r.valueJson, updatedAt: now, updatedBy: user.id } });
+    await audit(Astro, 'update', 'settings', 'contact,links,hero');
+    await purge(Astro, ['settings', 'announcements']);
+    return Astro.redirect('/admin/setari?ok=okSaved', 303);
+  }
+}
+const st = await getSettings();
+const media = await mediaLite([st.hero.mediaId]);
+const [heroRow] = st.hero.mediaId ? await db().select({ id: s.mediaAssets.id }).from(s.mediaAssets).where(eq(s.mediaAssets.id, st.hero.mediaId)) : [];
+const c = st.contact;
+const flash = flashFrom(Astro.url);
+const errText = (k: string) => (errors[k] ? t(errors[k]) : '');
+---
+
+<Admin title={t('settings')} active="setari">
+  <header class="adm-head"><h1>{t('settings')}</h1></header>
+  <Flash t={t} ok={flash.ok} err={Object.keys(errors).length ? 'errorsTitle' : flash.err} />
+  <form method="post" class="edit">
+    <input type="hidden" name="_csrf" value={user.csrf} />
+    <div class="edit__main">
+      <fieldset class="card">
+        <legend>{t('set_contact')}</legend>
+        <div class="grid-2">
+          <div class="f"><label for="street">{t('set_street')}</label><input type="text" id="street" name="street" value={c.street} /></div>
+          <div class="f"><label for="postalCode">{t('set_postal')}</label><input type="text" id="postalCode" name="postalCode" value={c.postalCode} /></div>
+          <div class="f"><label for="city">{t('set_city')}</label><input type="text" id="city" name="city" value={c.city} /></div>
+          <div class="f"><label for="fax">{t('set_fax')}</label><input type="text" id="fax" name="fax" value={c.fax ?? ''} /></div>
+          <div class="f"><label for="email">{t('set_email')}</label><input type="email" id="email" name="email" value={c.email} aria-invalid={errors.email ? 'true' : undefined} />{errText('email') && <p class="err">{errText('email')}</p>}</div>
+          <div class="f"><label for="admissionsEmail">{t('set_admEmail')}</label><input type="email" id="admissionsEmail" name="admissionsEmail" value={c.admissionsEmail ?? ''} /></div>
+        </div>
+        <div class="f"><label for="phones">{t('set_phones')}</label><textarea id="phones" name="phones" rows="3">{c.phones.join('\n')}</textarea></div>
+        <div class="grid-2">
+          {(['ro', 'de', 'en'] as const).map((l) => (
+            <div class="f"><label for={`hours_${l}`}>{t('set_hours')} <span class="lang-tag">· {l.toUpperCase()}</span></label><input type="text" id={`hours_${l}`} name={`hours_${l}`} value={c.hours?.[l] ?? ''} lang={l} /></div>
+          ))}
+        </div>
+        <div class="f"><label for="mapUrl">{t('set_map')}</label><input type="text" inputmode="url" id="mapUrl" name="mapUrl" value={c.mapUrl} />{errText('mapUrl') && <p class="err">{errText('mapUrl')}</p>}</div>
+        <div class="grid-2">
+          <div class="f"><label for="lat">Lat</label><input type="text" inputmode="decimal" id="lat" name="lat" value={c.lat} /></div>
+          <div class="f"><label for="lng">Lng</label><input type="text" inputmode="decimal" id="lng" name="lng" value={c.lng} /></div>
+        </div>
+      </fieldset>
+      <fieldset class="card">
+        <legend>{t('set_links')}</legend>
+        {(
+          [
+            ['noteInCatalog', t('set_nic')],
+            ['classroom', t('set_classroom')],
+            ['youtube', 'YouTube'],
+            ['facebook', 'Facebook'],
+            ['instagram', 'Instagram'],
+          ] as const
+        ).map(([k, label]) => (
+          <div class="f"><label for={k}>{label}</label><input type="text" inputmode="url" id={k} name={k} value={(st.links as Record<string, string | undefined>)[k] ?? ''} aria-invalid={errors[k] ? 'true' : undefined} />{errText(k) && <p class="err">{errText(k)}</p>}</div>
+        ))}
+      </fieldset>
+    </div>
+    <aside class="edit__side">
+      <section class="card card--lapis actions actions-bar">
+        <button class="btn btn--primary" name="_action" value="save">{t('save')}</button>
+      </section>
+      <section class="card">
+        <div class="f">
+          <span class="lbl">{t('set_hero')}</span>
+          <MediaPicker name="heroMediaId" value={heroRow ? (st.hero.mediaId ?? '') : ''} media={st.hero.mediaId ? media.get(st.hero.mediaId) : undefined} t={t} />
+        </div>
+      </section>
+    </aside>
+  </form>
+  <form method="post" class="card" style="margin-top: var(--s-6)">
+    <h2>{t('set_cache')}</h2>
+    <p class="help">{t('set_cacheHelp')}</p>
+    <input type="hidden" name="_csrf" value={user.csrf} />
+    <p style="margin-top: var(--s-3)"><button class="btn btn--danger" name="_action" value="purge" data-confirm={t('set_purge') + '?'}>{t('set_purge')}</button></p>
+  </form>
+</Admin>
