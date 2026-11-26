@@ -36,14 +36,29 @@ const md = new Marked({
     table(token: Tokens.Table) {
       const head = token.header.map((c) => `<th>${this.parser.parseInline(c.tokens)}</th>`).join('');
       const rows = token.rows.map((r) => `<tr>${r.map((c) => `<td>${this.parser.parseInline(c.tokens)}</td>`).join('')}</tr>`).join('');
-      return `<div class="table-scroll"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+      // A focusable, named scroll region: wide tables scroll inside the column instead of widening the page (WCAG 1.4.10).
+      const name = token.header
+        .map((c) => plainText(c.text, 60))
+        .filter(Boolean)
+        .join(' · ');
+      return `<div class="table-scroll" role="region" tabindex="0" aria-label="${esc(name || 'Tabel')}"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
     },
   },
 });
 
+/** Codes such as 2022-1-RO01-KA120-SCH-000105343: letters and digits in ≥ 3 hyphenated parts. */
+const CODE = /\b(?=[A-Z0-9-]*\d)(?=[A-Z0-9-]*[A-Z])[A-Z0-9]+(?:-[A-Z0-9]+){2,}\b/g;
+/** Wrap identifiers in <span class="code"> (lining figures) — only in text, never inside tags. */
+function markCodes(html: string): string {
+  return html
+    .split(/(<[^>]+>)/)
+    .map((part) => (part.startsWith('<') ? part : part.replace(CODE, (m) => (m.length >= 8 ? `<span class="code">${m}</span>` : m))))
+    .join('');
+}
+
 export function renderMarkdown(src: string | null | undefined): string | null {
   if (!src || !src.trim()) return null;
-  return md.parse(src.slice(0, 200_000)) as string;
+  return markCodes(md.parse(src.slice(0, 200_000)) as string);
 }
 
 /** Strip markdown/HTML to plain text (search index, meta descriptions). */

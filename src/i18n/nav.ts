@@ -41,7 +41,7 @@ export const NAV: NavItem[] = [
       {
         title: l('Înscriere', 'Anmeldung', 'Enrolment'),
         links: [
-          guide('pregatitoare', l('Clasa pregătitoare', 'Vorbereitungsklasse', 'Preparatory class'), l('cu evaluarea limbii germane', 'mit Deutsch-Einstufung', 'with German assessment')),
+          guide('pregatitoare', l('Clasa pregătitoare', 'Vorbereitungsklasse', 'Preparatory class'), l('cu evaluarea limbii germane', 'mit Überprüfung der Deutschkenntnisse', 'with German assessment')),
           guide('clasa-v', l('Clasa a V-a', '5. Klasse', 'Year 5')),
           guide('clasa-ix', l('Clasa a IX-a (liceu)', '9. Klasse (Lyzeum)', 'Year 9 (upper secondary)'), l('proba de limba germană', 'Deutschprüfung', 'German language test')),
           guide('transfer', l('Transferuri', 'Schulwechsel', 'Transfers')),
@@ -78,7 +78,7 @@ export const NAV: NavItem[] = [
         title: l('Despre noi', 'Über uns', 'About us'),
         links: [
           { label: l('Colegiul pe scurt', 'Das Kolleg im Überblick', 'The college at a glance'), route: 'school' },
-          { label: l('Istorie: 1541 – azi', 'Geschichte: 1541 bis heute', 'History: 1541 to today'), route: 'history' },
+          { label: l('Istoric: 1388 – azi', 'Geschichte: 1388 bis heute', 'History: 1388 to today'), route: 'history' },
           { label: l('Johannes Honterus', 'Johannes Honterus', 'Johannes Honterus'), route: 'honterus' },
           { label: l('Curtea Honterus', 'Der Honterushof', 'The Honterus Courtyard'), route: 'campus' },
         ],
@@ -110,7 +110,7 @@ export const NAV: NavItem[] = [
       {
         title: l('Cicluri', 'Schulstufen', 'Stages'),
         links: [
-          { label: l('Primar · P – IV', 'Grundschule · V – 4', 'Primary · P – 4'), route: 'primar' },
+          { label: l('Primar · P – IV', 'Grundschule · VK – 4', 'Primary · P – 4'), route: 'primar' },
           { label: l('Gimnaziu · V – VIII', 'Gymnasialstufe · 5 – 8', 'Lower secondary · 5 – 8'), route: 'gimnaziu' },
           { label: l('Liceu · IX – XII', 'Lyzealstufe · 9 – 12', 'Upper secondary · 9 – 12'), route: 'liceu' },
         ],
@@ -135,7 +135,7 @@ export const NAV: NavItem[] = [
         links: [
           { label: l('Coetus, din 1543', 'Coetus, seit 1543', 'Coetus, since 1543'), route: 'coetus' },
           { label: l('Toate activitățile', 'Alle Aktivitäten', 'All activities'), route: 'life' },
-          { label: l('Galerie', 'Galerie', 'Gallery'), route: 'gallery' },
+          // Gallery link returns once the school publishes its first gallery in /admin → Galerii.
         ],
       },
     ],
@@ -167,8 +167,8 @@ export const AUDIENCES: { id: 'elevi' | 'parinti' | 'viitori' | 'profesori'; lin
     id: 'parinti',
     links: [
       { label: l('Catalogul electronic', 'Elektronisches Notenbuch', 'Electronic gradebook'), href: 'noteInCatalog' },
-      { label: l('Formulare și cereri', 'Formulare und Anträge', 'Forms and applications'), route: 'documents', query: { cat: 'formulare' } },
-      { label: l('Burse', 'Stipendien', 'Grants'), route: 'documents', query: { cat: 'burse' } },
+      { label: l('Regulamente școlare', 'Schulordnungen', 'School regulations'), route: 'documents', query: { cat: 'regulamente' } },
+      { label: l('Burse', 'Stipendien', 'Scholarships and grants'), route: 'documents', query: { cat: 'burse' } },
       { label: l('Evaluarea Națională', 'Nationale Evaluierung', 'National Assessment'), route: 'guide', params: { kind: 'evaluare-nationala' } },
       { label: l('Contact secretariat', 'Sekretariat kontaktieren', 'Contact the office'), route: 'contact' },
     ],
@@ -179,7 +179,7 @@ export const AUDIENCES: { id: 'elevi' | 'parinti' | 'viitori' | 'profesori'; lin
       { label: l('Catalogul electronic', 'Elektronisches Notenbuch', 'Electronic gradebook'), href: 'noteInCatalog' },
       { label: l('Google Classroom', 'Google Classroom', 'Google Classroom'), href: 'classroom' },
       { label: l('Bacalaureat', 'Bakkalaureat', 'Baccalaureate'), route: 'guide', params: { kind: 'bacalaureat' } },
-      { label: l('DSD I și II', 'DSD I und II', 'DSD I and II'), route: 'guide', params: { kind: 'dsd' } },
+      { label: l('Diploma DSD', 'Deutsches Sprachdiplom (DSD)', 'German Language Diploma (DSD)'), route: 'guide', params: { kind: 'dsd' } },
       { label: l('Coetus și Consiliul Elevilor', 'Coetus und Schülerrat', 'Coetus and the Student Council'), route: 'coetus' },
     ],
   },
@@ -190,7 +190,7 @@ export const AUDIENCES: { id: 'elevi' | 'parinti' | 'viitori' | 'profesori'; lin
       { label: l('Catalogul electronic', 'Elektronisches Notenbuch', 'Electronic gradebook'), href: 'noteInCatalog' },
       { label: l('Documente și regulamente', 'Dokumente und Ordnungen', 'Documents and regulations'), route: 'documents' },
       { label: l('Proiecte Erasmus+', 'Erasmus+-Projekte', 'Erasmus+ projects'), route: 'projects' },
-      { label: l('Personal și catedre', 'Kollegium und Fachbereiche', 'Staff and departments'), route: 'staff' },
+      { label: l('Conducere și personal', 'Schulleitung und Kollegium', 'Leadership and staff'), route: 'staff' },
     ],
   },
 ];

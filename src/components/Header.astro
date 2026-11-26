@@ -46,6 +46,7 @@ const L = (k: string) => ui(locale, k);
                   aria-current={l === locale ? 'true' : undefined}
                   data-lang-link
                 >
+                  {/* The endonym is always the accessible name; on narrow screens it is visually hidden (not display:none) behind the short label. */}
                   <span class="lang__long">{LOCALE_META[l].endonym}</span>
                   <span class="lang__short" aria-hidden="true">{LOCALE_META[l].short}</span>
                 </a>
@@ -63,7 +64,7 @@ const L = (k: string) => ui(locale, k);
         <CrestMark class="brand__crest" />
         <span class="brand__text">
           <span class="brand__kicker">{L('schoolKicker')}</span>
-          <span class="brand__name">Johannes Honterus</span>
+          <span class="brand__name"><span class="brand__given">Johannes </span>Honterus</span>
         </span>
       </a>
 
@@ -140,7 +141,7 @@ const L = (k: string) => ui(locale, k);
         </button>
         <button class="menu-trigger" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
           <Icon name="menu" />
-          <span>{L('menu')}</span>
+          <span class="menu-trigger__label">{L('menu')}</span>
         </button>
       </div>
     </div>
@@ -161,7 +162,7 @@ const L = (k: string) => ui(locale, k);
           }
         </ul>
       </nav>
-      <button class="icon-btn" type="button" data-menu-close>
+      <button class="icon-btn" type="button" data-menu-close autofocus>
         <Icon name="close" /><span class="vh">{L('close')}</span>
       </button>
     </div>
@@ -196,8 +197,8 @@ const L = (k: string) => ui(locale, k);
       }
     </ul>
     <div class="mobile-menu__actions">
-      <a class="btn btn--block" href={settings.links.noteInCatalog} rel="noopener" target="_blank">NoteInCatalog <Icon name="external" /></a>
-      <a class="btn btn--ghost btn--block" href={settings.links.classroom} rel="noopener" target="_blank">Google Classroom <Icon name="external" /></a>
+      <a class="btn btn--block" href={settings.links.noteInCatalog} rel="noopener" target="_blank">NoteInCatalog <Icon name="external" /><span class="vh">{L('external')}</span></a>
+      <a class="btn btn--ghost btn--block" href={settings.links.classroom} rel="noopener" target="_blank">Google Classroom <Icon name="external" /><span class="vh">{L('external')}</span></a>
       <a class="btn btn--ghost btn--block" href={url('documents', locale)}>{L('documents')}</a>
       <a class="btn btn--ghost btn--block" href={`tel:${settings.contact.phones[0]?.replace(/\s/g, '')}`}><Icon name="phone" /> {settings.contact.phones[0]}</a>
     </div>
@@ -259,6 +260,13 @@ const L = (k: string) => ui(locale, k);
     { passive: true },
   );
 
+  // Switching language keeps the current filters (?cat=…, ?an=…): parameter names are the same in every language.
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('.lang a[hreflang]')) {
+    a.addEventListener('click', () => {
+      if (location.search && !a.search) a.search = location.search;
+    });
+  }
+
   // Show ⌘K on Apple platforms.
   if (/Mac|iPhone|iPad/.test(navigator.platform)) document.querySelectorAll('[data-kbd]').forEach((k) => (k.textContent = '⌘ K'));
 </script>
@@ -280,7 +288,7 @@ const L = (k: string) => ui(locale, k);
     display: flex;
     align-items: center;
     gap: var(--s-5);
-    min-height: 2.5rem;
+    min-height: 2.75rem;
   }
   .utility__tag {
     font-family: var(--font-serif);
@@ -302,7 +310,7 @@ const L = (k: string) => ui(locale, k);
     display: inline-flex;
     align-items: center;
     gap: 0.3em;
-    min-height: 2.5rem;
+    min-height: 2.75rem;
   }
   .utility a :global(svg) {
     width: 0.95em;
@@ -314,6 +322,8 @@ const L = (k: string) => ui(locale, k);
     margin: 0;
   }
   .lang a {
+    justify-content: center;
+    min-width: 2.75rem;
     padding-inline: 0.5rem;
     text-decoration: none;
     border-bottom: 2px solid transparent;
@@ -338,10 +348,22 @@ const L = (k: string) => ui(locale, k);
       display: none;
     }
     .lang__long {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
     }
     .lang__short {
       display: inline;
+    }
+    .utility__row,
+    .utility a {
+      min-height: 3rem;
+    }
+    .lang a {
+      min-width: 3rem;
     }
   }
 
@@ -391,6 +413,7 @@ const L = (k: string) => ui(locale, k);
     display: flex;
     flex-direction: column;
     line-height: 1;
+    min-width: 0;
   }
   .brand__kicker {
     font-size: 0.72rem;
@@ -460,9 +483,17 @@ const L = (k: string) => ui(locale, k);
     right: 0;
     top: 100%;
     background: var(--paper);
+    /* closes on the seal's double rule (1 + 3 + 1 px), not a shadow */
     border-bottom: 1px solid var(--ink);
-    box-shadow: 0 30px 40px -30px rgb(11 27 77 / 0.35);
     padding-block: var(--s-6) var(--s-7);
+  }
+  .mega::after {
+    content: '';
+    position: absolute;
+    inset: calc(100% + 1px) 0 auto 0;
+    height: 4px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--ink);
   }
   .mega__grid {
     display: grid;
@@ -529,6 +560,7 @@ const L = (k: string) => ui(locale, k);
 
   .masthead__actions {
     display: flex;
+    flex: none;
     gap: var(--s-2);
   }
   .search-trigger,
@@ -596,11 +628,32 @@ const L = (k: string) => ui(locale, k);
       overflow: hidden;
       clip: rect(0 0 0 0);
     }
-    .brand__name {
-      font-size: 1.35rem;
+    /* phones: crest + "Honterus" (spec §7.3); the full name stays in the link's aria-label */
+    .brand__kicker,
+    .brand__given {
+      display: none;
     }
-    .brand__kicker {
-      font-size: 0.65rem;
+    .brand__name {
+      font-size: 1.5rem;
+      margin-top: 0;
+      white-space: nowrap;
+    }
+    .masthead__row {
+      gap: var(--s-3);
+    }
+  }
+  @media (max-width: 22.5rem) {
+    .menu-trigger__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+    .search-trigger,
+    .menu-trigger {
+      padding-inline: 0.7rem;
     }
   }
 

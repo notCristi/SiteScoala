@@ -17,8 +17,9 @@ export const fold = (s: string) =>
     .toLowerCase();
 
 export function searchRecords(records: SearchRecord[], query: string, limit = 40) {
-  const terms = fold(query).split(/\s+/).filter((x) => x.length > 0);
-  if (!terms.length || fold(query).trim().length < 2) return [];
+  const fq = fold(query).trim().replace(/\s+/g, ' ');
+  const terms = fq.split(' ').filter((x) => x.length > 0);
+  if (!terms.length || fq.length < 2) return [];
   const out: { r: SearchRecord; score: number }[] = [];
   for (const r of records) {
     const title = fold(r.t);
@@ -35,7 +36,13 @@ export function searchRecords(records: SearchRecord[], query: string, limit = 40
       score += ti === 0 ? 12 : ti > 0 && /\W/.test(title[ti - 1] ?? ' ') ? 8 : ti > 0 ? 5 : /\W/.test(hay[i - 1] ?? ' ') ? 3 : 1;
     }
     if (!ok) continue;
+    // the title is the query (or starts with it): that record wins over pages that merely mention it
+    if (title === fq) score += 40;
+    else if (title.startsWith(fq)) score += 15;
     if (r.k === 'guide' || r.k === 'page') score += 2;
+    // newer documents first among equals (school year in the subtitle)
+    const yr = r.k === 'document' ? /\b(20\d\d)\b/.exec(r.s ?? '') : null;
+    if (yr) score += (Number(yr[1]) - 2010) * 0.08;
     score -= r.t.length / 200;
     out.push({ r, score });
   }

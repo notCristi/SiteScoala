@@ -7,7 +7,7 @@ import Fleuron from '~/components/svg/Fleuron.astro';
 import Icon from '~/components/svg/Icon.astro';
 import { pick } from '~/i18n/locales';
 import { url } from '~/i18n/routes';
-import { caption } from '~/lib/media';
+import { caption, creditLine } from '~/lib/media';
 import { getMedia, type Life, type Project } from '~/server/content';
 import type { ViewProps } from './types';
 
@@ -34,7 +34,7 @@ const parent = isProject
             <div class="plate">
               <Picture media={cover} locale={locale} priority sizes="(min-width: 60rem) 42rem, 100vw" />
             </div>
-            {caption(cover, locale) && <figcaption>{caption(cover, locale)}{cover.credit && <span class="credit">{cover.credit}</span>}</figcaption>}
+            {caption(cover, locale) && <figcaption>{caption(cover, locale)}{cover.credit && <span class="credit">{creditLine(cover, locale)}</span>}</figcaption>}
           </figure>
         )
       }

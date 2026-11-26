@@ -63,3 +63,12 @@ export function formatBytes(n: number | null | undefined, locale: Locale) {
   }
   return `${new Intl.NumberFormat(LOCALE_META[locale].intl, { maximumFractionDigits: v < 10 && i > 0 ? 1 : 0 }).format(v)} ${units[i]}`;
 }
+
+/** "2026-2027" → RO 2026–2027 · DE 2026/27 · EN 2026–27 (each language's own school-year convention). */
+export function formatSchoolYear(y: string | null | undefined, locale: Locale): string {
+  if (!y) return '';
+  const [a, b] = y.split(/[-–/]/);
+  if (!a || !b) return y;
+  const b2 = b.length === 4 ? b.slice(2) : b;
+  return locale === 'ro' ? `${a}–${b.length === 4 ? b : a.slice(0, 2) + b}` : locale === 'de' ? `${a}/${b2}` : `${a}–${b2}`;
+}

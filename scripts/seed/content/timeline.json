@@ -41,9 +41,9 @@
       "en": "Johannes Honterus is born"
     },
     "body": {
-      "ro": "Johannes Honterus, născut Austen, vine pe lume la Brașov, fiu al unui meșter tăbăcar înstărit. Numele latinizat provine din săsescul „Honter”, adică soc.",
-      "de": "Johannes Honterus, eigentlich Austen, kommt in Kronstadt als Sohn eines wohlhabenden Lederers zur Welt. Der latinisierte Name geht auf das siebenbürgisch-sächsische „Honter“ (Holunder) zurück.",
-      "en": "Johannes Honterus, born Austen, is born in Brașov, the son of a prosperous tanner. His Latinised name comes from the Transylvanian Saxon “Honter”, meaning elder (the shrub)."
+      "ro": "Johannes Honterus, născut Austen, vine pe lume la Brașov, fiu al unui meșter tăbăcar înstărit. Numele latinizat provine din săsescul „Hontert”, adică soc.",
+      "de": "Johannes Honterus, eigentlich Austen, kommt in Kronstadt als Sohn eines wohlhabenden Lederers zur Welt. Der latinisierte Name geht auf das siebenbürgisch-sächsische „Hontert“ (Holunder) zurück.",
+      "en": "Johannes Honterus (originally Austen) is born in Brașov, the son of a prosperous tanner. His Latinised name comes from the Transylvanian Saxon “Hontert”, meaning elder (the shrub)."
     },
     "media_id": "h-portret-xilogravura",
     "source_url": "https://www.deutsche-biographie.de/pnd118553445.html"
@@ -120,9 +120,9 @@
     "era": "honterus",
     "highlight": true,
     "title": {
-      "ro": "Anul întemeierii",
-      "de": "Gründungsjahr",
-      "en": "Year of foundation"
+      "ro": "Noua școală a lui Honterus",
+      "de": "Die neue Schule des Honterus",
+      "en": "Honterus’s new school"
     },
     "body": {
       "ro": "La 26 aprilie 1541 începe construcția unei școli noi pe locul fostei mănăstiri Sf. Ecaterina, cu o sală publică de prelegeri. Colegiul își sărbătorește ziua la 3 octombrie 1541.",
@@ -344,8 +344,8 @@
     },
     "body": {
       "ro": "Prin reforma învățământului, școala este naționalizată și își pierde numele și clădirile. Potrivit cronicii școlii, învățământul în limba germană continuă într-o școală de stat, sub numele de „Liceul mixt german”.",
-      "de": "Mit der Schulreform wird die Schule verstaatlicht und verliert Namen und Gebäude. Nach der Schulchronik wird der deutschsprachige Unterricht an einer staatlichen Schule fortgeführt, zunächst unter dem Namen „Liceul mixt german“ (Gemischtes deutsches Lyzeum).",
-      "en": "The education reform nationalises the school, which loses its name and buildings. According to the school chronicle, German-language teaching continues at a state school, first as the “Liceul mixt german” (Mixed German Lyceum)."
+      "de": "Mit der Schulreform wird die Schule verstaatlicht und verliert Namen und Gebäude. Nach der Schulchronik wird der deutschsprachige Unterricht an einer staatlichen Schule fortgeführt, zunächst unter dem Namen „Liceul mixt german“ (deutschsprachiges koedukatives Lyzeum).",
+      "en": "The education reform nationalises the school, which loses its name and buildings. According to the school chronicle, German-language teaching continues at a state school, first as the “Liceul mixt german” (a co-educational German-language lyceum)."
     },
     "source_url": "https://liceulhonterusbrasov.ro/lic/despre-noi/"
   },
@@ -408,7 +408,7 @@
       "en": "Deutsches Sprachdiplom"
     },
     "body": {
-      "ro": "Potrivit Allgemeine Deutsche Zeitung, școala organizează din 1995 examenul pentru Diploma de limba germană (DSD) a Conferinței Miniștrilor Culturii din Germania.",
+      "ro": "Potrivit Allgemeine Deutsche Zeitung, școala organizează din 1995 examenul pentru Diploma de limba germană (DSD) a Conferinței permanente a miniștrilor educației și culturii din landurile germane (KMK).",
       "de": "Nach einem Bericht der Allgemeinen Deutschen Zeitung wird an der Schule seit 1995 das Deutsche Sprachdiplom der Kultusministerkonferenz abgenommen.",
       "en": "According to the Allgemeine Deutsche Zeitung, the school has held the examination for the German Language Diploma (DSD) of the Kultusministerkonferenz since 1995."
     },

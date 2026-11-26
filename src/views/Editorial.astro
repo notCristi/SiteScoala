@@ -14,11 +14,13 @@ import EmblemGimnaziu from '~/components/svg/EmblemGimnaziu.astro';
 import EmblemLiceu from '~/components/svg/EmblemLiceu.astro';
 import EmblemDSD from '~/components/svg/EmblemDSD.astro';
 import EmblemCoetus from '~/components/svg/EmblemCoetus.astro';
-import { pick } from '~/i18n/locales';
+import EmblemPress from '~/components/svg/EmblemPress.astro';
+import CompassRose from '~/components/svg/CompassRose.astro';
+import { formatDate, pick } from '~/i18n/locales';
 import { url, type RouteId } from '~/i18n/routes';
 import { NAV } from '~/i18n/nav';
 import { ui } from '~/i18n/ui';
-import { caption } from '~/lib/media';
+import { caption, creditLine } from '~/lib/media';
 import { getMedia, getPage, listLife } from '~/server/content';
 import type { ViewProps } from './types';
 
@@ -45,7 +47,10 @@ const title = page ? pick(page, 'title', locale) : { value: NAV.flatMap((n) => n
 const lead = page ? pick(page, 'lead', locale) : undefined;
 const body = page ? pick(page, 'bodyHtml', locale) : undefined;
 const parent = NAV.find((n) => n.match.includes(match.id));
-const Emblem = { primar: EmblemPrimar, gimnaziu: EmblemGimnaziu, liceu: EmblemLiceu, german: EmblemDSD, coetus: EmblemCoetus }[match.id as string];
+// Gutter marks: the cycle emblems; the 1539 press for Honterus; the cosmographer's compass rose for the courtyard.
+const Emblem = { primar: EmblemPrimar, gimnaziu: EmblemGimnaziu, liceu: EmblemLiceu, german: EmblemDSD, coetus: EmblemCoetus, honterus: EmblemPress, campus: CompassRose }[
+  match.id as string
+];
 const desc = page ? pick(page, 'metaDescription', locale).value || lead?.value : undefined;
 ---
 
@@ -81,14 +86,14 @@ const desc = page ? pick(page, 'metaDescription', locale).value || lead?.value :
             {caption(hero, locale) && (
               <figcaption>
                 {caption(hero, locale)}
-                {hero.credit && <span class="credit">{hero.credit}{hero.license ? ` · ${hero.license}` : ''}</span>}
+                {hero.credit && <span class="credit">{creditLine(hero, locale)}</span>}
               </figcaption>
             )}
           </figure>
         )
       }
       {body?.value ? <div class="prose" lang={body.lang} set:html={body.value} /> : <p class="prose muted">—</p>}
-      <div class="end-mark" aria-hidden="true"><Fleuron /></div>
+      <div class="end-mark" aria-hidden="true"><Fleuron size={36} /></div>
 
       {
         life.length > 0 && (
@@ -132,8 +137,8 @@ const desc = page ? pick(page, 'metaDescription', locale).value || lead?.value :
       }
       {
         data.related && data.related.length > 0 && (
-          <nav class="related" aria-label={locale === 'ro' ? 'Vezi și' : locale === 'de' ? 'Siehe auch' : 'See also'}>
-            <p class="kicker">{locale === 'ro' ? 'Vezi și' : locale === 'de' ? 'Siehe auch' : 'See also'}</p>
+          <nav class="related" aria-label={locale === 'ro' ? 'Vedeți și' : locale === 'de' ? 'Siehe auch' : 'See also'}>
+            <p class="kicker">{locale === 'ro' ? 'Vedeți și' : locale === 'de' ? 'Siehe auch' : 'See also'}</p>
             <ul role="list">
               {data.related.map((r) => (
                 <li>
@@ -147,10 +152,15 @@ const desc = page ? pick(page, 'metaDescription', locale).value || lead?.value :
           </nav>
         )
       }
-      <p class="margin-note updated">
-        <strong>{ui(locale, 'updated')}</strong>
-        {page?.updatedAt ? new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'Europe/Bucharest' }).format(page.updatedAt) : ''}
-      </p>
+      {
+        /* only an editor's save is news to the reader; the seed import date is not */
+        page?.updatedAt && page.updatedBy && page.updatedBy !== 'seed' && (
+          <p class="margin-note updated">
+            <strong>{ui(locale, 'updated')}</strong>
+            {formatDate(page.updatedAt, locale, 'long')}
+          </p>
+        )
+      }
     </aside>
   </div>
 </Base>
@@ -161,7 +171,7 @@ const desc = page ? pick(page, 'metaDescription', locale).value || lead?.value :
   }
   .emblem {
     width: 5.5rem;
-    color: var(--rubric);
+    color: var(--ink);
     position: sticky;
     top: calc(var(--header-h) + 2rem);
   }
@@ -173,10 +183,13 @@ const desc = page ? pick(page, 'metaDescription', locale).value || lead?.value :
   .hero-fig {
     margin-bottom: var(--s-6);
   }
+  /* the printer's ivy leaf closes the text: centred, in ink */
   .end-mark {
-    margin-top: var(--s-6);
-    width: 2rem;
-    color: var(--rubric);
+    display: flex;
+    justify-content: center;
+    max-width: var(--measure);
+    margin: var(--s-7) 0;
+    color: var(--ink);
   }
   .facts {
     display: grid;

@@ -29,3 +29,22 @@ export function altText(m: Media, locale: Locale) {
 export function caption(m: Media, locale: Locale) {
   return pick(m as unknown as Record<string, unknown>, 'caption', locale).value;
 }
+
+/* Credit lines: author and licence names are stored in English (Wikimedia Commons metadata);
+   the generic parts are localised here so RO/DE pages do not print "Unknown artist · Public domain". */
+const CREDIT_WORDS: Record<string, Record<Locale, string>> = {
+  'unknown artist': { ro: 'Autor necunoscut', de: 'Unbekannter Künstler', en: 'Unknown artist' },
+  unknown: { ro: 'Autor necunoscut', de: 'Unbekannter Urheber', en: 'Unknown author' },
+  'unknown author': { ro: 'Autor necunoscut', de: 'Unbekannter Urheber', en: 'Unknown author' },
+  'autor necunoscut': { ro: 'Autor necunoscut', de: 'Unbekannter Künstler', en: 'Unknown artist' },
+  'public domain': { ro: 'domeniu public', de: 'gemeinfrei', en: 'public domain' },
+  'domeniu public': { ro: 'domeniu public', de: 'gemeinfrei', en: 'public domain' },
+  gemeinfrei: { ro: 'domeniu public', de: 'gemeinfrei', en: 'public domain' },
+};
+const localWord = (s: string, locale: Locale) => CREDIT_WORDS[s.trim().toLowerCase()]?.[locale] ?? s;
+
+/** "Itineris55 · CC BY-SA 4.0", "Autor necunoscut · domeniu public" — or '' when there is no credit. */
+export function creditLine(m: Pick<Media, 'credit' | 'license'>, locale: Locale): string {
+  if (!m.credit) return '';
+  return m.license ? `${localWord(m.credit, locale)} · ${localWord(m.license, locale)}` : localWord(m.credit, locale);
+}

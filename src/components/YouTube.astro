@@ -1,19 +1,30 @@
 ---
-/** Click-to-load YouTube facade: poster from i.ytimg.com, iframe (youtube-nocookie) only after click. */
+/**
+ * Click-to-load YouTube facade: iframe (youtube-nocookie) only after click.
+ * Poster: a still chosen by the school (`poster`, a media asset from our own origin) — YouTube's
+ * automatic thumbnail (i.ytimg.com) is only the fallback.
+ */
 import type { Locale } from '~/i18n/locales';
 import { ui } from '~/i18n/ui';
 interface Props {
   id: string;
   title: string;
   locale: Locale;
+  poster?: { src: string; srcset?: string; width: number; height: number };
 }
-const { id, title, locale } = Astro.props;
+const { id, title, locale, poster } = Astro.props;
 ---
 
 <figure class="yt">
   <div class="yt__frame plate">
     <button type="button" class="yt__btn" data-yt={id} data-title={title}>
-      <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} width="480" height="360" alt="" loading="lazy" decoding="async" />
+      {
+        poster ? (
+          <img src={poster.src} srcset={poster.srcset} sizes="(min-width: 64rem) 50rem, 100vw" width={poster.width} height={poster.height} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} width="480" height="360" alt="" loading="lazy" decoding="async" />
+        )
+      }
       <span class="yt__play" aria-hidden="true">
         <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="1.5"></circle><circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="1"></circle><path d="M26 21 L45 32 L26 43 Z" fill="currentColor"></path></svg>
       </span>

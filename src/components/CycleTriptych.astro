@@ -21,6 +21,12 @@ const cycles = [
 ] as const;
 const rangeDE = { primar: 'VK – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
 const rangeEN = { primar: 'P – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
+/** Visible link text (the arrow alone is no label): names the stage page it opens. */
+const GO = {
+  primar: { ro: 'Despre ciclul primar', de: 'Zur Grundschule', en: 'About the primary school' },
+  gimnaziu: { ro: 'Despre gimnaziu', de: 'Zur Gymnasialstufe', en: 'About the lower secondary' },
+  liceu: { ro: 'Despre liceu', de: 'Zur Lyzealstufe', en: 'About the upper secondary' },
+} as const;
 ---
 
 <ol role="list" class="triptych">
@@ -40,7 +46,8 @@ const rangeEN = { primar: 'P – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
             <span class="cycle__name">{ui(locale, `cycles.${c.id}`)}</span>
             <span class="cycle__grades">{ui(locale, `grades.${c.id}`)}</span>
             {p && <span class="cycle__lead">{pick(p, 'lead', locale).value}</span>}
-            <span class="cycle__go">
+            <span class="cycle__go" aria-hidden="true">
+              {GO[c.key][locale]}
               <Icon name="arrow-right" />
             </span>
           </a>
@@ -84,7 +91,7 @@ const rangeEN = { primar: 'P – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
   }
   .cycle__emblem {
     width: 3.5rem;
-    color: var(--rubric);
+    color: var(--ink);
   }
   .cycle__range {
     font-family: var(--font-serif);
@@ -99,10 +106,13 @@ const rangeEN = { primar: 'P – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
     font-weight: 600;
   }
   .cycle__grades {
-    font-size: var(--t-label);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    /* small caps on the mixed-case string keep Romanian ordinals legible ("a V-a", not "A V-A") */
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+    font-variant-caps: all-small-caps;
+    font-variant-numeric: lining-nums;
+    letter-spacing: 0.06em;
     color: var(--rubric);
   }
   .cycle__lead {
@@ -112,10 +122,19 @@ const rangeEN = { primar: 'P – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
   .cycle__go {
     margin-top: auto;
     padding-top: var(--s-4);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 700;
     color: var(--lapis);
   }
+  .cycle:hover .cycle__go {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
   .cycle__go :global(svg) {
-    width: 1.4rem;
+    width: 1.15rem;
+    height: 1.15rem;
     transition: transform 200ms;
   }
   .cycle:hover .cycle__go :global(svg) {

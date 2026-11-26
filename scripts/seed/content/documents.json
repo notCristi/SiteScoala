@@ -904,7 +904,7 @@
   {
     "title": {
       "ro": "Procedura de evaluare pentru înscrierea în clasa pregătitoare 2026–2027",
-      "de": "Verfahren der Eingangsbewertung für die Vorbereitungsklasse 2026/27",
+      "de": "Verfahren zur Überprüfung der Deutschkenntnisse – Vorbereitungsklasse 2026/27",
       "en": "Assessment procedure for preparatory-class admission 2026–27"
     },
     "category": "admitere",
@@ -1126,7 +1126,7 @@
     "title": {
       "ro": "OMEC nr. 732 privind bursele elevilor",
       "de": "Ministerialerlass Nr. 732 über Schülerstipendien",
-      "en": "Ministerial Order No. 732 on student grants"
+      "en": "Ministerial Order No. 732 on scholarships and grants"
     },
     "category": "burse",
     "cycles": [],
@@ -1664,7 +1664,7 @@
     "title": {
       "ro": "Cerere – bursă de merit pentru premii, 2024–2025",
       "de": "Antrag – Leistungsstipendium für Preisträgerinnen und Preisträger, 2024/25",
-      "en": "Application – merit grant for award winners, 2024–25"
+      "en": "Application – merit scholarship for award winners, 2024–25"
     },
     "category": "burse",
     "cycles": [],
@@ -1874,7 +1874,7 @@
     "title": {
       "ro": "Cerere – bursă de merit, art. 7 lit. d), 2023–2024",
       "de": "Antrag – Leistungsstipendium, Art. 7 Buchst. d, 2023/24",
-      "en": "Application – merit grant, Art. 7(d), 2023–24"
+      "en": "Application – merit scholarship, Art. 7(d), 2023–24"
     },
     "category": "burse",
     "cycles": [],
@@ -1889,7 +1889,7 @@
     "title": {
       "ro": "Cerere – bursă de merit, art. 7 lit. e), 2023–2024",
       "de": "Antrag – Leistungsstipendium, Art. 7 Buchst. e, 2023/24",
-      "en": "Application – merit grant, Art. 7(e), 2023–24"
+      "en": "Application – merit scholarship, Art. 7(e), 2023–24"
     },
     "category": "burse",
     "cycles": [],
@@ -1904,7 +1904,7 @@
     "title": {
       "ro": "Cerere – bursă de merit, art. 7 lit. f), 2023–2024",
       "de": "Antrag – Leistungsstipendium, Art. 7 Buchst. f, 2023/24",
-      "en": "Application – merit grant, Art. 7(f), 2023–24"
+      "en": "Application – merit scholarship, Art. 7(f), 2023–24"
     },
     "category": "burse",
     "cycles": [],
@@ -2072,7 +2072,7 @@
     "title": {
       "ro": "OME nr. 5379/07.09.2022 privind bursele elevilor",
       "de": "Erlass Nr. 5379 vom 07.09.2022 über Schülerstipendien",
-      "en": "Order No. 5379 of 7 September 2022 on student grants"
+      "en": "Order No. 5379 of 7 September 2022 on scholarships and grants"
     },
     "category": "burse",
     "cycles": [],
@@ -2100,8 +2100,8 @@
   },
   {
     "title": {
-      "ro": "Regulamentul concursului „Honterus Ski-Pokal” 2022",
-      "de": "Ausschreibung des Honterus-Skipokals 2022",
+      "ro": "Regulamentul concursului „Honterus Ski Pokal” 2022",
+      "de": "Ausschreibung zum Honterus Ski Pokal 2022",
       "en": "Rules of the Honterus Ski Cup 2022"
     },
     "category": "alte",
@@ -2610,8 +2610,8 @@
   },
   {
     "title": {
-      "ro": "Regulamentul concursului „Honterus Ski-Pokal” 2024",
-      "de": "Ausschreibung des Honterus-Skipokals 2024",
+      "ro": "Regulamentul concursului „Honterus Ski Pokal” 2024",
+      "de": "Ausschreibung zum Honterus Ski Pokal 2024",
       "en": "Rules of the Honterus Ski Cup 2024"
     },
     "category": "alte",

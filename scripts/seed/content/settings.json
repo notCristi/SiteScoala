@@ -9,7 +9,6 @@
     ],
     "fax": "0268 470 802",
     "email": "liceulhonterus@yahoo.com",
-    "admissionsEmail": "admitere@liceulhonterusbrasov.ro",
     "hours": null,
     "mapUrl": "https://www.openstreetmap.org/?mlat=45.64092&mlon=25.58882#map=18/45.64092/25.58882",
     "lat": 45.6409185,
@@ -38,6 +37,7 @@
     "Adresele de e-mail funcționale cu an în denumire (…2026@) sunt specifice sesiunii; confirmați care rămân active și dacă există o adresă oficială pe domeniul școlii care să înlocuiască liceulhonterus@yahoo.com.",
     "NoteInCatalog și Google Classroom nu erau legate de pe site-ul vechi; confirmați că școala folosește aceste platforme înainte de a afișa linkurile.",
     "Nu există pagini oficiale YouTube/Facebook verificate (postarea Facebook referită pe site-ul vechi este de pe un profil personal) – ambele lăsate null.",
-    "PDI 2021–2026 (p. 5) conține un telefon (0249 435470) și un e-mail (contact@liceulhonterusbrasov.ro) greșite – nu au fost folosite."
+    "PDI 2021–2026 (p. 5) conține un telefon (0249 435470) și un e-mail (contact@liceulhonterusbrasov.ro) greșite – nu au fost folosite.",
+    "Adresa admitere@liceulhonterusbrasov.ro apare pe site-ul vechi doar în anunțul de admitere în clasa a IX-a (iulie 2026); a fost scoasă din „contact” pentru a nu fi afișată în toate ghidurile (inclusiv clasa pregătitoare) și pe pagina Contact alături de liceulhonterus@yahoo.com. Rămâne în „functionalEmails.admitere”. Confirmați dacă este activă și pentru ce etape de admitere se folosește."
   ]
 }

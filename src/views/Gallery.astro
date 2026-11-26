@@ -4,7 +4,7 @@ import PageHead from '~/components/PageHead.astro';
 import Picture from '~/components/Picture.astro';
 import YouTube from '~/components/YouTube.astro';
 import { pick } from '~/i18n/locales';
-import { altText, caption, imageSources } from '~/lib/media';
+import { altText, caption, creditLine, imageSources } from '~/lib/media';
 import type { Gallery, Media } from '~/server/content';
 import type { ViewProps } from './types';
 
@@ -16,7 +16,7 @@ const galLabel = ({ ro: 'Galerie', de: 'Galerie', en: 'Gallery' } as const)[loca
 ---
 
 <Base locale={locale} title={t.value} description={d.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
-  <PageHead locale={locale} title={t.value} lead={d.value} crumbs={[{ label: galLabel, route: 'gallery' }, { label: t.value }]} />
+  <PageHead locale={locale} title={t.value} titleLang={t.lang} lead={d.value} leadLang={d.lang} crumbs={[{ label: galLabel, route: 'gallery' }, { label: t.value }]} />
   <ul role="list" class="wrap photos">
     {
       items.map((m) =>
@@ -33,7 +33,7 @@ const galLabel = ({ ro: 'Galerie', de: 'Galerie', en: 'Gallery' } as const)[loca
               {(caption(m, locale) || m.credit) && (
                 <figcaption>
                   {caption(m, locale)}
-                  {m.credit && <span class="credit">{m.credit}{m.license ? ` · ${m.license}` : ''}</span>}
+                  {m.credit && <span class="credit">{creditLine(m, locale)}</span>}
                 </figcaption>
               )}
             </figure>

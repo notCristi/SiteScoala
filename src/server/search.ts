@@ -1,11 +1,20 @@
 import { and, desc, eq } from 'drizzle-orm';
 import { db, schema as s } from './db';
-import { pick, type Locale } from '~/i18n/locales';
+import { formatSchoolYear, pick, type Locale } from '~/i18n/locales';
 import { url, type RouteId } from '~/i18n/routes';
 import { NAV } from '~/i18n/nav';
 import { ui } from '~/i18n/ui';
 import { CATEGORY_LABELS, docUrl } from '~/lib/documents';
 import type { SearchRecord } from '~/lib/search-core';
+
+/** What people type when they mean a page, in every language (a German parent may type "secretariat"). */
+const KEYWORDS: Partial<Record<RouteId, string>> = {
+  contact: 'secretariat secretariatul sekretariat school office secretary telefon telephone phone fax adresa adresă anschrift address program sprechzeiten office hours e-mail email harta karte map',
+  documents: 'regulament ordnung regulations rof roi formular formulare antrag forms',
+  admissions: 'inscriere înscriere anmeldung enrolment enrollment',
+  staff: 'profesori profesor lehrer lehrkraft teachers teacher conducere director schulleitung headteacher secretar',
+};
+const SECRETARIAT = /secretar|sekretari|office|administrat/i;
 
 /** Static sections (from the nav) + all published content, for one locale. */
 export async function buildSearchIndex(locale: Locale): Promise<SearchRecord[]> {
@@ -60,7 +69,7 @@ export async function buildSearchIndex(locale: Locale): Promise<SearchRecord[]> 
     push({
       k: 'document',
       t: pick(doc, 'title', locale).value,
-      s: [CATEGORY_LABELS[doc.category]?.[locale], doc.academicYear, doc.fileExt?.toUpperCase()].filter(Boolean).join(' · '),
+      s: [CATEGORY_LABELS[doc.category]?.[locale], formatSchoolYear(doc.academicYear, locale), doc.fileExt?.toUpperCase()].filter(Boolean).join(' · '),
       u: href,
       x: 1,
     });
@@ -74,6 +83,10 @@ export async function buildSearchIndex(locale: Locale): Promise<SearchRecord[]> 
       t: p.fullName,
       s: [role, subject, p.departmentId ? deptName.get(p.departmentId) : ''].filter(Boolean).join(' · '),
       u: `${url('staff', locale)}#p${p.id}`,
+      // roles in all three languages, so "secretariat" / "Sekretariat" / "office" find the office staff
+      w: [pick(p, 'role', 'ro').value, pick(p, 'role', 'de').value, pick(p, 'role', 'en').value, SECRETARIAT.test(`${role} ${pick(p, 'role', 'ro').value}`) ? 'secretariat sekretariat school office' : '']
+        .filter(Boolean)
+        .join(' '),
     });
   }
   for (const n of news) {
@@ -82,6 +95,11 @@ export async function buildSearchIndex(locale: Locale): Promise<SearchRecord[]> 
   for (const p of projects) push({ k: 'page', t: pick(p, 'title', locale).value, s: p.period ?? undefined, u: url('project', locale, { slug: p.slug }) });
   for (const l of life) {
     push({ k: 'page', t: pick(l, 'title', locale).value, u: l.kind === 'coetus' ? url('coetus', locale) : url('lifeEntry', locale, { slug: l.slug }) });
+  }
+  // attach keywords to the canonical record of each keyed route
+  for (const [route, words] of Object.entries(KEYWORDS) as [RouteId, string][]) {
+    const u = url(route, locale);
+    for (const r of out) if (r.u === u && r.k === 'page') r.w = [r.w, words].filter(Boolean).join(' ');
   }
   return out;
 }

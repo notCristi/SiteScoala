@@ -106,7 +106,7 @@ const GUIDE_LABELS: Record<string, string> = {
   transfer: 'Transferuri',
   'evaluare-nationala': 'Evaluarea Națională',
   bacalaureat: 'Bacalaureat',
-  dsd: 'DSD I & II',
+  dsd: 'DSD',
   olimpiade: 'Olimpiade',
 };
 const PROJECT_LABELS: Record<string, string> = {

@@ -9,7 +9,7 @@ import PageHead from '~/components/PageHead.astro';
 import Icon from '~/components/svg/Icon.astro';
 import RubricNumeral from '~/components/svg/RubricNumeral.astro';
 import Manicule from '~/components/svg/Manicule.astro';
-import { pick, formatDate, formatBytes } from '~/i18n/locales';
+import { pick, formatDate, formatBytes, formatSchoolYear } from '~/i18n/locales';
 import { url } from '~/i18n/routes';
 import { ui } from '~/i18n/ui';
 import { NAV } from '~/i18n/nav';
@@ -37,23 +37,28 @@ try {
 } catch {
   faq = [];
 }
-const checklistOf = (st: GuideStep): string[] => {
+const checklistOf = (st: GuideStep): { items: string[]; lang?: string } => {
   try {
     const c = st.checklistJson ? (JSON.parse(st.checklistJson) as Record<string, string[]>) : {};
-    return c[locale]?.length ? c[locale]! : (c.ro ?? []);
+    return c[locale]?.length ? { items: c[locale]! } : { items: c.ro ?? [], lang: locale === 'ro' ? undefined : 'ro' };
   } catch {
-    return [];
+    return { items: [] };
   }
 };
 const admissions = NAV.find((n) => n.id === 'admitere')!;
+const EXAMS = ['evaluare-nationala', 'bacalaureat', 'dsd', 'olimpiade'];
+const section = EXAMS.includes(guide.kind) ? ({ ro: 'Examene', de: 'Prüfungen', en: 'Examinations' } as const)[locale] : admissions.label[locale];
+const schoolYear = (y: string) => formatSchoolYear(y, locale);
 const siblings = admissions.columns!.find((c) => c.links.some((l) => l.params?.kind === guide.kind))!;
 const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => stateOf(s) === 'upcoming');
+/** Visible step numbers always follow the list order (1…n), whatever sortOrder the CMS stored. */
+const stepNo = (st: GuideStep) => steps.indexOf(st) + 1;
 ---
 
 <Base locale={locale} title={title.value} description={lead.value} route="guide" alternates={alternates} settings={settings} banners={banners} fallback={title.fallback}>
   <PageHead
     locale={locale}
-    kicker={guide.academicYear ? `${admissions.label[locale]} · ${guide.academicYear.replace('-', '–')}` : admissions.label[locale]}
+    kicker={guide.academicYear ? `${section} · ${schoolYear(guide.academicYear)}` : section}
     title={title.value}
     titleLang={title.lang}
     lead={lead.value}
@@ -65,7 +70,7 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
         <p class="next">
           <span class="next__label">{stateOf(nextStep) === 'open' ? L('stateOpen') : L('stateUpcoming')}</span>
           <a href={`#step-${nextStep.sortOrder}`}>
-            {L('step')} {nextStep.sortOrder}: {pick(nextStep, 'title', locale).value}
+            {L('step')} {stepNo(nextStep)}: {pick(nextStep, 'title', locale).value}
           </a>
           {pick(nextStep, 'when', locale).value && <span class="muted"> · {pick(nextStep, 'when', locale).value}</span>}
         </p>
@@ -78,10 +83,10 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
       <p class="kicker">{L('steps')}</p>
       <ol role="list">
         {
-          steps.map((s) => (
+          steps.map((s, i) => (
             <li>
               <a href={`#step-${s.sortOrder}`} data-state={stateOf(s) ?? undefined}>
-                <span class="num">{s.sortOrder}</span>
+                <span class="num">{i + 1}</span>
                 <span>{pick(s, 'title', locale).value}</span>
               </a>
             </li>
@@ -103,11 +108,24 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
     </nav>
 
     <div class="guide__main">
+      {
+        body.value && (
+          <section class="guide__more">
+            <div class="callout">
+              <span class="callout__hand" aria-hidden="true">
+                <Manicule />
+              </span>
+              <div class="prose" lang={body.lang} set:html={body.value} />
+            </div>
+          </section>
+        )
+      }
+
       <ol class="steps" role="list" data-guide={guide.slug}>
         {
           steps.map((s, i) => {
             const st = stateOf(s);
-            const items = checklistOf(s);
+            const { items, lang: itemsLang } = checklistOf(s);
             const doc = s.documentId ? docs.get(s.documentId) : undefined;
             const when = pick(s, 'when', locale).value;
             const stepBody = pick(s, 'bodyHtml', locale);
@@ -118,7 +136,7 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
                 </div>
                 <div class="step__body">
                   <header class="step__head">
-                    <h2>{pick(s, 'title', locale).value}</h2>
+                    <h2 lang={pick(s, 'title', locale).lang}>{pick(s, 'title', locale).value}</h2>
                     {st && <span class:list={['tag', st === 'closed' ? 'tag--muted' : st === 'open' ? 'tag--rubric' : 'tag--lapis']}>{L(st === 'closed' ? 'stateClosed' : st === 'open' ? 'stateOpen' : 'stateUpcoming')}</span>}
                   </header>
                   {(when || s.startsAt || s.endsAt) && (
@@ -137,7 +155,7 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
                   )}
                   {stepBody.value && <div class="prose step__text" lang={stepBody.lang} set:html={stepBody.value} />}
                   {items.length > 0 && (
-                    <fieldset class="checklist">
+                    <fieldset class="checklist" lang={itemsLang}>
                       <legend>{L('bring')}</legend>
                       {items.map((it, i) => (
                         <label>
@@ -160,8 +178,9 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
                       )}
                       {s.linkUrl && (
                         <a class="link-arrow" href={s.linkUrl} {...(s.linkUrl.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>
-                          {L('open')}
+                          {s.linkUrl.startsWith('http') ? `${L('open')}: ${new URL(s.linkUrl).hostname.replace(/^www\./, '')}` : `${L('open')}: ${pick(s, 'title', locale).value}`}
                           <Icon name={s.linkUrl.startsWith('http') ? 'external' : 'arrow-right'} />
+                          {s.linkUrl.startsWith('http') && <span class="vh">{L('external')}</span>}
                         </a>
                       )}
                     </p>
@@ -174,32 +193,21 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
       </ol>
 
       {
-        body.value && (
-          <section class="guide__more">
-            <div class="callout">
-              <span class="callout__hand" aria-hidden="true">
-                <Manicule />
-              </span>
-              <div class="prose" lang={body.lang} set:html={body.value} />
-            </div>
-          </section>
-        )
-      }
-
-      {
         faq.length > 0 && (
           <section class="faq" aria-labelledby="faq-h">
             <h2 id="faq-h">{L('faq')}</h2>
             {faq.map((f, i) => {
-              const q = (f as Record<string, string | undefined>)[`q_${locale}`] || f.q_ro;
-              const a = (f as Record<string, string | undefined>)[`a_${locale}`] || f.a_ro;
+              const ql = (f as Record<string, string | undefined>)[`q_${locale}`];
+              const al = (f as Record<string, string | undefined>)[`a_${locale}`];
+              const q = ql || f.q_ro;
+              const a = al || f.a_ro;
               return (
-                <details id={`faq-${i + 1}`}>
+                <details id={`faq-${i + 1}`} lang={!ql && locale !== 'ro' ? 'ro' : undefined}>
                   <summary>
                     {q}
                     <Icon name="chevron-down" />
                   </summary>
-                  <p>{a}</p>
+                  <p lang={!al && locale !== 'ro' ? 'ro' : undefined}>{a}</p>
                 </details>
               );
             })}
@@ -210,12 +218,8 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
       <p class="contact-line">
         {locale === 'ro' ? 'Întrebări? Secretariatul vă răspunde:' : locale === 'de' ? 'Fragen? Das Sekretariat hilft Ihnen gern:' : 'Questions? The school office can help:'}{' '}
         <a href={`tel:+4${settings.contact.phones[0]?.replace(/\s/g, '')}`}>{settings.contact.phones[0]}</a>
-        {settings.contact.admissionsEmail && (
-          <>
-            {' · '}
-            <a href={`mailto:${settings.contact.admissionsEmail}`}>{settings.contact.admissionsEmail}</a>
-          </>
-        )}
+        {' · '}
+        <a href={`mailto:${settings.contact.admissionsEmail || settings.contact.email}`}>{settings.contact.admissionsEmail || settings.contact.email}</a>
       </p>
     </div>
   </div>
@@ -330,7 +334,7 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
   }
   .step {
     display: grid;
-    grid-template-columns: 4rem minmax(0, 1fr);
+    grid-template-columns: 3.5rem minmax(0, 1fr);
     gap: var(--s-4);
     padding-bottom: var(--s-7);
     position: relative;
@@ -339,13 +343,14 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
     /* the thread linking steps: a hairline from numeral to numeral */
     content: '';
     position: absolute;
-    left: 2rem;
-    top: 4.25rem;
+    left: 1.375rem;
+    top: 3.6rem;
     bottom: 0.5rem;
     border-left: 1px solid var(--rule-strong);
   }
   .step__num {
-    width: 4rem;
+    width: 3.5rem;
+    font-size: 1.3125rem; /* ring 2.1em ≈ 44px, digits 21px */
     color: var(--rubric);
   }
   .step[data-state='closed'] .step__num {
@@ -386,6 +391,9 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
     margin-top: var(--s-4);
   }
   .checklist {
+    min-width: 0;
+    overflow-wrap: break-word;
+    hyphens: auto;
     margin-top: var(--s-4);
     border: 1px solid var(--rule-strong);
     padding: var(--s-3) var(--s-4) var(--s-4);
@@ -398,6 +406,9 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
     text-transform: uppercase;
     color: var(--rubric);
     padding-inline: 0.4rem;
+  }
+  .checklist label > span {
+    min-width: 0;
   }
   .checklist label {
     display: flex;
@@ -434,12 +445,16 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
     font-weight: 600;
     text-align: left;
   }
+  .guide__more {
+    margin-bottom: var(--s-7);
+  }
   .callout {
     display: grid;
     grid-template-columns: 3rem minmax(0, 1fr);
     gap: var(--s-4);
     padding: var(--s-5);
     background: var(--paper-sunk);
+    --table-bg: var(--paper-sunk);
     border-top: 1px solid var(--ink);
   }
   .callout__hand {
@@ -485,6 +500,11 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
     padding-bottom: var(--s-4);
     max-width: var(--measure);
   }
+  .contact-line a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
   .contact-line {
     margin-top: var(--s-7);
     padding-top: var(--s-4);
@@ -497,10 +517,11 @@ const nextStep = steps.find((s) => stateOf(s) === 'open') ?? steps.find((s) => s
     }
     .step__num {
       width: 2.75rem;
+      font-size: 1.25rem;
     }
     .step:not(:last-child)::before {
-      left: 1.375rem;
-      top: 3rem;
+      left: 1.3125rem;
+      top: 3.4rem;
     }
   }
 </style>

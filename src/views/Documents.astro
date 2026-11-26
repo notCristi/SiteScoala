@@ -6,7 +6,8 @@
 import Base from '~/layouts/Base.astro';
 import PageHead from '~/components/PageHead.astro';
 import Icon from '~/components/svg/Icon.astro';
-import { pick, formatBytes, formatDate } from '~/i18n/locales';
+import { pick, formatBytes, formatDate, formatSchoolYear, LOCALE_META } from '~/i18n/locales';
+import { count, COUNT_FORMS } from '~/i18n/plural';
 import { url } from '~/i18n/routes';
 import { ui } from '~/i18n/ui';
 import { CATEGORY_LABELS, docUrl } from '~/lib/documents';
@@ -26,10 +27,23 @@ const fText = q.get('q') ?? '';
 
 const cats = DOCUMENT_CATEGORIES.filter((c) => docs.some((d) => d.category === c));
 const years = [...new Set(docs.map((d) => d.academicYear).filter((y): y is string => !!y))].sort().reverse();
+const catOrder = new Map(DOCUMENT_CATEGORIES.map((c, i) => [c, i]));
 const rows = docs.map((d) => {
   const t = pick(d, 'title', locale);
   return { d, t, cyc: d.cycles ? d.cycles.split(',') : [], hay: fold(`${t.value} ${d.titleRo} ${d.registrationNo ?? ''}`) };
 });
+// Register grouped by school year (newest first; undated documents last), categories in their fixed order inside each year.
+const NO_YEAR = '';
+const groups = [...years, NO_YEAR]
+  .map((y) => ({
+    y,
+    rows: rows
+      .filter((r) => (r.d.academicYear ?? NO_YEAR) === y)
+      .sort((a, b) => (catOrder.get(a.d.category) ?? 99) - (catOrder.get(b.d.category) ?? 99)),
+  }))
+  .filter((g) => g.rows.length);
+const noYearLabel = ({ ro: 'Fără an școlar', de: 'Ohne Schuljahr', en: 'No school year' } as const)[locale];
+const activeFilters = [fCat, fYear, fCycle, fText].filter(Boolean).length;
 const visible = (r: (typeof rows)[number]) =>
   (!fCat || r.d.category === fCat) && (!fYear || r.d.academicYear === fYear) && (!fCycle || r.cyc.length === 0 || r.cyc.includes(fCycle)) && (!fText || fold(fText).split(/\s+/).every((w) => r.hay.includes(w)));
 const shown = rows.filter(visible).length;
@@ -43,7 +57,15 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
   <PageHead locale={locale} kicker={L('publicInfo')} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: title }]} />
 
   <div class="wrap docs" data-docs>
+    <details class="filters-box" open data-filters-box>
+      <summary>
+        <Icon name="filter" />
+        {L('filters')}
+        <span class="filters-box__n" data-active-n>{activeFilters ? `(${activeFilters})` : ''}</span>
+        <Icon name="chevron-down" />
+      </summary>
     <form class="filters" method="get" action={url('documents', locale)} data-filters>
+      <input type="hidden" name="cat" value={fCat} />
       <div class="filters__text">
         <label for="f-q">{L('filterText')}</label>
         <div class="input-icon">
@@ -52,17 +74,10 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
         </div>
       </div>
       <div>
-        <label for="f-cat">{L('filterCategory')}</label>
-        <select id="f-cat" name="cat">
-          <option value="">{L('filterAll')}</option>
-          {cats.map((c) => <option value={c} selected={c === fCat}>{CATEGORY_LABELS[c][locale]}</option>)}
-        </select>
-      </div>
-      <div>
         <label for="f-an">{L('filterYear')}</label>
         <select id="f-an" name="an">
           <option value="">{L('filterAll')}</option>
-          {years.map((y) => <option value={y} selected={y === fYear}>{y.replace('-', '–')}</option>)}
+          {years.map((y) => <option value={y} selected={y === fYear}>{formatSchoolYear(y, locale)}</option>)}
         </select>
       </div>
       <div>
@@ -78,11 +93,8 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
       </div>
     </form>
 
-    <p class="count" role="status" aria-live="polite" data-count data-label={L('docsCount')}>
-      <strong>{shown}</strong> {L('docsCount')}
-    </p>
-
     <nav class="cats" aria-label={L('filterCategory')}>
+      <p class="cats__label" aria-hidden="true">{L('filterCategory')}</p>
       <ul role="list">
         <li><a class="chip" href={url('documents', locale)} aria-current={!fCat ? 'true' : undefined} data-cat="">{L('filterAll')}</a></li>
         {
@@ -96,6 +108,18 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
         }
       </ul>
     </nav>
+    </details>
+    <script is:inline>
+      // Phones: filters fold behind one "Filtre (n)" disclosure unless a filter is already set (runs before first paint: no shift).
+      (function () {
+        const d = document.querySelector('[data-filters-box]');
+        if (d && matchMedia('(max-width: 40rem)').matches && !/[?&](cat|an|ciclu|q)=[^&]/.test(location.search)) d.removeAttribute('open');
+      })();
+    </script>
+
+    <p class="count" role="status" aria-live="polite" data-count data-forms={JSON.stringify(COUNT_FORMS.documents[locale])} data-intl={LOCALE_META[locale].intl}>
+      {count(shown, locale, 'documents')}
+    </p>
 
     <table class="register">
       <caption class="vh">{title}</caption>
@@ -107,10 +131,15 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
           <th scope="col">{L('docFormat')}</th>
         </tr>
       </thead>
-      <tbody>
+      {
+        groups.map((g) => (
+      <tbody data-group>
+        <tr class="register__year" hidden={!g.rows.some(visible)}>
+          <th scope="colgroup" colspan="4">{g.y ? formatSchoolYear(g.y, locale) : noYearLabel}</th>
+        </tr>
         {
-          rows.map((r) => (
-            <tr hidden={!visible(r)} data-cat={r.d.category} data-year={r.d.academicYear ?? ''} data-cycles={r.cyc.join(',')} data-hay={r.hay}>
+          g.rows.map((r) => (
+            <tr hidden={!visible(r)} data-row data-cat={r.d.category} data-year={r.d.academicYear ?? ''} data-cycles={r.cyc.join(',')} data-hay={r.hay}>
               <td class="register__title">
                 <a href={docUrl(r.d)} target="_blank" rel="noopener" lang={r.t.lang}>
                   <Icon name={icon(ext(r.d))} />
@@ -124,7 +153,7 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
                 )}
               </td>
               <td data-label={L('filterCategory')}>{CATEGORY_LABELS[r.d.category][locale]}</td>
-              <td data-label={L('filterYear')} class="num">{r.d.academicYear?.replace('-', '–') ?? '—'}</td>
+              <td data-label={L('filterYear')} class="num register__yr">{r.d.academicYear ? formatSchoolYear(r.d.academicYear, locale) : '—'}</td>
               <td data-label={L('docFormat')} class="num">
                 {ext(r.d).toUpperCase()}
                 {r.d.sizeBytes ? ` · ${formatBytes(r.d.sizeBytes, locale)}` : ''}
@@ -134,17 +163,22 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
           ))
         }
       </tbody>
+        ))
+      }
     </table>
-    <p class="empty" hidden={shown > 0} data-empty>{ui(locale, 'searchNoResults')} …</p>
+    <p class="empty" hidden={shown > 0} data-empty>{L('docsEmpty')}</p>
   </div>
 </Base>
 
 <script>
   import { fold } from '~/lib/search-core';
+  import { countWith, type CountForms } from '~/i18n/plural';
   const root = document.querySelector<HTMLElement>('[data-docs]');
   if (root) {
     const form = root.querySelector<HTMLFormElement>('[data-filters]')!;
-    const rows = [...root.querySelectorAll<HTMLTableRowElement>('tbody tr')];
+    const rows = [...root.querySelectorAll<HTMLTableRowElement>('tr[data-row]')];
+    const groups = [...root.querySelectorAll<HTMLTableSectionElement>('tbody[data-group]')];
+    const activeN = root.querySelector<HTMLElement>('[data-active-n]');
     const count = root.querySelector<HTMLElement>('[data-count]')!;
     const empty = root.querySelector<HTMLElement>('[data-empty]')!;
     root.querySelectorAll<HTMLElement>('[data-nojs]').forEach((b) => (b.hidden = true));
@@ -161,8 +195,11 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
         r.hidden = !ok;
         if (ok) n++;
       }
-      count.innerHTML = `<strong>${n}</strong> ${count.dataset.label}`;
+      count.textContent = countWith(n, count.dataset.intl!, JSON.parse(count.dataset.forms!) as CountForms);
       empty.hidden = n > 0;
+      for (const g of groups) g.querySelector<HTMLElement>('.register__year')!.hidden = !g.querySelector('tr[data-row]:not([hidden])');
+      const active = [cat, an, ciclu, words.length ? 'q' : ''].filter(Boolean).length;
+      if (activeN) activeN.textContent = active ? `(${active})` : '';
       root.querySelectorAll<HTMLAnchorElement>('.cats a').forEach((a) => a.setAttribute('aria-current', String(a.dataset.cat === cat)));
       if (push) {
         const u = new URL(location.href);
@@ -175,7 +212,7 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     root.querySelectorAll<HTMLAnchorElement>('.cats a').forEach((a) =>
       a.addEventListener('click', (e) => {
         e.preventDefault();
-        (form.elements.namedItem('cat') as unknown as HTMLSelectElement).value = a.dataset.cat ?? '';
+        (form.elements.namedItem('cat') as HTMLInputElement).value = a.dataset.cat ?? '';
         apply();
       }),
     );
@@ -247,6 +284,10 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
   .input-icon input {
     padding-left: 2.5rem;
   }
+  /* the submit button is only for visitors without JS; hide it before first paint (no layout shift) */
+  :global(.js) [data-nojs] {
+    display: none;
+  }
   .filters__actions {
     display: flex;
     gap: var(--s-2);
@@ -256,11 +297,62 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     font-size: var(--t-small);
     color: var(--ink-2);
   }
+  .cats {
+    padding: var(--s-4) var(--s-5) var(--s-5);
+    background: var(--paper-sunk);
+    border-top: 1px solid var(--rule);
+  }
+  .cats__label {
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin-bottom: 0.35rem;
+  }
   .cats ul {
     display: flex;
     flex-wrap: wrap;
     gap: var(--s-2);
-    margin: var(--s-3) 0 var(--s-5);
+    margin: 0;
+  }
+  .filters-box > summary {
+    display: none;
+  }
+  @media (max-width: 40rem) {
+    .filters-box {
+      border-top: 1px solid var(--ink);
+      background: var(--paper-sunk);
+    }
+    .filters-box > summary {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 3rem;
+      padding: 0 var(--s-4);
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+    .filters-box > summary::-webkit-details-marker {
+      display: none;
+    }
+    .filters-box > summary :global(svg) {
+      width: 1.15rem;
+      height: 1.15rem;
+    }
+    .filters-box > summary :global(svg:last-child) {
+      margin-left: auto;
+      transition: transform 200ms;
+    }
+    .filters-box[open] > summary :global(svg:last-child) {
+      transform: rotate(180deg);
+    }
+    .filters,
+    .cats {
+      padding-inline: var(--s-4);
+      border-top-color: var(--rule);
+    }
   }
   .register {
     width: 100%;
@@ -286,10 +378,34 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     display: inline-flex;
     gap: 0.6rem;
     align-items: flex-start;
+    min-height: 2.75rem;
+    padding-block: 0.3rem;
     font-size: 1.02rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--ink);
     text-decoration: none;
+  }
+  .register__yr {
+    white-space: nowrap;
+    min-width: 10ch;
+  }
+  .register th:nth-child(3) {
+    white-space: nowrap;
+  }
+  /* school-year heading rows: the register's running heads */
+  .register__year th {
+    padding: var(--s-6) 0 var(--s-2);
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    font-variant-numeric: lining-nums;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  tbody:first-of-type .register__year th {
+    padding-top: var(--s-4);
   }
   .register__title a:hover span {
     text-decoration: underline;
@@ -299,12 +415,15 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     width: 1.35rem;
     height: 1.35rem;
     flex: none;
-    color: var(--rubric);
+    color: var(--ink-3);
     margin-top: 0.05rem;
+  }
+  .register__title a:hover :global(svg) {
+    color: var(--lapis);
   }
   .register__meta {
     display: block;
-    margin: 0.2rem 0 0 1.95rem;
+    margin: 0 0 0 1.95rem;
     color: var(--ink-2);
     font-size: 0.85rem;
   }
@@ -348,6 +467,21 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     }
     .register td[data-label]:nth-child(2) {
       grid-column: 1 / -1;
+    }
+    /* the school year is already the group heading */
+    .register td.register__yr {
+      display: none;
+    }
+    .register tr.register__year {
+      display: block;
+      padding: 0;
+      border: 0;
+    }
+    .register tr.register__year[hidden] {
+      display: none;
+    }
+    .register__year th {
+      display: block;
     }
   }
 </style>

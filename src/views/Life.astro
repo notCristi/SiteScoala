@@ -42,10 +42,10 @@ const entries = life.filter((l) => l.kind !== 'coetus');
           </span>
           <span class="coetus__text">
             <span class="kicker">Constitutio Scholae Coronensis · 1543</span>
-            <span class="coetus__t">{pick(coetus, 'title', locale).value}</span>
-            <span class="coetus__l">{pick(coetus, 'lead', locale).value}</span>
+            <span class="coetus__t" lang={pick(coetus, 'title', locale).lang}>{pick(coetus, 'title', locale).value}</span>
+            <span class="coetus__l" lang={pick(coetus, 'lead', locale).lang}>{pick(coetus, 'lead', locale).value}</span>
             <span class="link-arrow">
-              {locale === 'ro' ? 'Citește povestea' : locale === 'de' ? 'Zur Geschichte' : 'Read the story'}
+              {locale === 'ro' ? 'Citiți povestea' : locale === 'de' ? 'Zur Geschichte' : 'Read the story'}
               <Icon name="arrow-right" />
             </span>
           </span>
@@ -65,8 +65,8 @@ const entries = life.filter((l) => l.kind !== 'coetus');
                   </span>
                 )}
                 <span class="kicker">{KIND[e.kind][locale]}</span>
-                <span class="item__t">{pick(e, 'title', locale).value}</span>
-                <span class="item__s">{pick(e, 'summary', locale).value}</span>
+                <span class="item__t" lang={pick(e, 'title', locale).lang}>{pick(e, 'title', locale).value}</span>
+                <span class="item__s" lang={pick(e, 'summary', locale).lang}>{pick(e, 'summary', locale).value}</span>
               </a>
             </li>
           );

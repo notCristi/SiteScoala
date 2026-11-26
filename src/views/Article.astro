@@ -3,11 +3,12 @@ import Base from '~/layouts/Base.astro';
 import PageHead from '~/components/PageHead.astro';
 import Picture from '~/components/Picture.astro';
 import Fleuron from '~/components/svg/Fleuron.astro';
+import DateMark from '~/components/DateMark.astro';
 import Icon from '~/components/svg/Icon.astro';
 import { pick, formatDate } from '~/i18n/locales';
 import { url } from '~/i18n/routes';
 import { ui } from '~/i18n/ui';
-import { caption } from '~/lib/media';
+import { caption, creditLine } from '~/lib/media';
 import { getMedia, listNews, type Announcement } from '~/server/content';
 import type { ViewProps } from './types';
 
@@ -36,7 +37,7 @@ const others = recent.rows.filter((r) => r.id !== a.id).slice(0, 4);
     {a.publishedAt && <p class="byline"><time datetime={new Date(a.publishedAt).toISOString()}>{formatDate(a.publishedAt, locale)}</time></p>}
   </PageHead>
   <div class="wrap book">
-    <div class="book__gutter"></div>
+    <div class="book__gutter">{a.publishedAt && <div class="gutter-date"><DateMark ms={a.publishedAt} locale={locale} /></div>}</div>
     <article class="book__text">
       {
         cover && (
@@ -44,12 +45,12 @@ const others = recent.rows.filter((r) => r.id !== a.id).slice(0, 4);
             <div class="plate">
               <Picture media={cover} locale={locale} priority sizes="(min-width: 60rem) 42rem, 100vw" />
             </div>
-            {caption(cover, locale) && <figcaption>{caption(cover, locale)}{cover.credit && <span class="credit">{cover.credit}</span>}</figcaption>}
+            {caption(cover, locale) && <figcaption>{caption(cover, locale)}{cover.credit && <span class="credit">{creditLine(cover, locale)}</span>}</figcaption>}
           </figure>
         )
       }
       {body.value && <div class="prose" lang={body.lang} set:html={body.value} />}
-      <div class="end" aria-hidden="true"><Fleuron /></div>
+      <div class="end" aria-hidden="true"><Fleuron size={36} /></div>
       {a.sourceUrl && <p class="muted small">{ui(locale, 'source')}: <a href={a.sourceUrl} rel="noopener" target="_blank">{new URL(a.sourceUrl).hostname}</a></p>}
     </article>
     <aside class="book__margin">
@@ -58,7 +59,7 @@ const others = recent.rows.filter((r) => r.id !== a.id).slice(0, 4);
         {
           others.map((o) => (
             <li>
-              <a href={url('article', locale, { slug: o.slug })}>{pick(o, 'title', locale).value}</a>
+              <a href={url('article', locale, { slug: o.slug })} lang={pick(o, 'title', locale).lang}>{pick(o, 'title', locale).value}</a>
               {o.publishedAt && <time datetime={new Date(o.publishedAt).toISOString()}>{formatDate(o.publishedAt, locale)}</time>}
             </li>
           ))
@@ -81,10 +82,27 @@ const others = recent.rows.filter((r) => r.id !== a.id).slice(0, 4);
   .cover {
     margin-bottom: var(--s-6);
   }
+  /* the printer's ivy leaf closes the text: centred, in ink */
   .end {
-    width: 2rem;
-    color: var(--rubric);
-    margin: var(--s-6) 0 var(--s-4);
+    display: flex;
+    justify-content: center;
+    max-width: var(--measure);
+    margin: var(--s-7) 0;
+    color: var(--ink);
+  }
+  .gutter-date {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+  @media (min-width: 60rem) {
+    .byline {
+      display: none;
+    }
+  }
+  @media (max-width: 59.99rem) {
+    .book__gutter {
+      display: none;
+    }
   }
   .small {
     font-size: var(--t-small);

@@ -26,19 +26,24 @@
   font-style: normal;
   font-display: swap;
 }
+/* Fallback metrics measured against the real faces (average advance of mixed RO/DE/EN text, OS/2 typo metrics):
+   EB Garamond 0.403 em vs Times/Liberation Serif 0.4225 em → 95.3 %; Atkinson Next 0.465 em vs Arial/Liberation Sans
+   0.469 em → 99.2 %. Times and Arial share metrics with Liberation, so one override fits all platforms. */
 @font-face {
   font-family: 'Garamond Fallback';
-  src: local('Georgia'), local('Times New Roman'), local('Liberation Serif');
-  size-adjust: 92%;
-  ascent-override: 104%;
-  descent-override: 32%;
+  src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Liberation Serif'), local('Times');
+  size-adjust: 95.3%;
+  ascent-override: 105.7%;
+  descent-override: 31.3%;
+  line-gap-override: 0%;
 }
 @font-face {
   font-family: 'Atkinson Fallback';
-  src: local('Arial'), local('Helvetica'), local('Liberation Sans');
-  size-adjust: 103%;
-  ascent-override: 94%;
-  descent-override: 24%;
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('Helvetica');
+  size-adjust: 99.2%;
+  ascent-override: 99.2%;
+  descent-override: 31.9%;
+  line-gap-override: 0%;
 }
 
 @layer reset {
@@ -109,7 +114,7 @@
     --on-dark-2: #c9c6d6;
 
     /* type */
-    --font-serif: 'EB Garamond', 'Garamond Fallback', Georgia, 'Times New Roman', serif;
+    --font-serif: 'EB Garamond', 'Garamond Fallback', 'Times New Roman', serif;
     --font-sans: 'Atkinson Hyperlegible Next', 'Atkinson Fallback', Arial, sans-serif;
     --t-hero: clamp(2.75rem, 1.6rem + 4.9vw, 5.5rem);
     --t-h1: clamp(2.125rem, 1.45rem + 2.9vw, 3.75rem);
@@ -313,6 +318,7 @@
     line-height: 1.62;
     font-variant-numeric: oldstyle-nums proportional-nums;
     max-width: var(--measure);
+    overflow-wrap: break-word;
   }
   .prose > * + * {
     margin-top: 1em;
@@ -342,6 +348,20 @@
     font-style: italic;
     color: var(--ink-2);
   }
+  .prose .table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    /* scroll shadows in paper: show that more columns sit off-screen */
+    background:
+      linear-gradient(to right, var(--table-bg, var(--paper)) 30%, transparent) left / 2rem 100% no-repeat local,
+      linear-gradient(to left, var(--table-bg, var(--paper)) 30%, transparent) right / 2rem 100% no-repeat local,
+      linear-gradient(to right, var(--rule-strong), transparent) left / 0.6rem 100% no-repeat scroll,
+      linear-gradient(to left, var(--rule-strong), transparent) right / 0.6rem 100% no-repeat scroll;
+  }
+  .prose .table-scroll:focus-visible {
+    outline-offset: 4px;
+  }
   .prose table {
     width: 100%;
     font-family: var(--font-sans);
@@ -354,6 +374,11 @@
     padding: 0.5em 0.75em 0.5em 0;
     border-bottom: 1px solid var(--rule);
     vertical-align: top;
+    hyphens: auto;
+  }
+  .prose th {
+    font-weight: 700;
+    border-bottom-color: var(--ink);
   }
   .prose .fleuron-end::after {
     content: '';
@@ -489,12 +514,19 @@
   .breadcrumbs ol {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25rem 0.5rem;
+    align-items: center;
+    gap: 0 0.5rem;
     list-style: none;
     padding: 0;
     font-size: var(--t-small);
     color: var(--ink-2);
-    margin-bottom: var(--s-5);
+    margin-top: calc(-1 * var(--s-3));
+    margin-bottom: var(--s-3);
+  }
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
   }
   .breadcrumbs li + li::before {
     content: '/';
@@ -502,6 +534,9 @@
     color: var(--rule-strong);
   }
   .breadcrumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
     color: var(--ink-2);
   }
 
@@ -602,6 +637,14 @@
   }
   .num {
     font-variant-numeric: tabular-nums lining-nums;
+  }
+  /* identifiers (project codes, registration numbers): never old-style figures ("RO01", not "ROo1") */
+  .code {
+    font-family: var(--font-sans);
+    font-size: 0.92em;
+    font-variant-numeric: lining-nums tabular-nums;
+    letter-spacing: 0.01em;
+    overflow-wrap: anywhere;
   }
   .serif {
     font-family: var(--font-serif);

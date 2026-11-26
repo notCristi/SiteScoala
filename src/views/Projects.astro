@@ -36,8 +36,8 @@ const kindLabel = (k: keyof typeof KIND) => {
                   {p.period && <span class="proj__period">{p.period}</span>}
                 </span>
                 <span class="proj__main">
-                  <span class="proj__t">{pick(p, 'title', locale).value}</span>
-                  <span class="proj__s">{pick(p, 'summary', locale).value}</span>
+                  <span class="proj__t" lang={pick(p, 'title', locale).lang}>{pick(p, 'title', locale).value}</span>
+                  <span class="proj__s" lang={pick(p, 'summary', locale).lang}>{pick(p, 'summary', locale).value}</span>
                 </span>
                 {m && (
                   <span class="plate proj__img">

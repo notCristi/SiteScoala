@@ -10,17 +10,27 @@ interface Props {
   banners: Announcement[];
 }
 const { locale, banners } = Astro.props;
+// One banner per notice: drop repeated ids and repeated texts (an admin double-save must never stack two identical bars).
+const seen = new Set<string>();
+const list = banners
+  .map((b) => ({ b, text: pick(b, 'bannerText', locale) }))
+  .filter(({ b, text }) => {
+    const keys = [`id:${b.id}`, `t:${text.value.trim().toLowerCase()}`];
+    if (keys.some((k) => seen.has(k))) return false;
+    keys.forEach((k) => seen.add(k));
+    return true;
+  });
+const label = ui(locale, 'noticeLabel');
 ---
 
 {
-  banners.map((b) => {
-    const text = pick(b, 'bannerText', locale);
+  list.map(({ b, text }, i) => {
     return (
-      <aside class:list={['notice', `notice--${b.bannerLevel}`]} data-notice={`n${b.id}-${b.rev}`} aria-label={locale === 'ro' ? 'Anunț important' : locale === 'de' ? 'Wichtiger Hinweis' : 'Important notice'}>
+      <aside class:list={['notice', `notice--${b.bannerLevel}`]} data-notice={`n${b.id}-${b.rev}`} aria-label={list.length > 1 ? `${label} ${i + 1}/${list.length}` : label}>
         <div class="wrap notice__row">
           <Icon name="alert" />
-          <p lang={text.lang}>
-            {text.value}{' '}
+          <p>
+            <span lang={text.lang !== locale ? text.lang : undefined}>{text.value}</span>{' '}
             <a href={url('article', locale, { slug: b.slug })}>{ui(locale, 'readMore')}</a>
           </p>
           <button type="button" class="notice__close" data-notice-close>
@@ -95,5 +105,26 @@ const { locale, banners } = Astro.props;
   .notice__close :global(svg) {
     width: 1.1rem;
     height: 1.1rem;
+  }
+  @media (max-width: 40rem) {
+    .notice {
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+    .notice__row {
+      gap: var(--s-2);
+      padding-block: 0.15rem;
+      align-items: flex-start;
+    }
+    .notice__row > :global(svg) {
+      display: none;
+    }
+    .notice p {
+      padding-block: 0.6rem;
+      font-weight: 500;
+    }
+    .notice__close {
+      margin-right: -0.75rem;
+    }
   }
 </style>

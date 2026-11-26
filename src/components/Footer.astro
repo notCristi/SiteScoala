@@ -51,7 +51,7 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
         <li><a href={url('admissions', locale)}>{locale === 'ro' ? 'Admitere' : locale === 'de' ? 'Aufnahme' : 'Admissions'}</a></li>
         <li><a href={url('documents', locale)}>{L('documents')}</a></li>
         <li><a href={url('news', locale)}>{locale === 'ro' ? 'Noutăți' : locale === 'de' ? 'Aktuelles' : 'News'}</a></li>
-        <li><a href={url('staff', locale)}>{locale === 'ro' ? 'Personal' : locale === 'de' ? 'Kollegium' : 'Staff'}</a></li>
+        <li><a href={url('staff', locale)}>{locale === 'ro' ? 'Conducere și personal' : locale === 'de' ? 'Schulleitung und Kollegium' : 'Leadership and staff'}</a></li>
         <li><a href={settings.links.noteInCatalog} rel="noopener" target="_blank">NoteInCatalog <span class="vh">{L('external')}</span></a></li>
         <li><a href={settings.links.classroom} rel="noopener" target="_blank">Google Classroom <span class="vh">{L('external')}</span></a></li>
       </ul>
@@ -73,7 +73,7 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
       <h2 id="f-inst" class="footer__title">{L('institution')}</h2>
       <ul role="list">
         <li><a href={url('documents', locale)}>{L('publicInfo')}</a></li>
-        <li><a href={url('history', locale)}>{locale === 'ro' ? 'Istorie' : locale === 'de' ? 'Geschichte' : 'History'}</a></li>
+        <li><a href={url('history', locale)}>{locale === 'ro' ? 'Istoric' : locale === 'de' ? 'Geschichte' : 'History'}</a></li>
         <li><a href={url('privacy', locale)}>{L('privacy')}</a></li>
         <li><a href={url('accessibility', locale)}>{L('accessibility')}</a></li>
       </ul>
@@ -93,7 +93,7 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
   .site-footer {
     background: var(--lapis-deep);
     color: var(--on-dark);
-    margin-top: var(--s-9);
+    margin-top: var(--s-7);
     position: relative;
   }
   .frieze {
@@ -132,6 +132,9 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
   }
   address {
     font-style: normal;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-variant-numeric: lining-nums;
   }
   .footer__school {
     font-family: var(--font-serif);
@@ -162,6 +165,13 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
     gap: 0.6rem;
     align-items: center;
     min-height: 2.75rem;
+  }
+  /* tel:, mailto: and map links are what a parent taps here: full 44 px targets */
+  address a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-variant-numeric: lining-nums;
   }
   .footer__lines :global(svg) {
     width: 1.1rem;

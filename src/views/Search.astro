@@ -6,12 +6,18 @@ import { url } from '~/i18n/routes';
 import { UI, ui } from '~/i18n/ui';
 import { buildSearchIndex } from '~/server/search';
 import { searchRecords } from '~/lib/search-core';
+import { count } from '~/i18n/plural';
 import type { ViewProps } from './types';
 
 const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
 const q = (Astro.url.searchParams.get('q') ?? '').slice(0, 100);
 const results = q.trim().length >= 2 ? searchRecords(await buildSearchIndex(locale), q, 60) : [];
 const title = ui(locale, 'search');
+const EMPTY = {
+  ro: 'Încercați un termen mai scurt sau căutați în Documente.',
+  de: 'Versuchen Sie einen kürzeren Begriff oder sehen Sie unter Dokumente nach.',
+  en: 'Try a shorter word, or look in Documents.',
+} as const;
 ---
 
 <Base locale={locale} title={q ? `${title}: ${q}` : title} route={match.id} alternates={alternates} settings={settings} banners={banners} noindex>
@@ -23,7 +29,15 @@ const title = ui(locale, 'search');
     </form>
   </PageHead>
   <div class="wrap-narrow">
-    {q && <p class="muted" role="status">{results.length} {ui(locale, 'searchResults')}</p>}
+    {
+      q && (
+        <p class="muted" role="status">
+          {results.length
+            ? count(results.length, locale, 'results')
+            : `${ui(locale, 'searchNoResults')} ${locale === 'en' ? `“${q}”` : locale === 'de' ? `„${q}“` : `„${q}”`}. ${EMPTY[locale]}`}
+        </p>
+      )
+    }
     <ul role="list" class="res">
       {
         results.map((r) => (
@@ -47,6 +61,7 @@ const title = ui(locale, 'search');
   }
   .sform input {
     flex: 1;
+    min-width: 0;
     min-height: 3rem;
     padding: 0 0.75rem;
     border: 1px solid var(--rule-strong);

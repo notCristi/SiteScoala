@@ -7,7 +7,8 @@ import Base from '~/layouts/Base.astro';
 import PageHead from '~/components/PageHead.astro';
 import Picture from '~/components/Picture.astro';
 import Icon from '~/components/svg/Icon.astro';
-import { pick } from '~/i18n/locales';
+import { pick, LOCALE_META } from '~/i18n/locales';
+import { count, COUNT_FORMS } from '~/i18n/plural';
 import { ui } from '~/i18n/ui';
 import { fold } from '~/lib/search-core';
 import { getMediaMap, getPage, listStaff, type Staff } from '~/server/content';
@@ -69,7 +70,9 @@ const total = people.length;
           }
         </ul>
       </nav>
-      <p class="staff__count" role="status" aria-live="polite" data-staff-count>{total}</p>
+      <p class="staff__count" role="status" aria-live="polite" data-staff-count data-forms={JSON.stringify(COUNT_FORMS.people[locale])} data-intl={LOCALE_META[locale].intl}>
+        {count(total, locale, 'people')}
+      </p>
     </div>
 
     {
@@ -92,10 +95,15 @@ const total = people.length;
                         </span>
                       )}
                       <span class="person__name">
-                        {p.titlePrefix && <span class="person__prefix">{p.titlePrefix} </span>}
-                        {p.fullName}
+                        {/* Romanian honorifics ("prof.", "prof. înv. primar") would mislead in German/English: RO only */}
+                        {locale === 'ro' && p.titlePrefix && <span class="person__prefix">{p.titlePrefix} </span>}
+                        {/* compound names never break at their hyphen */}
+                        {p.fullName.replace(/-/g, '\u2011')}
                       </span>
-                      {(role || subject) && <span class="person__role">{[role, subject].filter((x, i, a) => x && a.indexOf(x) === i).join(' · ')}</span>}
+                      {/* inside the teachers' group "teacher ·" on every line is noise: the subject says it */}
+                      {(role || subject) && (
+                        <span class="person__role">{(g.cat === 'profesori' && subject ? [subject] : [role, subject]).filter((x, i, a) => x && a.indexOf(x) === i).join(' · ')}</span>
+                      )}
                       {p.showEmail && p.email && (
                         <a class="person__mail" href={`mailto:${p.email}`}>
                           {p.email}
@@ -116,6 +124,7 @@ const total = people.length;
 
 <script>
   import { fold } from '~/lib/search-core';
+  import { countWith, type CountForms } from '~/i18n/plural';
   const root = document.querySelector<HTMLElement>('[data-staff]');
   const input = root?.querySelector<HTMLInputElement>('[data-staff-q]');
   const count = root?.querySelector<HTMLElement>('[data-staff-count]');
@@ -128,7 +137,7 @@ const total = people.length;
       if (ok) n++;
     });
     root!.querySelectorAll<HTMLElement>('.dept, .cat').forEach((g) => (g.hidden = !g.querySelector('.person:not([hidden])')));
-    if (count) count.textContent = String(n);
+    if (count) count.textContent = countWith(n, count.dataset.intl!, JSON.parse(count.dataset.forms!) as CountForms);
   });
 </script>
 
@@ -190,10 +199,9 @@ const total = people.length;
     margin: 0;
   }
   .staff__count {
-    font-family: var(--font-serif);
-    font-size: 2rem;
-    color: var(--rubric);
-    line-height: 1;
+    font-size: var(--t-small);
+    color: var(--ink-2);
+    white-space: nowrap;
   }
   .cat {
     margin-top: var(--s-7);

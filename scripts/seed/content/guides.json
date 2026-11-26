@@ -4,19 +4,19 @@
     "slug": "pregatitoare",
     "academic_year": "2027-2028",
     "title": {
-      "ro": "Admiterea în clasa pregătitoare",
+      "ro": "Înscrierea în clasa pregătitoare",
       "de": "Aufnahme in die Vorbereitungsklasse",
-      "en": "Admission to the preparatory year"
+      "en": "Enrolment in the preparatory class"
     },
     "lead": {
       "ro": "Înscrierea se face după calendarul național; pentru că la Honterus se învață în limba germană, copiii participă la o evaluare a cunoștințelor de limba germană – un „interviu prin joc”.",
-      "de": "Die Anmeldung folgt dem landesweiten Zeitplan. Da am Honterus-Kolleg auf Deutsch unterrichtet wird, nehmen die Kinder an einer Überprüfung ihrer Deutschkenntnisse teil – einem spielerischen Aufnahmegespräch.",
+      "de": "Die Anmeldung folgt dem landesweiten Zeitplan. Da am Honterus-Kolleg auf Deutsch unterrichtet wird, nehmen die Kinder an der Überprüfung der Deutschkenntnisse teil („spielerisches Aufnahmegespräch“).",
       "en": "Enrolment follows the national calendar. Because Honterus teaches in German, children take part in an assessment of their German – a play-based interview."
     },
     "body_md": {
-      "ro": "Colegiul are patru clase pregătitoare. Pentru anul școlar 2026–2027 au fost alocate 76 de locuri, toate ocupate. Numărul de locuri pentru 2027–2028 se stabilește prin cifra de școlarizare aprobată de Ministerul Educației și va fi anunțat aici.\n\nCalendarul înscrierii, procedura evaluării și eventualele modificări se publică în fiecare primăvară. Datele de mai jos din 2026 sunt orientative.",
-      "de": "Das Kolleg führt vier Vorbereitungsklassen. Für das Schuljahr 2026/27 standen 76 Plätze zur Verfügung, die alle vergeben wurden. Die Zahl der Plätze für 2027/28 ergibt sich aus der vom Bildungsministerium genehmigten Schülerzahl und wird hier bekannt gegeben.\n\nZeitplan, Verfahren der Überprüfung und etwaige Änderungen werden jedes Frühjahr veröffentlicht. Die unten genannten Termine von 2026 dienen zur Orientierung.",
-      "en": "The college has four preparatory classes. For 2026–27 there were 76 places, all of them taken. The number of places for 2027–28 depends on the enrolment figures approved by the Ministry of Education and will be announced here.\n\nThe enrolment calendar, the assessment procedure and any changes are published every spring. The 2026 dates below are for guidance."
+      "ro": "Colegiul are patru clase pregătitoare. Pentru anul școlar 2026–2027 au fost alocate 76 de locuri, toate ocupate. Numărul de locuri pentru 2027–2028 se stabilește prin cifra de școlarizare aprobată de Ministerul Educației și va fi anunțat aici.\n\nCalendarul înscrierii, procedura evaluării și eventualele modificări se publică în fiecare primăvară. Datele din 2026 indicate la fiecare pas sunt orientative.",
+      "de": "Das Kolleg führt vier Vorbereitungsklassen. Für das Schuljahr 2026/27 standen 76 Plätze zur Verfügung, die alle vergeben wurden. Die Zahl der Plätze für 2027/28 ergibt sich aus der vom Bildungsministerium genehmigten Schülerzahl und wird hier bekannt gegeben.\n\nZeitplan, Verfahren der Überprüfung und etwaige Änderungen werden jedes Frühjahr veröffentlicht. Die bei den einzelnen Schritten genannten Termine von 2026 dienen zur Orientierung.",
+      "en": "The college has four preparatory classes. For 2026–27 there were 76 places, all of them taken. The number of places for 2027–28 depends on the enrolment figures approved by the Ministry of Education and will be announced here.\n\nThe enrolment calendar, the assessment procedure and any changes are published every spring. The 2026 dates given in the steps are for guidance."
     },
     "faq": [
       {
@@ -50,9 +50,9 @@
           "en": "What happens if there are more applicants than places?"
         },
         "a": {
-          "ro": "Admiterea se face în ordinea rezultatelor evaluării, după procedura colegiului. În anii trecuți, colegiul a cerut Inspectoratului Școlar Județean suplimentarea locurilor (2024: 93 de copii admiși; 2025: 94 de copii admiși și 2 cetățeni germani). După prima etapă se publică locurile rămase libere.",
-          "de": "Aufgenommen wird nach dem Ergebnis der Überprüfung, gemäß dem Verfahren des Kollegs. In den vergangenen Jahren hat das Kolleg beim Kreisschulinspektorat zusätzliche Plätze beantragt (2024: 93 aufgenommene Kinder; 2025: 94 Kinder und zwei deutsche Staatsangehörige). Nach der ersten Etappe werden die freien Plätze veröffentlicht.",
-          "en": "Children are admitted in order of their assessment results, under the college’s procedure. In past years the college asked the County School Inspectorate for extra places (2024: 93 children admitted; 2025: 94 children plus 2 German nationals). Places still free after the first round are published."
+          "ro": "Admiterea se face după criteriile din procedura colegiului, pe baza evaluării cunoștințelor de limba germană. În anii trecuți, colegiul a cerut Inspectoratului Școlar Județean suplimentarea locurilor (2024: 93 de copii admiși; 2025: 94 de copii admiși și 2 cetățeni germani). După prima etapă se publică locurile rămase libere.",
+          "de": "Aufgenommen wird nach den Kriterien im Verfahren des Kollegs, auf der Grundlage der Überprüfung der Deutschkenntnisse. In den vergangenen Jahren hat das Kolleg beim Kreisschulinspektorat zusätzliche Plätze beantragt (2024: 93 aufgenommene Kinder; 2025: 94 Kinder und zwei deutsche Staatsangehörige). Nach der ersten Runde werden die freien Plätze veröffentlicht.",
+          "en": "Children are admitted according to the criteria in the college’s procedure, on the basis of the German assessment. In past years the college asked the County School Inspectorate for extra places (2024: 93 children admitted; 2025: 94 children plus 2 German nationals). Places still free after the first round are published."
         }
       },
       {
@@ -142,7 +142,7 @@
         "when": {
           "ro": "martie–aprilie 2027, după calendarul național",
           "de": "März–April 2027, nach landesweitem Zeitplan",
-          "en": "March–April 2027, per the national calendar"
+          "en": "March–April 2027, in line with the national calendar"
         },
         "is_deadline": true,
         "checklist": {
@@ -178,7 +178,7 @@
         },
         "body_md": {
           "ro": "Copiii înscriși participă la evaluarea cunoștințelor de limba germană („interviu prin joc”), după procedura colegiului. Data, ora și locul se publică pe site după încheierea înscrierilor; vă rugăm să urmăriți anunțurile, deoarece data a fost reprogramată în anii trecuți.",
-          "de": "Die angemeldeten Kinder nehmen an der Überprüfung der Deutschkenntnisse teil (spielerisches Aufnahmegespräch), nach dem Verfahren des Kollegs. Datum, Uhrzeit und Ort werden nach Abschluss der Anmeldung veröffentlicht. Bitte verfolgen Sie die Mitteilungen – in den vergangenen Jahren wurde der Termin gelegentlich verschoben.",
+          "de": "Die angemeldeten Kinder nehmen an der Überprüfung der Deutschkenntnisse teil („spielerisches Aufnahmegespräch“), nach dem Verfahren des Kollegs. Datum, Uhrzeit und Ort werden nach Abschluss der Anmeldung veröffentlicht. Bitte verfolgen Sie die Mitteilungen – in den vergangenen Jahren wurde der Termin gelegentlich verschoben.",
           "en": "Enrolled children take part in the German assessment (play-based interview) under the college’s procedure. The date, time and place are published after enrolment closes; please watch the announcements, as the date has been moved in past years."
         },
         "when": {
@@ -207,7 +207,7 @@
         },
         "body_md": {
           "ro": "Lista copiilor admiși se afișează la școală și pe site. Dacă rămân locuri libere după prima etapă, colegiul publică numărul lor pentru etapa următoare, după calendarul național.",
-          "de": "Die Liste der aufgenommenen Kinder wird in der Schule und auf der Website bekannt gegeben. Bleiben nach der ersten Etappe Plätze frei, veröffentlicht das Kolleg deren Zahl für die nächste Etappe nach dem landesweiten Zeitplan.",
+          "de": "Die Liste der aufgenommenen Kinder wird in der Schule und auf der Website bekannt gegeben. Bleiben nach der ersten Runde Plätze frei, veröffentlicht das Kolleg deren Zahl für die nächste Runde nach dem landesweiten Zeitplan.",
           "en": "The list of admitted children is posted at the school and online. If places remain after the first round, the college publishes how many for the next round, following the national calendar."
         },
         "when": {
@@ -289,7 +289,7 @@
         "a": {
           "ro": "Transferul este posibil numai dacă există locuri libere și cu aprobarea consiliului de administrație. Pentru că toate orele se țin în limba germană, colegiul stabilește prin procedura de transfer dacă elevul susține un examen de diferență la limba și literatura germană maternă. Întrebați secretariatul înainte de a depune cererea.",
           "de": "Ein Wechsel ist nur bei freien Plätzen und mit Zustimmung des Verwaltungsrats möglich. Da der gesamte Unterricht auf Deutsch stattfindet, legt das Kolleg im Wechselverfahren fest, ob eine Differenzprüfung in Deutsch als Muttersprache abzulegen ist. Bitte erkundigen Sie sich vor dem Antrag im Sekretariat.",
-          "en": "A transfer is possible only if places are free and the board of administration approves it. Because all lessons are in German, the college’s transfer procedure determines whether the pupil sits a differential exam in German as a mother tongue. Please ask the school office before applying."
+          "en": "A transfer is possible only if places are free and the college board approves it. Because all lessons are in German, the college’s transfer procedure determines whether the pupil sits a bridging exam in German as a mother tongue. Please ask the school office before applying."
         }
       },
       {
@@ -338,7 +338,7 @@
         "body_md": {
           "ro": "Pentru elevii din alte școli, consiliul de administrație aprobă și publică locurile libere, de regulă înaintea vacanței de vară.",
           "de": "Für Schüler anderer Schulen beschließt und veröffentlicht der Verwaltungsrat die freien Plätze, in der Regel vor den Sommerferien.",
-          "en": "For pupils from other schools, the board of administration approves and publishes the free places, usually before the summer holidays."
+          "en": "For pupils from other schools, the college board approves and publishes the free places, usually before the summer holidays."
         },
         "when": {
           "ro": "iunie–iulie 2027",
@@ -395,12 +395,12 @@
         "title": {
           "ro": "Examenul de diferență, dacă este cazul",
           "de": "Differenzprüfung, falls erforderlich",
-          "en": "Differential exam, if required"
+          "en": "Bridging exam, if required"
         },
         "body_md": {
           "ro": "Dacă procedura colegiului o cere, elevul susține un examen de diferență, în special la limba și literatura germană maternă. Data se comunică părinților.",
           "de": "Wenn das Verfahren des Kollegs es vorsieht, legt das Kind eine Differenzprüfung ab, insbesondere in Deutsch als Muttersprache. Der Termin wird den Eltern mitgeteilt.",
-          "en": "If the college’s procedure requires it, the pupil sits a differential exam, particularly in German as a mother tongue. Parents are told the date."
+          "en": "If the college’s procedure requires it, the pupil sits a bridging exam, particularly in German as a mother tongue. Parents are told the date."
         },
         "when": {
           "ro": "sfârșitul lunii august 2027",
@@ -428,12 +428,12 @@
     },
     "lead": {
       "ro": "Patru clase a IX-a cu predare în limba germană – două la profilul real, specializarea științe ale naturii, și două la profilul umanist, specializarea filologie –, ocupate prin repartizare computerizată națională.",
-      "de": "Vier 9. Klassen mit deutscher Unterrichtssprache – zwei im naturwissenschaftlichen, zwei im philologischen Profil –, vergeben über die landesweite computergestützte Verteilung.",
+      "de": "Vier 9. Klassen mit deutscher Unterrichtssprache – zwei im Realprofil (Fachrichtung Naturwissenschaften), zwei im humanistischen Profil (Fachrichtung Philologie) –, vergeben über die landesweite computergestützte Verteilung.",
       "en": "Four Year 9 classes taught in German – two on the natural sciences track and two on the philology track – filled through Romania’s national computerised allocation."
     },
     "body_md": {
       "ro": "| Profil | Specializare | Clase |\n|---|---|---|\n| Real | Științe ale naturii | 2 |\n| Umanist | Filologie | 2 |\n\nAdmiterea are două părți: proba de verificare a cunoștințelor de limba germană maternă, organizată de colegiu în mai, pentru candidații care au nevoie de ea, și repartizarea computerizată din iulie. Calendarul admiterii pentru 2027–2028 este stabilit de Ministerul Educației; datele din 2026 sunt date orientativ.",
-      "de": "| Profil | Fachrichtung | Klassen |\n|---|---|---|\n| Realprofil | Naturwissenschaften | 2 |\n| Geisteswissenschaftliches Profil | Philologie | 2 |\n\nDie Aufnahme besteht aus zwei Teilen: der Prüfung der Deutschkenntnisse (Muttersprache), die das Kolleg im Mai für die betreffenden Bewerber durchführt, und der computergestützten Verteilung im Juli. Den Zeitplan für 2027/28 legt das Bildungsministerium fest; die Termine von 2026 dienen zur Orientierung.",
+      "de": "| Profil | Fachrichtung | Klassen |\n|---|---|---|\n| Realprofil | Naturwissenschaften | 2 |\n| Humanistisches Profil | Philologie | 2 |\n\nDie Aufnahme besteht aus zwei Teilen: der Prüfung der Deutschkenntnisse (Muttersprache), die das Kolleg im Mai für die betreffenden Bewerber durchführt, und der computergestützten Verteilung im Juli. Den Zeitplan für 2027/28 legt das Bildungsministerium fest; die Termine von 2026 dienen zur Orientierung.",
       "en": "| Track | Specialisation | Classes |\n|---|---|---|\n| Science (*real*) | Natural sciences | 2 |\n| Humanities (*umanist*) | Philology | 2 |\n\nAdmission has two parts: the German-language test, held by the college in May for the candidates who need it, and the computerised allocation in July. The 2027–28 admissions calendar is set by the Ministry of Education; the 2026 dates are given for guidance."
     },
     "faq": [
@@ -451,13 +451,13 @@
       },
       {
         "q": {
-          "ro": "Pot alege profilul matematică-informatică?",
-          "de": "Gibt es das Profil Mathematik-Informatik?",
+          "ro": "Pot alege specializarea matematică-informatică?",
+          "de": "Gibt es die Fachrichtung Mathematik-Informatik?",
           "en": "Is there a mathematics and computer science track?"
         },
         "a": {
           "ro": "Nu. La colegiu există numai profilul real, specializarea științe ale naturii, și profilul umanist, specializarea filologie.",
-          "de": "Nein. Das Kolleg bietet nur das naturwissenschaftliche Profil (Fachrichtung Naturwissenschaften) und das geisteswissenschaftliche Profil (Fachrichtung Philologie) an.",
+          "de": "Nein. Das Kolleg bietet nur das Realprofil (Fachrichtung Naturwissenschaften) und das humanistische Profil (Fachrichtung Philologie) an.",
           "en": "No. The college offers only the natural sciences specialisation (science track) and the philology specialisation (humanities track)."
         }
       },
@@ -717,12 +717,12 @@
     "lead": {
       "ro": "Transferul la colegiu este posibil pe locurile libere aprobate de consiliul de administrație, după examene de diferență; proba de limba și literatura germană maternă este eliminatorie.",
       "de": "Ein Wechsel an das Kolleg ist auf die vom Verwaltungsrat genehmigten freien Plätze möglich, nach Differenzprüfungen; die Prüfung in Deutsch als Muttersprache ist ausschlaggebend.",
-      "en": "Transfers to the college are possible into places approved by the board of administration, after differential exams; the German mother-tongue exam must be passed first."
+      "en": "Transfers to the college are possible into places approved by the college board (consiliul de administrație), after bridging (differential) exams; the German mother-tongue exam must be passed first."
     },
     "body_md": {
       "ro": "Transferurile se fac în vacanța de vară, după procedura de transfer a colegiului și ROFUIP. Transferurile intersemestriale nu se pot efectua.\n\nÎn 2026, consiliul de administrație a aprobat la 30 iunie câte un loc liber în clasa a X-a la profilul umanist – filologie și la profilul real – științe ale naturii, iar examenele de diferențe au avut loc în 24–28 august.",
-      "de": "Schulwechsel finden in den Sommerferien statt, nach dem Wechselverfahren des Kollegs und der rumänischen Schulordnung (ROFUIP). Ein Wechsel zum Halbjahr ist nicht möglich.\n\n2026 genehmigte der Verwaltungsrat am 30. Juni je einen freien Platz in der 10. Klasse des philologischen und des naturwissenschaftlichen Profils; die Differenzprüfungen fanden vom 24. bis 28. August statt.",
-      "en": "Transfers take place during the summer holidays, under the college’s transfer procedure and the national school regulations (ROFUIP). Mid-year transfers are not possible.\n\nIn 2026 the board of administration approved, on 30 June, one free place each in Year 10 on the philology and the natural sciences tracks; the differential exams were held on 24–28 August."
+      "de": "Schulwechsel finden in den Sommerferien statt, nach dem Wechselverfahren des Kollegs und der rumänischen Schulordnung (ROFUIP). Ein Wechsel zum Halbjahr ist nicht möglich.\n\n2026 genehmigte der Verwaltungsrat am 30. Juni je einen freien Platz in der 10. Klasse des humanistischen Profils (Fachrichtung Philologie) und des Realprofils (Fachrichtung Naturwissenschaften); die Differenzprüfungen fanden vom 24. bis 28. August statt.",
+      "en": "Transfers take place during the summer holidays, under the college’s transfer procedure and the national school regulations (ROFUIP). Mid-year transfers are not possible.\n\nIn 2026 the college board approved, on 30 June, one free place each in Year 10 on the philology and the natural sciences tracks; the bridging exams were held on 24–28 August."
     },
     "faq": [
       {
@@ -741,11 +741,11 @@
         "q": {
           "ro": "Ce examene de diferență trebuie să susțin?",
           "de": "Welche Differenzprüfungen muss ich ablegen?",
-          "en": "Which differential exams do I need to sit?"
+          "en": "Which bridging exams do I need to sit?"
         },
         "a": {
           "ro": "Elevii care vin din alte licee susțin întâi proba eliminatorie de limba și literatura germană maternă (scris și oral), pentru clasele în care nu au învățat în această limbă. Urmează, după profil, probe la matematică și informatică (real) sau la limba franceză și limba latină (umanist). Programele sunt cele în vigoare pentru disciplinele respective.",
-          "de": "Schüler anderer Lyzeen legen zuerst die ausschlaggebende Prüfung in Deutsch als Muttersprache ab (schriftlich und mündlich), für die Klassenstufen, in denen sie nicht in dieser Sprache unterrichtet wurden. Danach folgen je nach Profil Prüfungen in Mathematik und Informatik (naturwissenschaftlich) oder in Französisch und Latein (philologisch), nach den geltenden Lehrplänen.",
+          "de": "Schüler anderer Lyzeen legen zuerst die ausschlaggebende Prüfung in Deutsch als Muttersprache ab (schriftlich und mündlich), für die Klassenstufen, in denen sie nicht in dieser Sprache unterrichtet wurden. Danach folgen je nach Profil Prüfungen in Mathematik und Informatik (Realprofil) oder in Französisch und Latein (humanistisches Profil), nach den geltenden Lehrplänen.",
           "en": "Students from other upper-secondary schools first sit the German mother-tongue exam (written and oral), which they must pass, for the years in which they were not taught in German. Then, depending on the track, they sit mathematics and computing (science) or French and Latin (humanities), on the current syllabuses."
         }
       },
@@ -757,7 +757,7 @@
         },
         "a": {
           "ro": "Criteriul de departajare anunțat în 2026 a fost media generală a clasei anterioare (clasa a IX-a). Pagina de transferuri a colegiului a indicat atunci ultima medie: 7,61 la profilul real și 6,78 la profilul umanist.",
-          "de": "Als Entscheidungskriterium galt 2026 der Gesamtdurchschnitt des vorangegangenen Schuljahres (9. Klasse). Die Seite des Kollegs zum Schulwechsel nannte damals als letzten Durchschnitt 7,61 (Realprofil) und 6,78 (philologisches Profil).",
+          "de": "Als Entscheidungskriterium galt 2026 der Gesamtdurchschnitt des vorangegangenen Schuljahres (9. Klasse). Die Seite des Kollegs zum Schulwechsel nannte damals als letzten Durchschnitt 7,61 (Realprofil) und 6,78 (humanistisches Profil).",
           "en": "The ranking criterion announced in 2026 was the overall average of the previous year (Year 9). The college’s transfer page then gave the last average as 7.61 for the science track and 6.78 for the humanities track."
         }
       }
@@ -772,7 +772,7 @@
         "body_md": {
           "ro": "Consiliul de administrație aprobă locurile libere pe clase și profiluri și le publică pe site.",
           "de": "Der Verwaltungsrat beschließt die freien Plätze nach Klassen und Profilen und veröffentlicht sie auf der Website.",
-          "en": "The board of administration approves the free places by class and track and publishes them on the website."
+          "en": "The college board approves the free places by class and track and publishes them on the website."
         },
         "when": {
           "ro": "sfârșitul lunii iunie – iulie 2027",
@@ -795,7 +795,7 @@
         "body_md": {
           "ro": "Părinții depun dosarul la secretariat sau îl trimit la liceulhonterus@yahoo.com. În cerere menționați că elevul va susține examenele de diferență și treceți un număr de telefon și o adresă de e-mail.",
           "de": "Die Eltern reichen die Unterlagen im Sekretariat ein oder schicken sie an liceulhonterus@yahoo.com. Im Antrag bitte vermerken, dass die Differenzprüfungen abgelegt werden, und Telefonnummer sowie E-Mail-Adresse angeben.",
-          "en": "Parents hand the file in at the school office or send it to liceulhonterus@yahoo.com. The application should state that the student will sit the differential exams and give a phone number and e-mail address."
+          "en": "Parents hand the file in at the school office or send it to liceulhonterus@yahoo.com. The application should state that the student will sit the bridging exams and give a phone number and e-mail address."
         },
         "when": {
           "ro": "iulie–august 2027, în termenul anunțat",
@@ -817,7 +817,7 @@
             "Kopie des Personalausweises eines Elternteils"
           ],
           "en": [
-            "transfer application stating that the differential exams will be sat, with phone and e-mail",
+            "transfer application stating that the bridging exams will be sat, with phone and e-mail",
             "school record (foaia matricolă)",
             "copy of the student’s birth certificate and identity card",
             "copy of a parent’s identity document"
@@ -858,11 +858,11 @@
         "title": {
           "ro": "Celelalte examene de diferență",
           "de": "Weitere Differenzprüfungen",
-          "en": "Other differential exams"
+          "en": "Other bridging exams"
         },
         "body_md": {
           "ro": "Probele încep la ora 9:00; candidații sunt în săli la 8:30. Disciplinele depind de profil: matematică și informatică pentru profilul real, limba franceză și limba latină pentru profilul umanist.",
-          "de": "Die Prüfungen beginnen um 9 Uhr; Einlass ist um 8.30 Uhr. Die Fächer hängen vom Profil ab: Mathematik und Informatik im naturwissenschaftlichen, Französisch und Latein im philologischen Profil.",
+          "de": "Die Prüfungen beginnen um 9 Uhr; Einlass ist um 8.30 Uhr. Die Fächer hängen vom Profil ab: Mathematik und Informatik im Realprofil, Französisch und Latein im humanistischen Profil.",
           "en": "Exams start at 09:00; candidates should be in the room by 08:30. Subjects depend on the track: mathematics and computing for science, French and Latin for humanities."
         },
         "when": {
@@ -886,7 +886,7 @@
         "body_md": {
           "ro": "Locurile se ocupă în ordinea criteriului de departajare anunțat. Transferul se aprobă de consiliul de administrație, iar familia este anunțată înainte de începerea anului școlar.",
           "de": "Die Plätze werden nach dem angekündigten Kriterium vergeben. Der Verwaltungsrat genehmigt den Wechsel; die Familie wird vor Schuljahresbeginn benachrichtigt.",
-          "en": "Places are filled in the order of the announced ranking criterion. The board of administration approves the transfer and the family is informed before the school year begins."
+          "en": "Places are filled in the order of the announced ranking criterion. The college board approves the transfer and the family is informed before the school year begins."
         },
         "when": {
           "ro": "începutul lunii septembrie 2027",
@@ -1170,7 +1170,7 @@
     },
     "body_md": {
       "ro": "Structura de mai jos este cea din metodologia de organizare a examenului de bacalaureat național în vigoare. Calendarul sesiunilor și eventualele modificări sunt aprobate anual prin ordin al ministrului și publicate pe edu.ro; centrele de examen se stabilesc de Inspectoratul Școlar Județean Brașov.\n\n**Evaluarea competențelor**\n\n- **A** – competențe lingvistice de comunicare orală în limba română\n- **B** – competențe lingvistice de comunicare orală în limba maternă (germană)\n- **C** – competențe lingvistice într-o limbă de circulație internațională\n- **D** – competențe digitale\n\n**Probe scrise**\n\n| Probă | Profil real – științe ale naturii | Profil umanist – filologie |\n|---|---|---|\n| E)a) | Limba și literatura română | Limba și literatura română |\n| E)b) | Limba și literatura germană maternă | Limba și literatura germană maternă |\n| E)c) | Matematică | Istorie |\n| E)d) | o disciplină la alegere: fizică, chimie, biologie sau informatică | o disciplină la alegere: geografie, logică, argumentare și comunicare, psihologie, economie, sociologie sau filosofie |\n\nPentru promovare sunt necesare cel puțin nota 5 la fiecare probă scrisă și media generală cel puțin 6.",
-      "de": "Der folgende Aufbau entspricht der geltenden Verordnung über das nationale Bakkalaureat. Den Zeitplan der Prüfungstermine und etwaige Änderungen legt das Bildungsministerium jährlich per Erlass fest und veröffentlicht sie auf edu.ro; die Prüfungszentren bestimmt das Kreisschulinspektorat Brașov.\n\n**Kompetenzprüfungen**\n\n- **A** – mündliche Kommunikation auf Rumänisch\n- **B** – mündliche Kommunikation in der Muttersprache (Deutsch)\n- **C** – Sprachkompetenz in einer international verbreiteten Fremdsprache\n- **D** – digitale Kompetenzen\n\n**Schriftliche Prüfungen**\n\n| Prüfung | Naturwissenschaftliches Profil | Philologisches Profil |\n|---|---|---|\n| E)a) | Rumänische Sprache und Literatur | Rumänische Sprache und Literatur |\n| E)b) | Deutsche Sprache und Literatur (Muttersprache) | Deutsche Sprache und Literatur (Muttersprache) |\n| E)c) | Mathematik | Geschichte |\n| E)d) | ein Wahlfach: Physik, Chemie, Biologie oder Informatik | ein Wahlfach: Geographie, Logik und Argumentation, Psychologie, Wirtschaft, Soziologie oder Philosophie |\n\nBestanden hat, wer in jeder schriftlichen Prüfung mindestens die Note 5 und insgesamt einen Durchschnitt von mindestens 6 erreicht.",
+      "de": "Der folgende Aufbau entspricht der geltenden Verordnung über das nationale Bakkalaureat. Den Zeitplan der Prüfungstermine und etwaige Änderungen legt das Bildungsministerium jährlich per Erlass fest und veröffentlicht sie auf edu.ro; die Prüfungszentren bestimmt das Kreisschulinspektorat Brașov.\n\n**Kompetenzprüfungen**\n\n- **A** – mündliche Kommunikation auf Rumänisch\n- **B** – mündliche Kommunikation in der Muttersprache (Deutsch)\n- **C** – Sprachkompetenz in einer international verbreiteten Fremdsprache\n- **D** – digitale Kompetenzen\n\n**Schriftliche Prüfungen**\n\n| Prüfung | Realprofil – Naturwissenschaften | Humanistisches Profil – Philologie |\n|---|---|---|\n| E)a) | Rumänische Sprache und Literatur | Rumänische Sprache und Literatur |\n| E)b) | Deutsche Sprache und Literatur (Muttersprache) | Deutsche Sprache und Literatur (Muttersprache) |\n| E)c) | Mathematik | Geschichte |\n| E)d) | ein Wahlfach: Physik, Chemie, Biologie oder Informatik | ein Wahlfach: Geographie, Logik und Argumentation, Psychologie, Wirtschaft, Soziologie oder Philosophie |\n\nBestanden hat, wer in jeder schriftlichen Prüfung mindestens die Note 5 und insgesamt einen Durchschnitt von mindestens 6 erreicht.",
       "en": "The structure below follows the current rules for Romania’s national baccalaureate. The session calendar and any changes are approved each year by ministerial order and published on edu.ro; exam centres are assigned by the Brașov County School Inspectorate.\n\n**Competence assessments**\n\n- **A** – oral communication in Romanian\n- **B** – oral communication in the mother tongue (German)\n- **C** – language competence in an international language\n- **D** – digital competence\n\n**Written papers**\n\n| Paper | Science track – natural sciences | Humanities track – philology |\n|---|---|---|\n| E)a) | Romanian language and literature | Romanian language and literature |\n| E)b) | German language and literature (mother tongue) | German language and literature (mother tongue) |\n| E)c) | Mathematics | History |\n| E)d) | one optional subject: physics, chemistry, biology or computing | one optional subject: geography, logic and argumentation, psychology, economics, sociology or philosophy |\n\nTo pass, a candidate needs at least 5 in each written paper and an overall average of at least 6."
     },
     "faq": [
@@ -1261,7 +1261,7 @@
         "when": {
           "ro": "după calendarul aprobat pentru 2027",
           "de": "nach dem für 2027 genehmigten Zeitplan",
-          "en": "per the approved 2027 calendar"
+          "en": "in line with the approved 2027 calendar"
         },
         "is_deadline": true,
         "checklist": {
@@ -1294,7 +1294,7 @@
         "when": {
           "ro": "după calendarul 2027",
           "de": "nach dem Zeitplan 2027",
-          "en": "per the 2027 calendar"
+          "en": "in line with the 2027 calendar"
         },
         "is_deadline": false,
         "checklist": {
@@ -1358,7 +1358,7 @@
         "when": {
           "ro": "după calendarul 2027",
           "de": "nach dem Zeitplan 2027",
-          "en": "per the 2027 calendar"
+          "en": "in line with the 2027 calendar"
         },
         "is_deadline": true,
         "checklist": {
@@ -1471,8 +1471,8 @@
         },
         "body_md": {
           "ro": "Înaintea examenului, elevii susțin o probă-pilot în condiții de examen (în 2018: 9 noiembrie).",
-          "de": "Vor der Prüfung schreiben die Schülerinnen und Schüler eine Pilotprüfung unter Prüfungsbedingungen (2018: 9. November).",
-          "en": "Before the exam, students sit a pilot test under exam conditions (in 2018: 9 November)."
+          "de": "Vor der Prüfung schreiben die Schülerinnen und Schüler eine Probeprüfung unter Prüfungsbedingungen (2018: 9. November).",
+          "en": "Before the exam, students sit a practice exam under exam conditions (in 2018: 9 November)."
         },
         "when": {
           "ro": "toamna 2026, clasa a XII-a",
@@ -1578,9 +1578,9 @@
       "en": "Olympiads and school competitions"
     },
     "lead": {
-      "ro": "Olimpiadele școlare se desfășoară pe etape – pe școală, județeană, națională –, după regulamentele Ministerului Educației. Colegiul găzduiește etapa județeană a olimpiadei de limba și literatura germană maternă.",
-      "de": "Die Schulolympiaden verlaufen in Stufen – Schul-, Kreis- und Landesstufe – nach den Regelungen des Bildungsministeriums. Das Kolleg richtet die Kreisstufe der Olympiade in Deutsch als Muttersprache aus.",
-      "en": "School olympiads run in stages – school, county and national – under the Ministry of Education’s rules. The college hosts the county stage of the German mother-tongue olympiad."
+      "ro": "Olimpiadele școlare se desfășoară pe etape – etapa pe școală, locală, județeană și națională, după caz –, după regulamentele Ministerului Educației. Colegiul găzduiește etapa județeană a olimpiadei de limba și literatura germană maternă.",
+      "de": "Die Schulolympiaden verlaufen in Stufen – je nach Olympiade Schul-, Orts-, Kreis- und Landesstufe – nach den Regelungen des Bildungsministeriums. Das Kolleg richtet die Kreisstufe der Olympiade in Deutsch als Muttersprache aus.",
+      "en": "School olympiads run in stages – school, local, county and national, depending on the olympiad – under the Ministry of Education’s rules. The college hosts the county stage of the German mother-tongue olympiad."
     },
     "body_md": {
       "ro": "Fiecare olimpiadă are propriul regulament, care stabilește etapele, clasele participante și numărul de locuri pentru etapa următoare. Calendarul olimpiadelor pentru anul școlar 2026–2027 este publicat de minister; Inspectoratul Școlar Județean Brașov anunță locul și data etapelor județene.\n\nColegiul a organizat în 2025 și 2026 etapa județeană a **Olimpiadei de limba și literatura germană maternă** și a **Olimpiadei de limba și literatura română pentru elevii aparținând minorităților naționale** (secțiunile A și B, clasele V–XII), cu publicarea subiectelor, baremelor și rezultatelor.",
@@ -1640,7 +1640,7 @@
         "when": {
           "ro": "decembrie 2026 – februarie 2027, după calendarul ministerului",
           "de": "Dezember 2026 – Februar 2027, nach Kalender des Ministeriums",
-          "en": "December 2026 – February 2027, per the ministry’s calendar"
+          "en": "December 2026 – February 2027, in line with the ministry’s calendar"
         },
         "is_deadline": false,
         "checklist": {
@@ -1728,7 +1728,7 @@
         "when": {
           "ro": "primăvara 2027, după calendarul ministerului",
           "de": "Frühjahr 2027, nach Kalender des Ministeriums",
-          "en": "spring 2027, per the ministry’s calendar"
+          "en": "spring 2027, in line with the ministry’s calendar"
         },
         "is_deadline": false,
         "checklist": {
