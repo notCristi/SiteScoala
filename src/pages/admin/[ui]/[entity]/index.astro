@@ -1,0 +1,186 @@
+---
+/** Generic list view: search, filters, status + translation chips, drag / ▲▼ ordering where it matters. */
+import Admin from '~/layouts/Admin.astro';
+import Flash from '~/components/admin/Flash.astro';
+import { entityByKey } from '~/server/admin/entities';
+import { listRows } from '~/server/admin/crud';
+import { can } from '~/server/admin/audit';
+import { translator } from '~/server/admin/i18n';
+import { flashFrom, optionLabel, trGlyph, trState } from '~/server/admin/view';
+import { fmtDate } from '~/server/admin/util';
+import { LOCALES } from '~/i18n/locales';
+
+const def = entityByKey(Astro.params.entity);
+if (!def || def.hidden) return new Response('Not found', { status: 404 });
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+const sp = Astro.url.searchParams;
+const q = (sp.get('q') ?? '').trim().slice(0, 100);
+const status = sp.get('status') ?? '';
+const filters: Record<string, string> = {};
+for (const f of def.filters ?? []) {
+  const v = sp.get(f.name);
+  if (v && f.options.includes(v)) filters[f.name] = v;
+}
+const page = Math.max(1, Number(sp.get('p') ?? 1) || 1);
+const { rows, total, per } = await listRows(def, { q, status: ['draft', 'published', 'archived'].includes(status) ? status : '', filters, page, perPage: def.orderable ? 200 : 50 });
+const pages = Math.max(1, Math.ceil(total / per));
+const orderable = !!def.orderable && can(user, 'content') && !q && total <= per;
+const title = (r: Record<string, unknown>) => String(r[def.titleLocalized ? `${def.titleField}Ro` : def.titleField] ?? '—');
+const qs = (p: number) => {
+  const u = new URLSearchParams(sp);
+  u.set('p', String(p));
+  return `?${u}`;
+};
+const flash = flashFrom(Astro.url);
+const listCol = def.listColumn;
+const listColField = listCol ? def.fields.find((f) => f.name === listCol.name) : undefined;
+---
+
+<Admin title={t(def.label)} active={def.key}>
+  <header class="adm-head">
+    <h1>{t(def.label)}</h1>
+    {
+      can(user, 'content') && (
+        <a class="btn btn--primary" href={`/admin/${def.key}/nou`}>
+          + {def.newLabel[user.uiLocale === 'de' ? 1 : 0]}
+        </a>
+      )
+    }
+  </header>
+  <Flash t={t} ok={flash.ok} err={flash.err} />
+
+  <form class="toolbar" method="get" role="search">
+    <div class="f grow">
+      <label for="q">{t('search')}</label>
+      <input type="search" id="q" name="q" value={q} data-filter-table="#list" autocomplete="off" />
+    </div>
+    {
+      def.hasStatus && (
+        <div class="f">
+          <label for="status">{t('status')}</label>
+          <select id="status" name="status" data-autosubmit>
+            <option value="">{t('all')}</option>
+            {['draft', 'published', 'archived'].map((st) => (
+              <option value={st} selected={st === status}>
+                {t(`st_${st}`)}
+              </option>
+            ))}
+          </select>
+        </div>
+      )
+    }
+    {
+      def.filters?.map((f) => (
+        <div class="f">
+          <label for={`flt-${f.name}`}>{t(def.fields.find((x) => x.name === f.name)?.label ?? f.name)}</label>
+          <select id={`flt-${f.name}`} name={f.name} data-autosubmit>
+            <option value="">{t('all')}</option>
+            {f.options.map((o) => (
+              <option value={o} selected={filters[f.name] === o}>
+                {optionLabel(f, o, t)}
+              </option>
+            ))}
+          </select>
+        </div>
+      ))
+    }
+    <button class="btn" type="submit">{t('filter')}</button>
+  </form>
+
+  {
+    rows.length === 0 ? (
+      <div class="card empty">
+        <p>{q || status || Object.keys(filters).length ? t('noResults') : t('emptyList')}</p>
+      </div>
+    ) : (
+      <div class="table-wrap">
+        <table class="t cards" id="list" data-reorder={orderable ? def.key : undefined}>
+          <thead>
+            <tr>
+              {orderable && (
+                <th>
+                  <span class="sr-only">{t('f_sortOrder')}</span>
+                </th>
+              )}
+              <th>{t(def.titleLocalized || def.key !== 'personal' ? 'f_title' : 's_fullName')}</th>
+              {listCol && <th>{listColField ? t(listColField.label) : listCol.name}</th>}
+              {def.hasStatus || def.key === 'personal' ? <th>{t('status')}</th> : null}
+              {def.titleLocalized && <th>{t('translations')}</th>}
+              <th>{t('f_date')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr data-id={String(r.id)}>
+                {orderable && (
+                  <td>
+                    <button type="button" class="handle" draggable="true" data-handle aria-label={t('moveUp')} title="▲▼">
+                      ⠿
+                    </button>
+                    <button type="button" class="btn btn--sm btn--quiet" data-up aria-label={t('moveUp')}>
+                      ▲
+                    </button>
+                    <button type="button" class="btn btn--sm btn--quiet" data-down aria-label={t('moveDown')}>
+                      ▼
+                    </button>
+                  </td>
+                )}
+                <td class="title">
+                  <a href={`/admin/${def.key}/${String(r.id)}`}>{title(r)}</a>
+                  {def.key === 'personal' && r.roleRo ? <small>{String(r.roleRo)}</small> : null}
+                  {r.slug ? <small>/{String(r.slug)}</small> : null}
+                  {def.key === 'anunturi' && r.pinnedBanner && Number(r.bannerUntil ?? 0) > Date.now() ? <span class="chip chip--critical">banner</span> : null}
+                </td>
+                {listCol && <td data-l={listColField ? t(listColField.label) : ''}>{listColField ? optionLabel(listColField, String(r[listCol.name] ?? ''), t) : String(r[listCol.name] ?? '')}</td>}
+                {def.hasStatus || def.key === 'personal' ? (
+                  <td>
+                    <span class={`chip chip--${String(r.status)}`}>{t(`st_${String(r.status)}`)}</span>
+                  </td>
+                ) : null}
+                {def.titleLocalized && (
+                  <td>
+                    <span class="tr">
+                      {LOCALES.map((l) => {
+                        const st = trState(def, r, l);
+                        return (
+                          <i class={st === 'missing' || st === 'outdated' ? 'm' : undefined} title={`${l.toUpperCase()}: ${t(`tr_${st === 'filled' ? 'done' : st}`)}`}>
+                            {l.toUpperCase()}
+                            {trGlyph(st)}
+                          </i>
+                        );
+                      })}
+                    </span>
+                  </td>
+                )}
+                <td data-l={t('f_date')}>
+                  <time>{fmtDate((r.publishedAt as number | null) ?? (r.updatedAt as number | null), user.uiLocale, false)}</time>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+  {
+    orderable && rows.length > 1 && (
+      <p class="btn-row" style="margin-top: var(--s-3)">
+        <button type="button" class="btn btn--primary" data-save-order hidden>
+          {t('saveOrder')}
+        </button>
+      </p>
+    )
+  }
+  {
+    pages > 1 && (
+      <nav class="pager" aria-label={t('page')}>
+        {page > 1 && <a href={qs(page - 1)}>← {t('prev')}</a>}
+        <span>
+          {t('page')} {page} {t('of')} {pages}
+        </span>
+        {page < pages && <a href={qs(page + 1)}>{t('next')} →</a>}
+      </nav>
+    )
+  }
+</Admin>

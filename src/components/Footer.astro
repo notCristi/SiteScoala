@@ -1,0 +1,213 @@
+---
+import type { Locale } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import { AUDIENCES } from '~/i18n/nav';
+import type { SiteSettings } from '~/server/content';
+import Icon from '~/components/svg/Icon.astro';
+
+interface Props {
+  locale: Locale;
+  settings: SiteSettings;
+}
+const { locale, settings } = Astro.props;
+const L = (k: string) => ui(locale, k);
+const c = settings.contact;
+const year = new Date().getFullYear();
+const hours = c.hours?.[locale] ?? c.hours?.ro;
+---
+
+<footer class="site-footer">
+  <div class="frieze" aria-hidden="true">
+    <!-- cached file, not inline: identical on every page (scripts/brand/build-frieze.mjs) -->
+    <img src="/brand/courtyard-frieze.svg" width="1600" height="260" alt="" loading="lazy" decoding="async" />
+  </div>
+  <div class="wrap footer__grid">
+    <section class="footer__contact" aria-labelledby="f-contact">
+      <h2 id="f-contact" class="footer__title">{L('contact')}</h2>
+      <address>
+        <p class="footer__school">{L('schoolFull')}</p>
+        <p>
+          <a href={c.mapUrl} rel="noopener" target="_blank">{c.street}<br />{c.postalCode} {c.city}</a>
+        </p>
+        <ul role="list" class="footer__lines">
+          {
+            c.phones.map((p) => (
+              <li>
+                <Icon name="phone" />
+                <a href={`tel:+4${p.replace(/\s/g, '')}`}>{p}</a>
+              </li>
+            ))
+          }
+          <li><Icon name="mail" /><a href={`mailto:${c.email}`}>{c.email}</a></li>
+          {hours && <li><Icon name="clock" /><span>{hours}</span></li>}
+        </ul>
+      </address>
+    </section>
+
+    <nav aria-labelledby="f-quick">
+      <h2 id="f-quick" class="footer__title">{L('quickLinks')}</h2>
+      <ul role="list">
+        <li><a href={url('admissions', locale)}>{locale === 'ro' ? 'Admitere' : locale === 'de' ? 'Aufnahme' : 'Admissions'}</a></li>
+        <li><a href={url('documents', locale)}>{L('documents')}</a></li>
+        <li><a href={url('news', locale)}>{locale === 'ro' ? 'Noutăți' : locale === 'de' ? 'Aktuelles' : 'News'}</a></li>
+        <li><a href={url('staff', locale)}>{locale === 'ro' ? 'Conducere și personal' : locale === 'de' ? 'Schulleitung und Kollegium' : 'Leadership and staff'}</a></li>
+        <li><a href={url('contact', locale)}>{locale === 'ro' ? 'Contact și program' : locale === 'de' ? 'Kontakt und Sprechzeiten' : 'Contact and office hours'}</a></li>
+        <li><a href={settings.links.noteInCatalog} rel="noopener" target="_blank">NoteInCatalog <span class="vh">{L('external')}</span></a></li>
+        <li><a href={settings.links.classroom} rel="noopener" target="_blank">Google Classroom <span class="vh">{L('external')}</span></a></li>
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="f-aud">
+      <h2 id="f-aud" class="footer__title">{locale === 'ro' ? 'Pentru…' : locale === 'de' ? 'Für …' : 'For…'}</h2>
+      <ul role="list">
+        {
+          AUDIENCES.map((a) => {
+            const first = a.links.find((x) => x.route);
+            return <li><a href={first?.route ? url(first.route, locale, first.params, first.query) : url('home', locale)}>{ui(locale, `audiences.${a.id}`)}</a></li>;
+          })
+        }
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="f-inst">
+      <h2 id="f-inst" class="footer__title">{L('institution')}</h2>
+      <ul role="list">
+        <li><a href={url('documents', locale)}>{L('publicInfo')}</a></li>
+        <li><a href={url('school', locale)}>{locale === 'ro' ? 'Școala' : locale === 'de' ? 'Schule' : 'Our school'}</a></li>
+        <li><a href={url('education', locale)}>{locale === 'ro' ? 'Educație' : locale === 'de' ? 'Bildung' : 'Education'}</a></li>
+        <li><a href={url('life', locale)}>{locale === 'ro' ? 'Viața școlară' : locale === 'de' ? 'Schulleben' : 'School life'}</a></li>
+        <li><a href={url('history', locale)}>{locale === 'ro' ? 'Istoric' : locale === 'de' ? 'Geschichte' : 'History'}</a></li>
+        <li><a href={url('privacy', locale)}>{L('privacy')}</a></li>
+        <li><a href={url('accessibility', locale)}>{L('accessibility')}</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="wrap footer__colophon">
+    <img src="/brand/honterus-seal-mono-light-small.svg" width="72" height="72" alt="" loading="lazy" decoding="async" />
+    <div>
+      <p class="footer__founded">{L('founded')}</p>
+      <p class="footer__small">© {year} {L('schoolFull')} · <span class="colophon">{L('colophon')}</span></p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--lapis-deep);
+    color: var(--on-dark);
+    margin-top: var(--s-7);
+    position: relative;
+  }
+  .frieze {
+    color: var(--lapis-deep);
+    background: var(--paper);
+    line-height: 0;
+    overflow: hidden;
+  }
+  .frieze img {
+    width: 100%;
+    height: clamp(110px, 16vw, 230px);
+    display: block;
+    /* = preserveAspectRatio xMidYMax slice: the ground line stays on the edge, the sides crop away */
+    object-fit: cover;
+    object-position: 50% 100%;
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: var(--s-6);
+    padding-block: var(--s-7) var(--s-6);
+  }
+  @media (max-width: 60rem) {
+    .footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer__contact {
+      grid-column: 1 / -1;
+    }
+  }
+  .footer__title {
+    font-family: var(--font-sans);
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #f2a3a8;
+    margin-bottom: var(--s-3);
+  }
+  address {
+    font-style: normal;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-variant-numeric: lining-nums;
+  }
+  .footer__school {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    line-height: 1.25;
+    margin-bottom: var(--s-3);
+  }
+  .site-footer a {
+    color: var(--on-dark);
+    text-decoration-color: rgb(247 243 234 / 0.35);
+  }
+  .site-footer a:focus-visible {
+    outline-color: var(--paper);
+  }
+  .site-footer ul {
+    margin: 0;
+  }
+  nav li a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+  .footer__lines {
+    margin-top: var(--s-3) !important;
+  }
+  .footer__lines li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+  /* tel:, mailto: and map links are what a parent taps here: full 44 px targets */
+  address a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-variant-numeric: lining-nums;
+  }
+  .footer__lines :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex: none;
+    color: var(--on-dark-2);
+  }
+  .footer__colophon {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    border-top: 1px solid rgb(247 243 234 / 0.18);
+    padding-block: var(--s-5) var(--s-6);
+  }
+  .footer__colophon img {
+    flex: none;
+  }
+  .footer__founded {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-style: italic;
+  }
+  .footer__small {
+    font-size: 0.85rem;
+    color: var(--on-dark-2);
+    margin-top: 0.2rem;
+  }
+  .colophon {
+    font-family: var(--font-serif);
+    font-style: italic;
+  }
+</style>

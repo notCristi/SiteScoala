@@ -1,0 +1,759 @@
+---
+/**
+ * Home — a title page, not a landing page.
+ * 1. Title page: school name set like a 1540s title leaf, the seal inks itself in, framed Honterushof plate.
+ * 2. Audience index (Hick): four bounded registers of ≤ 5 links each.
+ * 3. News and upcoming events (rubric date gutter).
+ * 4. Cycle triptych (primar · gimnaziu · liceu).
+ * 5. Heritage moment (Peak-End): three highlighted years from the Annales, the woodcut portrait, the press.
+ * 6. Optional video facade (page data_json.video) — nothing loads from YouTube until clicked.
+ */
+import Base from '~/layouts/Base.astro';
+import Picture from '~/components/Picture.astro';
+import DateMark from '~/components/DateMark.astro';
+import CycleTriptych from '~/components/CycleTriptych.astro';
+import YouTube from '~/components/YouTube.astro';
+import Graticule from '~/components/svg/Graticule.astro';
+import Icon from '~/components/svg/Icon.astro';
+import { formatDate, pick, type Locale } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import { AUDIENCES } from '~/i18n/nav';
+import { caption, creditLine, imageSources } from '~/lib/media';
+import { getMediaMap, getPages, listNews, listTimeline } from '~/server/content';
+import type { ViewProps } from './types';
+
+type L3 = { ro: string; de?: string; en?: string };
+interface HomeData {
+  heritageMediaId?: string;
+  video?: { id: string; title: L3; posterMediaId?: string };
+}
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const now = Date.now();
+const [pages, news, events, timeline] = await Promise.all([
+  getPages(['home', 'primar', 'gimnaziu', 'liceu']),
+  listNews({ limit: 5 }),
+  listNews({ limit: 12, type: 'event' }),
+  listTimeline(),
+]);
+const home = pages.get('home');
+let data: HomeData = {};
+try {
+  data = home?.dataJson ? (JSON.parse(home.dataJson) as HomeData) : {};
+} catch {
+  data = {};
+}
+const heroId = home?.heroMediaId ?? settings.hero.mediaId;
+// The film's poster: a still of the courtyard rather than YouTube's automatic mid-sentence frame.
+const posterId = data.video?.id ? (data.video.posterMediaId ?? 'h-scoala-a') : undefined;
+const media = await getMediaMap([heroId, data.heritageMediaId, posterId]);
+const posterImg = posterId ? media.get(posterId) : undefined;
+const hero = heroId ? media.get(heroId) : undefined;
+const heritageImg = data.heritageMediaId ? media.get(data.heritageMediaId) : undefined;
+
+const L = (k: string) => ui(locale, k);
+const tr = (o: L3 | undefined) => (o ? (o[locale] ?? o.ro) : '');
+const lead = home ? pick(home, 'lead', locale) : undefined;
+const latest = news.rows.filter((n) => n.type !== 'event').slice(0, 4);
+const upcoming = events.rows
+  .filter((e) => (e.eventEnd ?? e.eventStart ?? 0) >= now - 86_400_000)
+  .sort((a, b) => (a.eventStart ?? 0) - (b.eventStart ?? 0))
+  .slice(0, 3);
+const highlights = timeline.filter((e) => e.highlight).slice(0, 3);
+
+const T = {
+  title: { ro: 'Colegiul Național „Johannes Honterus” Brașov', de: 'Honterus-Nationalkolleg Kronstadt', en: '“Johannes Honterus” National College, Brașov' },
+  sub: {
+    ro: 'Școală cu predare în limbile germană și română, de la clasa pregătitoare la bacalaureat.',
+    de: 'Deutschsprachige und rumänischsprachige Schule von der Vorbereitungsklasse bis zum Bakkalaureat.',
+    en: 'A German- and Romanian-language school, from the preparatory year to the baccalaureate.',
+  },
+  admissions: { ro: 'Admitere și înscrieri', de: 'Aufnahme und Anmeldung', en: 'Admissions' },
+  about: { ro: 'Despre școală', de: 'Über die Schule', en: 'About the school' },
+  news: { ro: 'Noutăți', de: 'Aktuelles', en: 'News' },
+  events: { ro: 'Urmează', de: 'Termine', en: 'Coming up' },
+  cycles: { ro: 'Trei cicluri, o singură școală', de: 'Drei Schulstufen, eine Schule', en: 'Three stages, one school' },
+  heritage: { ro: 'Din anii școlii', de: 'Aus der Schulgeschichte', en: 'From the school’s annals' },
+  heritageLead: {
+    ro: 'Johannes Honterus a reorganizat școala din Curtea Bisericii Negre după modelul umanist și a deschis alături una dintre primele tipografii din Transilvania.',
+    de: 'Johannes Honterus ordnete die Schule am Kirchhof der Schwarzen Kirche nach humanistischem Vorbild neu und richtete daneben eine der ersten Druckereien Siebenbürgens ein.',
+    en: 'Johannes Honterus reorganised the school beside the Black Church on the humanist model and set up one of the first printing presses in Transylvania next to it.',
+  },
+  history: { ro: 'Istoria completă', de: 'Die ganze Geschichte', en: 'The full history' },
+  video: { ro: 'Școala în imagini', de: 'Die Schule im Bild', en: 'The school on film' },
+  quick: { ro: 'Acces rapid', de: 'Schnellzugriff', en: 'Quick access' },
+} as const;
+
+const linkFor = (ln: (typeof AUDIENCES)[number]['links'][number]) =>
+  'href' in ln && ln.href ? { href: settings.links[ln.href], ext: true } : { href: url(ln.route!, locale, ln.params, ln.query), ext: false };
+const year = (y: number, lbl: string | null) => lbl ?? String(y);
+const eventWhen = (start: number | null, end: number | null, loc: Locale) =>
+  start ? (end && end - start > 86_400_000 ? `${formatDate(start, loc, 'day-month')} – ${formatDate(end, loc, 'day-month')}` : formatDate(start, loc, 'long')) : '';
+---
+
+<Base locale={locale} title={T.title[locale]} description={lead?.value ?? T.sub[locale]} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <!-- 1 · Title page -->
+  <section class="title-page" aria-labelledby="home-title">
+    <div class="title-page__grat" aria-hidden="true"><Graticule frame={false} /></div>
+    <div class="wrap title-page__grid">
+      <div class="title-page__text">
+        <p class="kicker">Schola Coronensis · MDXLI</p>
+        <h1 id="home-title" class="title-page__h">
+          {
+            locale === 'de' ? (
+              <>
+                <span class="tp-small">Honterus-</span>
+                <span class="tp-big">Nationalkolleg</span>
+                <span class="tp-rule" aria-hidden="true" />
+                <span class="tp-place">Kronstadt</span>
+              </>
+            ) : locale === 'en' ? (
+              <>
+                <span class="tp-small">“Johannes Honterus”</span>
+                <span class="tp-big">National College</span>
+                <span class="tp-rule" aria-hidden="true" />
+                <span class="tp-place">Brașov</span>
+              </>
+            ) : (
+              <>
+                <span class="tp-small">Colegiul Național</span>
+                <span class="tp-big">„Johannes Honterus”</span>
+                <span class="tp-rule" aria-hidden="true" />
+                <span class="tp-place">Brașov</span>
+              </>
+            )
+          }
+        </h1>
+        <p class="title-page__lead" lang={lead?.lang}>{lead?.value || T.sub[locale]}</p>
+        <div class="title-page__actions">
+          <a class="btn" href={url('admissions', locale)}>{T.admissions[locale]}<Icon name="arrow-right" /></a>
+          <a class="btn btn--ghost" href={url('school', locale)}>{T.about[locale]}</a>
+        </div>
+      </div>
+      <div class="title-page__plate">
+        {
+          hero && (
+            <figure>
+              <div class="plate plate--hero">
+                <Picture media={hero} locale={locale} priority sizes="(min-width: 90rem) 30rem, (min-width: 64rem) 34vw, (min-width: 37rem) 34rem, calc(100vw - 3rem)" ratio="3 / 2" />
+                <div class="title-page__seal">
+                  {/* cached file (≈13 KB), not 180 KB of inline path data in every home response */}
+                  <img class="seal-img" src="/brand/honterus-seal-small.svg" width="144" height="144" alt={ui(locale, 'schoolFull')} decoding="async" loading="lazy" fetchpriority="low" />
+                </div>
+              </div>
+              <figcaption>
+                {caption(hero, locale)}
+                {hero.credit && <span class="credit">{creditLine(hero, locale)}</span>}
+              </figcaption>
+            </figure>
+          )
+        }
+        {
+          !hero && (
+            <div class="title-page__seal title-page__seal--alone">
+              <img class="seal-img" src="/brand/honterus-seal.svg" width="352" height="352" alt={ui(locale, 'schoolFull')} decoding="async" />
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · Audience index -->
+  <section class="wrap audiences" aria-labelledby="aud-h">
+    <h2 id="aud-h" class="sec-h">{L('audiencesTitle')}</h2>
+    <div class="audiences__grid">
+      {
+        AUDIENCES.map((a, i) => (
+          <nav class="aud" aria-labelledby={`aud-${a.id}`} data-reveal style={`--i:${i}`}>
+            <h3 id={`aud-${a.id}`} class="aud__tab">{ui(locale, `audiences.${a.id}`)}</h3>
+            <ul role="list">
+              {a.links.map((ln) => {
+                const { href, ext } = linkFor(ln);
+                return (
+                  <li>
+                    <a href={href} {...(ext ? { target: '_blank', rel: 'noopener' } : {})}>
+                      <span>{ln.label[locale]}</span>
+                      <Icon name={ext ? 'external' : 'arrow-right'} />
+                      {ext && <span class="vh">{L('external')}</span>}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 3 · News + events -->
+  <section class="wrap bulletin" aria-labelledby="news-h">
+    <div class="bulletin__news">
+      <div class="sec-head">
+        <h2 id="news-h" class="sec-h">{T.news[locale]}</h2>
+        <a class="link-arrow" href={url('news', locale)}>{L('allNews')}<Icon name="arrow-right" /></a>
+      </div>
+      <ol role="list" class="entries">
+        {
+          latest.map((n, i) => {
+            const t = pick(n, 'title', locale);
+            const s = pick(n, 'summary', locale);
+            return (
+              <li class:list={['entry', i === 0 && 'entry--lead']} data-reveal style={`--i:${i}`}>
+                <div class="entry__date">{n.publishedAt && <DateMark ms={n.publishedAt} locale={locale} />}</div>
+                <div class="entry__body">
+                  <h3 lang={t.lang}>
+                    <a href={url('article', locale, { slug: n.slug })}>{t.value}</a>
+                  </h3>
+                  {s.value && i < 2 && <p lang={s.lang}>{s.value}</p>}
+                </div>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+    <section class="bulletin__events" aria-labelledby={upcoming.length ? 'ev-h' : 'quick-h'}>
+      {upcoming.length > 0 && <h2 id="ev-h" class="sec-h sec-h--small">{T.events[locale]}</h2>}
+      {
+        upcoming.length > 0 && (
+          <ul role="list" class="events">
+            {upcoming.map((e) => {
+              const t = pick(e, 'title', locale);
+              return (
+                <li>
+                  <span class="events__when">{eventWhen(e.eventStart, e.eventEnd, locale)}</span>
+                  <a href={url('article', locale, { slug: e.slug })} lang={t.lang}>
+                    {t.value}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        )
+      }
+      <div class:list={['quick', !upcoming.length && 'quick--first']}>
+        {upcoming.length > 0 ? (
+          <h3 id="quick-h" class="quick__h">{T.quick[locale]}</h3>
+        ) : (
+          <h2 id="quick-h" class="quick__h">{T.quick[locale]}</h2>
+        )}
+        <a class="btn btn--block" href={settings.links.noteInCatalog} target="_blank" rel="noopener">
+          <Icon name="user" />NoteInCatalog<span class="vh">{L('external')}</span>
+        </a>
+        <a class="btn btn--ghost btn--block" href={settings.links.classroom} target="_blank" rel="noopener">
+          <Icon name="external" />Google Classroom<span class="vh">{L('external')}</span>
+        </a>
+        <a class="btn btn--ghost btn--block" href={url('documents', locale)}>
+          <Icon name="file-doc" />{L('documents')}
+        </a>
+      </div>
+    </section>
+  </section>
+
+  <!-- 4 · Cycles -->
+  <section class="wrap cycles" aria-labelledby="cyc-h">
+    <h2 id="cyc-h" class="sec-h">{T.cycles[locale]}</h2>
+    <CycleTriptych locale={locale} pages={pages} />
+  </section>
+
+  <!-- 5 · Heritage moment -->
+  <section class="heritage" aria-labelledby="her-h">
+    <div class="wrap heritage__grid">
+      <div class="heritage__text">
+        <p class="kicker kicker--light">Annales</p>
+        <h2 id="her-h">{T.heritage[locale]}</h2>
+        <p class="heritage__lead">{T.heritageLead[locale]}</p>
+        {
+          highlights.length > 0 && (
+            <ol role="list" class="years">
+              {highlights.map((h) => {
+                const t = pick(h, 'title', locale);
+                return (
+                  <li data-reveal>
+                    <a href={`${url('history', locale)}#${h.year}`}>
+                      <time datetime={String(h.year).padStart(4, '0')}>{year(h.year, h.yearLabel)}</time>
+                      <span lang={t.lang}>{t.value}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ol>
+          )
+        }
+        <a class="btn btn--light" href={url('history', locale)}>{T.history[locale]}<Icon name="arrow-right" /></a>
+      </div>
+      {
+        heritageImg && (
+          <figure class="heritage__fig">
+            <div class="plate plate--dark">
+              <Picture media={heritageImg} locale={locale} sizes="(min-width: 64rem) 28rem, calc(100vw - 3rem)" />
+            </div>
+            <figcaption>
+              {caption(heritageImg, locale)}
+              {heritageImg.credit && <span class="credit">{creditLine(heritageImg, locale)}</span>}
+            </figcaption>
+          </figure>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- 6 · Video (only when the school has chosen one) -->
+  {
+    data.video?.id && (
+      <section class="wrap video" aria-labelledby="vid-h">
+        <h2 id="vid-h" class="sec-h">{T.video[locale]}</h2>
+        <div class="video__frame">
+          <YouTube id={data.video.id} title={tr(data.video.title)} locale={locale} poster={posterImg ? imageSources(posterImg) : undefined} />
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  /* ───── 1 · title page ───── */
+  .title-page {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--ink);
+    padding: var(--s-6) 0 var(--s-7);
+  }
+  .title-page__grat {
+    position: absolute;
+    inset: -10% -20% auto auto;
+    width: min(70rem, 120vw);
+    aspect-ratio: 3 / 2;
+    color: var(--lapis);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+  .title-page__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-6);
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .title-page__grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--s-8);
+    }
+  }
+  .title-page__h {
+    display: flex;
+    flex-direction: column;
+    margin: var(--s-3) 0 var(--s-4);
+    font-family: var(--font-serif);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .tp-small {
+    font-size: clamp(1.35rem, 1rem + 1.4vw, 2rem);
+    font-variant: small-caps;
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+  }
+  .tp-big {
+    font-size: clamp(2.5rem, 1.4rem + 5vw, 5.25rem);
+    margin-top: 0.1em;
+  }
+  .tp-rule {
+    display: block;
+    width: 6rem;
+    height: 5px;
+    margin: 0.5em 0 0.45em;
+    border-top: 1px solid var(--rubric);
+    border-bottom: 1px solid var(--rubric);
+  }
+  .tp-place {
+    font-size: clamp(1.35rem, 1rem + 1.4vw, 2rem);
+    font-style: italic;
+    color: var(--rubric);
+  }
+  .title-page__lead {
+    max-width: 34rem;
+    font-family: var(--font-serif);
+    font-size: var(--t-lead);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .title-page__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-5);
+  }
+  @media (max-width: 40rem) {
+    .title-page__actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  .title-page__plate {
+    position: relative;
+    max-width: 34rem;
+    justify-self: center;
+    width: 100%;
+  }
+  .plate--hero {
+    position: relative;
+  }
+  .plate--hero :global(img) {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  /* The seal is pressed onto the plate's corner, never onto the caption. */
+  .title-page__seal {
+    position: absolute;
+    width: clamp(6.5rem, 26%, 9rem);
+    aspect-ratio: 1;
+    left: -1.75rem;
+    bottom: -1.75rem;
+    background: var(--paper);
+    border-radius: 50%;
+    padding: 0.35rem;
+  }
+  /* the seal is pressed onto the plate: opacity + scale only, 450 ms (reduced motion: shown at once) */
+  .seal-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @keyframes seal-press {
+    from {
+      opacity: 0;
+      transform: scale(1.08);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .seal-img {
+      animation: seal-press 450ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms both;
+    }
+  }
+  .title-page__plate figcaption {
+    margin-top: var(--s-3);
+    padding-left: calc(clamp(6.5rem, 26%, 9rem) - 1rem);
+  }
+  .title-page__seal--alone {
+    position: static;
+    width: min(22rem, 80%);
+    margin-inline: auto;
+    padding: 0;
+    background: none;
+  }
+  @media (max-width: 63.99rem) {
+    /* stacked layout: seal on the photo's top-right corner, caption full width */
+    .title-page__plate {
+      margin-top: var(--s-4);
+    }
+    .title-page__seal {
+      width: 5.5rem;
+      left: auto;
+      bottom: auto;
+      top: -1.75rem;
+      right: -0.25rem;
+    }
+    .title-page__plate figcaption {
+      padding-left: 0;
+    }
+  }
+
+  /* ───── section heads ───── */
+  .sec-h {
+    font-size: var(--t-h2);
+    margin: 0 0 var(--s-4);
+  }
+  .sec-h--small {
+    font-size: var(--t-h3);
+  }
+  .sec-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s-3);
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: var(--s-2);
+  }
+  .sec-head .sec-h {
+    margin: 0 0 var(--s-2);
+  }
+
+  /* ───── 2 · audiences ───── */
+  .audiences {
+    padding-block: var(--s-7) var(--s-6);
+  }
+  .audiences__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    border-top: 1px solid var(--ink);
+  }
+  .aud {
+    padding: var(--s-4) var(--s-4) var(--s-4) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 40rem) {
+    .aud + .aud {
+      padding-left: var(--s-4);
+      border-left: 1px solid var(--rule);
+    }
+  }
+  .aud__tab {
+    font-family: var(--font-sans);
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rubric);
+    margin-bottom: var(--s-2);
+  }
+  .aud ul {
+    margin: 0;
+  }
+  .aud a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 2.75rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .aud li:last-child a {
+    border-bottom: 0;
+  }
+  .aud a :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+    color: var(--ink-3);
+    transition: transform 160ms ease;
+  }
+  .aud a:is(:hover, :focus-visible) :global(svg) {
+    color: var(--lapis);
+  }
+  .aud a:hover span:first-child {
+    text-decoration: underline;
+    text-decoration-color: var(--rubric);
+    text-underline-offset: 0.2em;
+  }
+  .aud a:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  /* ───── 3 · bulletin ───── */
+  .bulletin {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-7);
+    padding-block: var(--s-6) var(--s-7);
+  }
+  @media (min-width: 64rem) {
+    .bulletin {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+  }
+  .entries {
+    margin: 0;
+  }
+  .entry {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: var(--s-4);
+    padding: var(--s-4) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .entry h3 {
+    font-size: var(--t-h3);
+    line-height: 1.2;
+  }
+  .entry--lead h3 {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  }
+  .entry h3 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .entry h3 a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--rubric);
+  }
+  .entry p {
+    margin-top: var(--s-2);
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .bulletin__events {
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-3);
+  }
+  .events {
+    margin: 0 0 var(--s-5);
+  }
+  .events li {
+    display: grid;
+    gap: 0.2rem;
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .events__when {
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rubric);
+  }
+  .events a {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+  .quick {
+    display: grid;
+    gap: var(--s-2);
+    margin-top: var(--s-5);
+  }
+  .quick--first {
+    margin-top: 0;
+  }
+  .quick__h {
+    font-family: var(--font-sans);
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  /* ───── 4 · cycles ───── */
+  .cycles {
+    padding-block: var(--s-6) var(--s-8);
+  }
+
+  /* ───── 5 · heritage ───── */
+  .heritage {
+    background: var(--lapis-deep);
+    color: var(--paper);
+    padding-block: var(--s-8);
+  }
+  .heritage__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-7);
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .heritage__grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+  }
+  .heritage h2 {
+    color: var(--paper);
+    font-size: var(--t-h1);
+    margin: var(--s-2) 0 var(--s-4);
+  }
+  .kicker--light {
+    color: color-mix(in srgb, var(--paper) 75%, transparent);
+  }
+  .heritage__lead {
+    max-width: 36rem;
+    font-family: var(--font-serif);
+    font-size: var(--t-lead);
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--paper) 88%, transparent);
+  }
+  .years {
+    margin: var(--s-5) 0 var(--s-6);
+    border-top: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+  }
+  .years a {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: var(--s-4);
+    align-items: baseline;
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+    color: var(--paper);
+    text-decoration: none;
+  }
+  .years time {
+    font-family: var(--font-serif);
+    font-size: 2.25rem;
+    line-height: 1;
+    font-variant-numeric: oldstyle-nums;
+    color: #f2b8b0;
+  }
+  .years span {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+  }
+  .years a:hover span {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .heritage__fig {
+    max-width: 28rem;
+    justify-self: center;
+  }
+  .heritage__fig figcaption {
+    color: color-mix(in srgb, var(--paper) 80%, transparent);
+  }
+  .heritage__fig :global(.credit) {
+    color: color-mix(in srgb, var(--paper) 65%, transparent);
+  }
+  /* The woodcut is printed on a paper plate (white of the scan becomes paper) inside a hairline frame on the night panel. */
+  .plate--dark {
+    background: var(--paper);
+    border: 0;
+    padding: 0.9rem;
+    outline: 1px solid color-mix(in srgb, var(--paper) 45%, transparent);
+    outline-offset: 0.45rem;
+    isolation: isolate;
+  }
+  .plate--dark :global(img) {
+    mix-blend-mode: multiply;
+    filter: contrast(1.05);
+  }
+  .heritage__fig figcaption {
+    margin-top: var(--s-4);
+  }
+
+  /* ───── 6 · video ───── */
+  .video {
+    padding-block: var(--s-7) var(--s-8);
+  }
+  .video__frame {
+    max-width: 48rem;
+  }
+  /* desktop: film in the text block, its caption set as a marginal note beside it */
+  @media (min-width: 64rem) {
+    .video__frame {
+      max-width: none;
+    }
+    .video__frame :global(.yt) {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: var(--s-6);
+      align-items: end;
+    }
+    .video__frame :global(.yt figcaption) {
+      margin: 0;
+      padding-top: var(--s-2);
+      border-top: 1px solid var(--rule);
+      font-size: 1.05rem;
+      line-height: 1.45;
+    }
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+/** No-JS search results page (the ⌘K dialog is the enhanced path). */
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import { url } from '~/i18n/routes';
+import { UI, ui } from '~/i18n/ui';
+import { buildSearchIndex } from '~/server/search';
+import { searchRecords } from '~/lib/search-core';
+import { count } from '~/i18n/plural';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const q = (Astro.url.searchParams.get('q') ?? '').slice(0, 100);
+const results = q.trim().length >= 2 ? searchRecords(await buildSearchIndex(locale), q, 60) : [];
+const title = ui(locale, 'search');
+const EMPTY = {
+  ro: 'Încercați un termen mai scurt sau căutați în Documente.',
+  de: 'Versuchen Sie einen kürzeren Begriff oder sehen Sie unter Dokumente nach.',
+  en: 'Try a shorter word, or look in Documents.',
+} as const;
+---
+
+<Base locale={locale} title={q ? `${title}: ${q}` : title} description={({ ro: 'Căutați pe site-ul colegiului: pagini, ghiduri de admitere și examene, documente, personal și noutăți.', de: 'Suche auf der Website des Kollegs: Seiten, Aufnahme- und Prüfungsleitfäden, Dokumente, Kollegium und Aktuelles.', en: 'Search the college website: pages, admissions and exam guides, documents, staff and news.' } as const)[locale]} route={match.id} alternates={alternates} settings={settings} banners={banners} noindex>
+  <PageHead locale={locale} title={title} crumbs={[{ label: title }]}>
+    <form class="sform" method="get" action={url('search', locale)} role="search">
+      <label class="vh" for="sq">{title}</label>
+      <input id="sq" name="q" type="search" value={q} placeholder={ui(locale, 'searchPlaceholder')} />
+      <button class="btn" type="submit">{title}</button>
+    </form>
+  </PageHead>
+  <div class="wrap-narrow">
+    {
+      q && (
+        <p class="muted" role="status">
+          {results.length
+            ? count(results.length, locale, 'results')
+            : `${ui(locale, 'searchNoResults')} ${locale === 'en' ? `“${q}”` : locale === 'de' ? `„${q}“` : `„${q}”`}. ${EMPTY[locale]}`}
+        </p>
+      )
+    }
+    <ul role="list" class="res">
+      {
+        results.map((r) => (
+          <li>
+            <span class="kicker">{UI.searchGroups[r.k][locale]}</span>
+            <a href={r.u} {...(r.x ? { target: '_blank', rel: 'noopener' } : {})}>{r.t}</a>
+            {r.s && <span class="muted">{r.s}</span>}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .sform {
+    display: flex;
+    gap: var(--s-2);
+    margin-top: var(--s-5);
+    max-width: 40rem;
+  }
+  .sform input {
+    flex: 1;
+    min-width: 0;
+    min-height: 3rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    font-size: 1.1rem;
+  }
+  .res {
+    margin: var(--s-4) 0 var(--s-8);
+  }
+  .res li {
+    display: grid;
+    gap: 0.2rem;
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .res a {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+  }
+</style>

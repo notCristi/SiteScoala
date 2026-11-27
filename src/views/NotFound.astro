@@ -1,0 +1,35 @@
+---
+import Base from '~/layouts/Base.astro';
+import CompassRose from '~/components/svg/CompassRose.astro';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import { NAV } from '~/i18n/nav';
+import type { Locale } from '~/i18n/locales';
+import type { Announcement, SiteSettings } from '~/server/content';
+
+interface Props {
+  locale: Locale;
+  alternates: Record<Locale, string>;
+  settings: SiteSettings;
+  banners: Announcement[];
+}
+const { locale, alternates, settings, banners } = Astro.props;
+---
+
+<Base locale={locale} title={ui(locale, 'notFoundTitle')} alternates={alternates} settings={settings} banners={banners} noindex error>
+  <div class="wrap nf">
+    <div class="nf__rose" aria-hidden="true" data-ink><CompassRose /></div>
+    <div>
+      <p class="kicker">404 · Terra incognita</p>
+      <h1>{ui(locale, 'notFoundTitle')}</h1>
+      <p class="lead">{ui(locale, 'notFoundBody')}</p>
+      <p class="cluster nf__actions">
+        <a class="btn" href={url('search', locale)} data-search-open>{ui(locale, 'search')}</a>
+        <a class="btn btn--ghost" href={url('home', locale)}>{ui(locale, 'home')}</a>
+      </p>
+      <ul role="list" class="nf__links">
+        {NAV.map((n) => <li><a href={url(n.route, locale)}>{n.label[locale]}</a></li>)}
+      </ul>
+    </div>
+  </div>
+</Base>

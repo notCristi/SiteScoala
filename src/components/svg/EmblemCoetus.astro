@@ -1,0 +1,41 @@
+---
+/**
+ * <EmblemCoetus> — cycle emblem. Seven seats around a round table, seen from above, with the open statute on it — the Coetus, the student self-government of 1543.
+ * 64 × 64 grid, 1.5 px line (non-scaling, so the weight holds from 32 to 128 px), one ink.
+ */
+interface Props {
+  class?: string;
+  /** Accessible name; omit when the emblem sits next to a visible label (decorative). */
+  title?: string;
+  size?: number | string;
+}
+
+const { class: className, title, size } = Astro.props;
+const dim = typeof size === 'number' ? `${size}px` : size;
+---
+
+<svg
+  class:list={['emblem', className]}
+  viewBox="0 0 64 64"
+  width={dim}
+  height={dim}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  {title && <title>{title}</title>}
+  <path vector-effect="non-scaling-stroke" d="M19.5 32a12.5 12.5 0 1 0 25 0a12.5 12.5 0 1 0 -25 0ZM28.8 11a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0ZM27.7 7.4A5.6 5.6 0 0 1 36.3 7.4M45.2 18.9a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0ZM48.6 13.3A5.6 5.6 0 0 1 53.9 20M49.3 36.7a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0ZM56.9 33.3A5.6 5.6 0 0 1 55 41.7M37.9 50.9a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0ZM46.5 52.3A5.6 5.6 0 0 1 38.8 56M19.7 50.9a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0ZM25.2 56A5.6 5.6 0 0 1 17.5 52.3M8.3 36.7a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0ZM9 41.7A5.6 5.6 0 0 1 7.1 33.3M12.4 18.9a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0ZM10.1 20A5.6 5.6 0 0 1 15.4 13.3M32 28.6C29.8 27.4 27.2 27.4 25.2 28V36C27.2 35.4 29.8 35.4 32 36.6C34.2 35.4 36.8 35.4 38.8 36V28C36.8 27.4 34.2 27.4 32 28.6ZM32 28.6V36.6M27 30.4H30.2M27 32.4H30.2M33.8 30.4H37M33.8 32.4H37" />
+</svg>
+
+<style>
+  .emblem {
+    display: inline-block;
+    vertical-align: middle;
+  }
+</style>

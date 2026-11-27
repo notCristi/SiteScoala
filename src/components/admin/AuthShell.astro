@@ -1,0 +1,32 @@
+---
+/** Minimal shell for login / activation (no session yet). */
+import '~/styles/global.css';
+import '~/styles/admin.css';
+interface Props {
+  title: string;
+  lang: 'ro' | 'de';
+  turnstile?: boolean;
+}
+const { title, lang, turnstile } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} · Honterus</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
+    {turnstile && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
+  </head>
+  <body class="adm-auth">
+    <main class="auth adm" id="main">
+      <div class="card">
+        <img class="seal" src="/brand/honterus-seal.svg" alt="Colegiul Național „Johannes Honterus” Brașov" width="72" height="72" />
+        <slot />
+      </div>
+    </main>
+  </body>
+</html>

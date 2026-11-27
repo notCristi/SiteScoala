@@ -1,0 +1,10 @@
+# Local development secrets for `astro dev` / `wrangler dev` (copy to .dev.vars — git-ignored).
+# In production set them with: npx wrangler secret put <NAME>
+AUTH_PEPPER=change-me-to-64-random-hex-characters
+ADMIN_BOOTSTRAP_EMAIL=YOUR_EMAIL@EXAMPLE.COM
+ADMIN_BOOTSTRAP_PASSWORD=change-me-at-least-12-chars
+# Cloudflare Turnstile test secret (always passes). Production: the real secret.
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+PBKDF2_ITERATIONS=100000
+# Local only: skip the Turnstile round-trip on http://localhost (ignored on any other host / https).
+TURNSTILE_DEV_BYPASS=1

@@ -1,0 +1,166 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Picture from '~/components/Picture.astro';
+import Icon from '~/components/svg/Icon.astro';
+import EmblemCoetus from '~/components/svg/EmblemCoetus.astro';
+import { pick } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { getMediaMap, getPages, listGalleries, listLife } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const [pages, life, galleries] = await Promise.all([getPages(['life', 'coetus']), listLife(), listGalleries()]);
+const media = await getMediaMap([...life.map((l) => l.coverMediaId), ...galleries.map((g) => g.coverMediaId)]);
+const page = pages.get('life');
+const coetus = pages.get('coetus');
+const title = page ? pick(page, 'title', locale).value : ({ ro: 'Viața școlară', de: 'Schulleben', en: 'School life' } as const)[locale];
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const KIND = {
+  coetus: { ro: 'Coetus', de: 'Coetus', en: 'Coetus' },
+  'consiliul-elevilor': { ro: 'Consiliul elevilor', de: 'Schülerrat', en: 'Student council' },
+  traditie: { ro: 'Tradiții', de: 'Traditionen', en: 'Traditions' },
+  olimpiade: { ro: 'Olimpiade', de: 'Olympiaden', en: 'Olympiads' },
+  arte: { ro: 'Arte și muzică', de: 'Kunst und Musik', en: 'Arts and music' },
+  publicatii: { ro: 'Publicații', de: 'Publikationen', en: 'Publications' },
+  club: { ro: 'Cercuri', de: 'Arbeitsgemeinschaften', en: 'Clubs' },
+  sport: { ro: 'Sport', de: 'Sport', en: 'Sport' },
+  voluntariat: { ro: 'Voluntariat', de: 'Ehrenamt', en: 'Volunteering' },
+  alte: { ro: 'Altele', de: 'Weiteres', en: 'More' },
+} as const;
+const entries = life.filter((l) => l.kind !== 'coetus');
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: title }]} />
+  <div class="wrap">
+    {
+      coetus && (
+        <a class="coetus" href={url('coetus', locale)} data-reveal>
+          <span class="coetus__emblem" aria-hidden="true" data-ink>
+            <EmblemCoetus />
+          </span>
+          <span class="coetus__text">
+            <span class="kicker">Constitutio Scholae Coronensis · 1543</span>
+            <span class="coetus__t" lang={pick(coetus, 'title', locale).lang}>{pick(coetus, 'title', locale).value}</span>
+            <span class="coetus__l" lang={pick(coetus, 'lead', locale).lang}>{pick(coetus, 'lead', locale).value}</span>
+            <span class="link-arrow">
+              {locale === 'ro' ? 'Citiți povestea' : locale === 'de' ? 'Zur Geschichte' : 'Read the story'}
+              <Icon name="arrow-right" />
+            </span>
+          </span>
+        </a>
+      )
+    }
+    <ul role="list" class="grid">
+      {
+        entries.map((e, i) => {
+          const m = e.coverMediaId ? media.get(e.coverMediaId) : undefined;
+          return (
+            <li data-reveal style={`--i:${i % 6}`}>
+              <a class="item" href={url('lifeEntry', locale, { slug: e.slug })}>
+                {m && (
+                  <span class="plate item__img">
+                    <Picture media={m} locale={locale} sizes="(min-width: 60rem) 24rem, (min-width: 40rem) 45vw, calc(100vw - 3rem)" ratio="3 / 2" alt="" />
+                  </span>
+                )}
+                <span class="kicker">{KIND[e.kind][locale]}</span>
+                <span class="item__t" lang={pick(e, 'title', locale).lang}>{pick(e, 'title', locale).value}</span>
+                <span class="item__s" lang={pick(e, 'summary', locale).lang}>{pick(e, 'summary', locale).value}</span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+    {
+      galleries.length > 0 && (
+        <p class="more">
+          <a class="link-arrow" href={url('gallery', locale)}>
+            {locale === 'ro' ? 'Galerie foto' : locale === 'de' ? 'Fotogalerie' : 'Photo gallery'}
+            <Icon name="arrow-right" />
+          </a>
+        </p>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  .coetus {
+    display: grid;
+    grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr);
+    gap: var(--s-6);
+    align-items: center;
+    padding: var(--s-6);
+    background: var(--lapis-deep);
+    color: var(--on-dark);
+    text-decoration: none;
+    margin-bottom: var(--s-7);
+  }
+  @media (max-width: 40rem) {
+    .coetus {
+      grid-template-columns: 1fr;
+    }
+    .coetus__emblem {
+      width: 7rem;
+    }
+  }
+  .coetus .kicker {
+    color: #f2a3a8;
+  }
+  .coetus__emblem {
+    color: var(--on-dark);
+  }
+  .coetus__text {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .coetus__t {
+    font-family: var(--font-serif);
+    font-size: var(--t-h1);
+    line-height: 1.02;
+  }
+  .coetus__l {
+    font-family: var(--font-serif);
+    font-size: var(--t-lead);
+    color: var(--on-dark-2);
+    max-width: 46ch;
+  }
+  .coetus .link-arrow {
+    color: var(--on-dark);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: var(--s-6) var(--s-5);
+    margin: 0;
+  }
+  .item {
+    display: grid;
+    gap: var(--s-2);
+    color: var(--ink);
+    text-decoration: none;
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-3);
+  }
+  .item__img {
+    margin-bottom: var(--s-2);
+  }
+  .item__t {
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  .item:hover .item__t {
+    text-decoration: underline;
+    text-decoration-color: var(--rubric);
+  }
+  .item__s {
+    color: var(--ink-2);
+  }
+  .more {
+    margin-top: var(--s-7);
+  }
+</style>

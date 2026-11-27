@@ -1,0 +1,79 @@
+---
+/** One-time invite / password-reset link: /admin/activare?t=<token> → name + password. */
+import AuthShell from '~/components/admin/AuthShell.astro';
+import { acceptInvite, findInvite } from '~/server/auth';
+import { translator } from '~/server/admin/i18n';
+import { badRequest, readForm, str } from '~/server/admin/util';
+
+const lang = Astro.cookies.get('hs_ui')?.value === 'de' ? 'de' : 'ro';
+const t = translator(lang);
+let token = Astro.url.searchParams.get('t') ?? '';
+let error = '';
+let name = '';
+if (Astro.request.method === 'POST') {
+  const fd = await readForm(Astro.request);
+  if (!fd) return badRequest();
+  token = str(fd.get('t'), 100);
+  name = str(fd.get('name'), 120);
+  const pw = String(fd.get('password') ?? '').slice(0, 300);
+  if (pw !== String(fd.get('password2') ?? '').slice(0, 300)) error = 'pwMismatch';
+  else {
+    const res = await acceptInvite(Astro, token, name, pw);
+    if (res.ok) return Astro.redirect('/admin?ok=okSaved', 303);
+    error = res.error;
+  }
+}
+const inv = await findInvite(token);
+const reset = inv?.invite.purpose === 'reset';
+if (inv && !name) name = inv.user.status === 'active' ? inv.user.displayName : '';
+---
+
+<AuthShell title={reset ? t('resetTitle') : t('activateTitle')} lang={lang}>
+  {
+    !inv ? (
+      <>
+        <h1>{t('activateTitle')}</h1>
+        <p class="flash flash--error" role="alert">
+          {t('inviteInvalid')}
+        </p>
+        <p style="text-align:center">
+          <a href="/admin/login">{t('login')}</a>
+        </p>
+      </>
+    ) : (
+      <>
+        <h1>{reset ? t('resetTitle') : t('activateTitle')}</h1>
+        <p class="sub">
+          {inv.user.email}
+          <br />
+          {t('activateLead')}
+        </p>
+        {error && (
+          <p class="flash flash--error" role="alert">
+            {t(error)}
+          </p>
+        )}
+        <form method="post">
+          <input type="hidden" name="t" value={token} />
+          <input type="hidden" name="username" value={inv.user.email} autocomplete="username" />
+          <div class="f">
+            <label for="name">{t('displayName')}</label>
+            <input type="text" id="name" name="name" value={name} required maxlength="120" autocomplete="name" />
+          </div>
+          <div class="f">
+            <label for="password">{t('newPassword')}</label>
+            <input type="password" id="password" name="password" required minlength="12" autocomplete="new-password" aria-describedby="pw-hint" />
+            <p class="help" id="pw-hint">{t('pwHint')}</p>
+          </div>
+          <div class="f">
+            <label for="password2">{t('passwordRepeat')}</label>
+            <input type="password" id="password2" name="password2" required minlength="12" autocomplete="new-password" />
+          </div>
+          <button class="btn btn--primary" type="submit">
+            {reset ? t('changePassword') : t('activate')}
+          </button>
+        </form>
+      </>
+    )
+  }
+</AuthShell>

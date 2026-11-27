@@ -1,0 +1,60 @@
+---
+/**
+ * <DoubleRule> — the section break of the design system: 1 px + 3 px gap + 1 px, a quotation
+ * of the seal's keylined ring. Full width of its container. `crest` sets a small
+ * <CrestMark> in the middle with the rules stopping short of it. Rendered as a separator.
+ */
+import CrestMark from './CrestMark.astro';
+
+interface Props {
+  class?: string;
+  crest?: boolean;
+  /** Gap between the two hairlines, px. */
+  gap?: number;
+}
+
+const { class: className, crest = false, gap = 3 } = Astro.props;
+const h = gap + 2;
+---
+
+<div class:list={['double-rule', crest && 'double-rule--crest', className]} role="separator" aria-orientation="horizontal">
+  <svg class="rule" width="100%" height={h} aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" x2="100%" y1="0.5" y2="0.5" />
+    <line x1="0" x2="100%" y1={h - 0.5} y2={h - 0.5} />
+  </svg>
+  {
+    crest && (
+      <>
+        <CrestMark size={22} keyline={false} class="mark" />
+        <svg class="rule" width="100%" height={h} aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" x2="100%" y1="0.5" y2="0.5" />
+          <line x1="0" x2="100%" y1={h - 0.5} y2={h - 0.5} />
+        </svg>
+      </>
+    )
+  }
+</div>
+
+<style>
+  .double-rule {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    color: inherit;
+  }
+  .rule {
+    display: block;
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: visible;
+  }
+  .rule line {
+    stroke: currentColor;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+  }
+  .mark {
+    flex: none;
+  }
+</style>

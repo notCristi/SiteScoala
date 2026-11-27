@@ -1,0 +1,42 @@
+---
+/**
+ * <EmblemPress> — cycle emblem. The wooden hand press of 1539 (cheeks, head, screw and bar, platen, carriage with raised tympan, rounce).
+ * 64 × 64 grid, 1.5 px line (non-scaling, so the weight holds from 32 to 128 px), one ink.
+ */
+interface Props {
+  class?: string;
+  /** Accessible name; omit when the emblem sits next to a visible label (decorative). */
+  title?: string;
+  size?: number | string;
+}
+
+const { class: className, title, size } = Astro.props;
+const dim = typeof size === 'number' ? `${size}px` : size;
+---
+
+<svg
+  class:list={['emblem', className]}
+  viewBox="0 0 64 64"
+  width={dim}
+  height={dim}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  {title && <title>{title}</title>}
+  <path vector-effect="non-scaling-stroke" d="M17 4V58M22 4V58M38 4V58M43 4V58M17 4H22M38 4H43M22 8H38M22 14H38M30 14V24M27.6 16.4L32.4 17.6M27.6 19.2L32.4 20.4M26.5 22H33.5V25H26.5ZM33.5 23.5L55 18.5M24 25H36V29.5H24ZM3 34H62M3 37.5H62M24 29.5V34M36 29.5V34M6 34L1.5 20.5M12 34L7.5 20.5M1.5 20.5H7.5M4.3 28.9H10.3M22 44H38M22 47.5H38M11 58H49M59 37.5V58M55 58H62M47 37.5V40.5A2.2 2.2 0 1 0 51.4 40.5V37.5" />
+  <path fill="currentColor" stroke="none" d="M54 18.4a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0Z" />
+</svg>
+
+<style>
+  .emblem {
+    display: inline-block;
+    vertical-align: middle;
+  }
+</style>

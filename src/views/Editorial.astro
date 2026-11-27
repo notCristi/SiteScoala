@@ -1,0 +1,270 @@
+---
+/**
+ * Long-form editable page in book layout: rubric gutter · text block · marginal column.
+ * Used for: school overview, Honterus, Honterushof, cycles (primar/gimnaziu/liceu), German & DSD,
+ * Coetus, privacy, accessibility. Content comes from `pages` (key = route id).
+ */
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Picture from '~/components/Picture.astro';
+import Icon from '~/components/svg/Icon.astro';
+import Fleuron from '~/components/svg/Fleuron.astro';
+import EmblemPrimar from '~/components/svg/EmblemPrimar.astro';
+import EmblemGimnaziu from '~/components/svg/EmblemGimnaziu.astro';
+import EmblemLiceu from '~/components/svg/EmblemLiceu.astro';
+import EmblemDSD from '~/components/svg/EmblemDSD.astro';
+import EmblemCoetus from '~/components/svg/EmblemCoetus.astro';
+import EmblemPress from '~/components/svg/EmblemPress.astro';
+import CompassRose from '~/components/svg/CompassRose.astro';
+import { formatDate, pick } from '~/i18n/locales';
+import { url, type RouteId } from '~/i18n/routes';
+import { NAV } from '~/i18n/nav';
+import { ui } from '~/i18n/ui';
+import { caption, creditLine } from '~/lib/media';
+import { getMedia, getPage, listLife } from '~/server/content';
+import type { ViewProps } from './types';
+
+type L = { ro: string; de?: string; en?: string };
+interface PageData {
+  facts?: { label: L; value: L | string }[];
+  related?: { route: RouteId; params?: Record<string, string>; label: L }[];
+  notes?: { title: L; text: L }[];
+}
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const page = await getPage(match.id);
+const hero = await getMedia(page?.heroMediaId);
+const life = match.id === 'coetus' ? (await listLife()).filter((x) => x.kind !== 'coetus') : [];
+const lv = (v: L | string | undefined) => (typeof v === 'string' ? v : (v?.[locale] ?? v?.ro ?? ''));
+
+let data: PageData = {};
+try {
+  data = page?.dataJson ? (JSON.parse(page.dataJson) as PageData) : {};
+} catch {
+  data = {};
+}
+const title = page ? pick(page, 'title', locale) : { value: NAV.flatMap((n) => n.columns ?? []).flatMap((c) => c.links).find((l) => l.route === match.id)?.label[locale] ?? '', lang: locale, fallback: false };
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const body = page ? pick(page, 'bodyHtml', locale) : undefined;
+const parent = NAV.find((n) => n.match.includes(match.id));
+// Gutter marks: the cycle emblems; the 1539 press for Honterus; the cosmographer's compass rose for the courtyard.
+const Emblem = { primar: EmblemPrimar, gimnaziu: EmblemGimnaziu, liceu: EmblemLiceu, german: EmblemDSD, coetus: EmblemCoetus, honterus: EmblemPress, campus: CompassRose }[
+  match.id as string
+];
+const FALLBACK_DESC: Partial<Record<string, Record<'ro' | 'de' | 'en', string>>> = {
+  accessibility: {
+    ro: 'Declarația de accesibilitate a site-ului Colegiului Național „Johannes Honterus” Brașov: standardul urmărit, limitele cunoscute și cum ne semnalați o problemă.',
+    de: 'Erklärung zur Barrierefreiheit der Website des Honterus-Nationalkollegs Kronstadt: angestrebter Standard, bekannte Einschränkungen und wie Sie uns Probleme melden.',
+    en: 'Accessibility statement for the “Johannes Honterus” National College website: the standard we follow, known limitations and how to report a problem.',
+  },
+  privacy: {
+    ro: 'Cum prelucrează Colegiul Național „Johannes Honterus” Brașov datele personale pe acest site și ce drepturi aveți.',
+    de: 'Wie das Honterus-Nationalkolleg Kronstadt auf dieser Website personenbezogene Daten verarbeitet und welche Rechte Sie haben.',
+    en: 'How the “Johannes Honterus” National College processes personal data on this website, and your rights.',
+  },
+};
+const desc = (page ? pick(page, 'metaDescription', locale).value || lead?.value : undefined) || FALLBACK_DESC[match.id]?.[locale];
+---
+
+<Base locale={locale} title={title.value} description={desc} route={match.id} alternates={alternates} settings={settings} banners={banners} fallback={body?.fallback}>
+  <PageHead
+    locale={locale}
+    kicker={parent && parent.route !== match.id ? parent.label[locale] : undefined}
+    title={title.value}
+    titleLang={title.lang}
+    lead={lead?.value}
+    leadLang={lead?.lang}
+    crumbs={[...(parent && parent.route !== match.id ? [{ label: parent.label[locale], route: parent.route }] : []), { label: title.value }]}
+  />
+
+  <div class="wrap book editorial">
+    <aside class="book__gutter" aria-hidden="true">
+      {
+        Emblem && (
+          <div class="emblem" data-ink>
+            <Emblem />
+          </div>
+        )
+      }
+    </aside>
+
+    <article class="book__text">
+      {
+        hero && (
+          <figure class="hero-fig">
+            <div class="plate">
+              <Picture media={hero} locale={locale} sizes="(min-width: 60rem) 42rem, calc(100vw - 3rem)" priority ratio="3 / 2" />
+            </div>
+            {caption(hero, locale) && (
+              <figcaption>
+                {caption(hero, locale)}
+                {hero.credit && <span class="credit">{creditLine(hero, locale)}</span>}
+              </figcaption>
+            )}
+          </figure>
+        )
+      }
+      {body?.value ? <div class="prose" lang={body.lang} set:html={body.value} /> : <p class="prose muted">—</p>}
+      <div class="end-mark" aria-hidden="true"><Fleuron size={36} /></div>
+
+      {
+        life.length > 0 && (
+          <section class="life-list" aria-labelledby="life-h">
+            <h2 id="life-h">{locale === 'ro' ? 'Viața elevilor astăzi' : locale === 'de' ? 'Schülerleben heute' : 'Student life today'}</h2>
+            <ul role="list">
+              {life.map((x) => (
+                <li>
+                  <a href={url('lifeEntry', locale, { slug: x.slug })}>
+                    <span class="life-list__t">{pick(x, 'title', locale).value}</span>
+                    <span class="life-list__s">{pick(x, 'summary', locale).value}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+    </article>
+
+    <aside class="book__margin">
+      {
+        data.facts && data.facts.length > 0 && (
+          <dl class="facts">
+            {data.facts.map((f) => (
+              <div>
+                <dt>{lv(f.label)}</dt>
+                <dd>{lv(f.value)}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+      {
+        data.notes?.map((n) => (
+          <p class="margin-note">
+            <strong>{lv(n.title)}</strong>
+            {lv(n.text)}
+          </p>
+        ))
+      }
+      {
+        data.related && data.related.length > 0 && (
+          <nav class="related" aria-label={locale === 'ro' ? 'Vedeți și' : locale === 'de' ? 'Siehe auch' : 'See also'}>
+            <p class="kicker">{locale === 'ro' ? 'Vedeți și' : locale === 'de' ? 'Siehe auch' : 'See also'}</p>
+            <ul role="list">
+              {data.related.map((r) => (
+                <li>
+                  <a class="link-arrow" href={url(r.route, locale, r.params)}>
+                    {lv(r.label)}
+                    <Icon name="arrow-right" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+      {
+        /* only an editor's save is news to the reader; the seed import date is not */
+        page?.updatedAt && page.updatedBy && page.updatedBy !== 'seed' && (
+          <p class="margin-note updated">
+            <strong>{ui(locale, 'updated')}</strong>
+            {formatDate(page.updatedAt, locale, 'long')}
+          </p>
+        )
+      }
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .editorial {
+    padding-bottom: var(--s-8);
+  }
+  .emblem {
+    width: 5.5rem;
+    color: var(--ink);
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+  @media (max-width: 59.99rem) {
+    .book__gutter {
+      display: none;
+    }
+  }
+  .hero-fig {
+    margin-bottom: var(--s-6);
+  }
+  /* the printer's ivy leaf closes the text: centred, in ink */
+  .end-mark {
+    display: flex;
+    justify-content: center;
+    max-width: var(--measure);
+    margin: var(--s-7) 0;
+    color: var(--ink);
+  }
+  .facts {
+    display: grid;
+    gap: var(--s-4);
+    margin-bottom: var(--s-6);
+  }
+  .facts div {
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-2);
+  }
+  .facts dt {
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .facts dd {
+    font-family: var(--font-serif);
+    font-size: 1.55rem;
+    line-height: 1.15;
+    margin-top: 0.2rem;
+  }
+  .margin-note + .margin-note,
+  .facts + .margin-note {
+    margin-top: var(--s-5);
+  }
+  .related {
+    margin-top: var(--s-6);
+  }
+  .related ul {
+    margin-top: var(--s-2);
+  }
+  .related li {
+    border-bottom: 1px solid var(--rule);
+  }
+  .updated {
+    margin-top: var(--s-6);
+  }
+  .life-list {
+    margin-top: var(--s-7);
+  }
+  .life-list ul {
+    margin-top: var(--s-4);
+    border-top: 1px solid var(--ink);
+  }
+  .life-list a {
+    display: grid;
+    gap: 0.2rem;
+    padding: var(--s-4) 0;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .life-list__t {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+  }
+  .life-list a:hover .life-list__t {
+    text-decoration: underline;
+    text-decoration-color: var(--rubric);
+  }
+  .life-list__s {
+    color: var(--ink-2);
+  }
+</style>

@@ -1,0 +1,192 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Icon from '~/components/svg/Icon.astro';
+import { pick } from '~/i18n/locales';
+import { url, type GuideKind } from '~/i18n/routes';
+import { NAV } from '~/i18n/nav';
+import { getPage, listGuides } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const [page, guides] = await Promise.all([getPage('admissions'), listGuides()]);
+const nav = NAV.find((n) => n.id === 'admitere')!;
+const byKind = new Map(guides.map((g) => [g.kind, g]));
+const title = page ? pick(page, 'title', locale).value : nav.label[locale];
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const GO = { ro: 'Vedeți pașii', de: 'Zu den Schritten', en: 'See the steps' } as const;
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: title }]} />
+  <div class="wrap">
+    {
+      nav.columns!.map((col, ci) => (
+        <section class="group" aria-labelledby={`g-${ci}`}>
+          <div class="group__head">
+            <span class="group__num" aria-hidden="true">
+              {ci === 0 ? 'I' : 'II'}
+            </span>
+            <h2 id={`g-${ci}`} class="group__title">
+              {col.title[locale]}
+            </h2>
+          </div>
+          <ol role="list" class="register">
+            {col.links.map((ln, i) => {
+              const kind = ln.params!.kind as GuideKind;
+              const g = byKind.get(kind);
+              const gl = g ? pick(g, 'lead', locale) : undefined;
+              return (
+                <li class="reg" data-reveal style={`--i:${i}`}>
+                  <span class="reg__n" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <div class="reg__body">
+                    <h3 class="reg__t">
+                      <a href={url('guide', locale, { kind })}>{ln.label[locale]}</a>
+                    </h3>
+                    {ln.note && <p class="reg__note">{ln.note[locale]}</p>}
+                    {gl?.value && (
+                      <p class="reg__lead" lang={gl.lang}>
+                        {gl.value}
+                      </p>
+                    )}
+                  </div>
+                  <span class="reg__go" aria-hidden="true">
+                    {GO[locale]}
+                    <Icon name="arrow-right" />
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  /* Each group is a numbered register (like the news list), not a grid of cards. */
+  .group {
+    display: grid;
+    gap: var(--s-4) var(--s-6);
+    margin-bottom: var(--s-8);
+  }
+  @media (min-width: 60rem) {
+    .group {
+      grid-template-columns: 14rem minmax(0, 1fr);
+    }
+  }
+  .group__head {
+    display: grid;
+    align-content: start;
+    gap: var(--s-2);
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-3);
+  }
+  .group__num {
+    font-family: var(--font-serif);
+    font-size: 2.75rem;
+    line-height: 1;
+    color: var(--rubric);
+  }
+  .group__title {
+    font-size: var(--t-h2);
+  }
+  @media (max-width: 59.99rem) {
+    .group__head {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: baseline;
+      column-gap: var(--s-4);
+    }
+  }
+  .register {
+    margin: 0;
+    border-top: 1px solid var(--ink);
+  }
+  .reg {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    gap: var(--s-2) var(--s-4);
+    align-items: baseline;
+    padding: var(--s-4) 0 var(--s-5);
+    border-bottom: 1px solid var(--rule);
+  }
+  .reg:hover {
+    background: var(--paper-raised);
+  }
+  .reg__n {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+    color: var(--rubric);
+    text-align: right;
+  }
+  .reg__t {
+    font-size: var(--t-h3);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  .reg__t a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  /* the whole row is the target (≥ 44 px); the title stays the accessible name */
+  .reg__t a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .reg__t a:focus-visible {
+    outline: none;
+  }
+  .reg:has(a:focus-visible) {
+    outline: 3px solid var(--lapis);
+    outline-offset: 2px;
+  }
+  .reg:hover .reg__t a {
+    text-decoration: underline;
+    text-decoration-color: var(--rubric);
+    text-underline-offset: 0.18em;
+  }
+  .reg__note {
+    margin-top: 0.3rem;
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.06em;
+    color: var(--rubric);
+  }
+  .reg__lead {
+    margin-top: var(--s-2);
+    max-width: 60ch;
+    color: var(--ink-2);
+  }
+  .reg__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 700;
+    color: var(--lapis);
+    white-space: nowrap;
+  }
+  .reg__go :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+    transition: transform 200ms var(--ease-out);
+  }
+  .reg:hover .reg__go :global(svg) {
+    transform: translateX(3px);
+  }
+  @media (max-width: 40rem) {
+    .reg {
+      grid-template-columns: 2rem minmax(0, 1fr);
+    }
+    .reg__go {
+      grid-column: 2;
+    }
+  }
+</style>

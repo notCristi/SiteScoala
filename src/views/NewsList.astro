@@ -1,0 +1,135 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import DateMark from '~/components/DateMark.astro';
+import Icon from '~/components/svg/Icon.astro';
+import { pick } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import { getPage, listNews } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const PER = 15;
+const pageNo = Math.max(1, Number.parseInt(Astro.url.searchParams.get('p') ?? '1', 10) || 1);
+const TYPES = { news: { ro: 'Știri', de: 'Meldungen', en: 'News' }, event: { ro: 'Evenimente', de: 'Termine', en: 'Events' }, achievement: { ro: 'Rezultate', de: 'Erfolge', en: 'Achievements' }, urgent: { ro: 'Important', de: 'Wichtig', en: 'Important' } } as const;
+const typeParam = Astro.url.searchParams.get('tip');
+const type = typeParam && typeParam in TYPES ? (typeParam as keyof typeof TYPES) : undefined;
+const [page, { rows, total }] = await Promise.all([getPage('news'), listNews({ limit: PER, offset: (pageNo - 1) * PER, ...(type ? { type } : {}) })]);
+const pages = Math.max(1, Math.ceil(total / PER));
+const title = page ? pick(page, 'title', locale).value : ({ ro: 'Noutăți', de: 'Aktuelles', en: 'News' } as const)[locale];
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const q = (p: number) => ({ ...(type ? { tip: type } : {}), ...(p > 1 ? { p: String(p) } : {}) });
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners} noindex={pageNo > 1}>
+  <PageHead locale={locale} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: title }]} />
+  <div class="wrap news">
+    <nav class="types" aria-label={ui(locale, 'filterCategory')}>
+      <ul role="list">
+        <li><a class="chip" href={url('news', locale)} aria-current={!type ? 'true' : undefined}>{ui(locale, 'filterAll')}</a></li>
+        {(['news', 'event', 'achievement'] as const).map((t) => <li><a class="chip" href={url('news', locale, {}, { tip: t })} aria-current={type === t ? 'true' : undefined}>{TYPES[t][locale]}</a></li>)}
+      </ul>
+    </nav>
+    <ol role="list" class="entries">
+      {
+        rows.map((n, i) => {
+          const t = pick(n, 'title', locale);
+          const s = pick(n, 'summary', locale);
+          return (
+            <li class="entry" data-reveal style={`--i:${i % 6}`}>
+              <div class="entry__date">{n.publishedAt && <DateMark ms={n.publishedAt} locale={locale} />}</div>
+              <div class="entry__body">
+                {n.type !== 'news' && <span class:list={['tag', n.type === 'urgent' ? 'tag--rubric' : 'tag--lapis']}>{TYPES[n.type][locale]}</span>}
+                <h2 lang={t.lang}>
+                  <a href={url('article', locale, { slug: n.slug })}>{t.value}</a>
+                </h2>
+                {s.value && <p lang={s.lang}>{s.value}</p>}
+              </div>
+            </li>
+          );
+        })
+      }
+    </ol>
+    {
+      pages > 1 && (
+        <nav class="pager" aria-label={locale === 'ro' ? 'Pagini' : locale === 'de' ? 'Seiten' : 'Pages'}>
+          {pageNo > 1 ? (
+            <a class="btn btn--ghost" href={url('news', locale, {}, q(pageNo - 1))} rel="prev">
+              <Icon name="arrow-left" />
+              {ui(locale, 'back')}
+            </a>
+          ) : (
+            <span />
+          )}
+          <span class="pager__n">
+            {pageNo} / {pages}
+          </span>
+          {pageNo < pages ? (
+            <a class="btn btn--ghost" href={url('news', locale, {}, q(pageNo + 1))} rel="next">
+              {locale === 'ro' ? 'Mai vechi' : locale === 'de' ? 'Ältere' : 'Older'}
+              <Icon name="arrow-right" />
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  .news {
+    padding-bottom: var(--s-8);
+  }
+  .types ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin: 0 0 var(--s-5);
+  }
+  .entries {
+    margin: 0;
+    border-top: 1px solid var(--ink);
+  }
+  .entry {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 46rem);
+    gap: var(--s-5);
+    padding: var(--s-5) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (max-width: 36rem) {
+    .entry {
+      grid-template-columns: 4.5rem minmax(0, 1fr);
+      gap: var(--s-3);
+    }
+  }
+  .entry h2 {
+    font-size: var(--t-h3);
+    font-weight: 500;
+    margin: 0.3rem 0 0.4rem;
+  }
+  .entry h2 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .entry h2 a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--rubric);
+  }
+  .entry p {
+    color: var(--ink-2);
+  }
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--s-6);
+  }
+  .pager__n {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+  }
+</style>

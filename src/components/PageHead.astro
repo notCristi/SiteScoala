@@ -1,0 +1,52 @@
+---
+import type { Locale } from '~/i18n/locales';
+import { url, type RouteId } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+
+interface Crumb {
+  label: string;
+  route?: RouteId;
+  params?: Record<string, string>;
+}
+interface Props {
+  locale: Locale;
+  kicker?: string;
+  title: string;
+  lead?: string;
+  leadLang?: string;
+  titleLang?: string;
+  crumbs?: Crumb[];
+}
+const { locale, kicker, title, lead, leadLang, titleLang, crumbs = [] } = Astro.props;
+---
+
+<header class="page-head wrap">
+  {
+    crumbs.length > 0 && (
+      <nav class="breadcrumbs" aria-label={locale === 'ro' ? 'Traseu' : locale === 'de' ? 'Brotkrumen' : 'Breadcrumb'}>
+        <ol>
+          <li>
+            <a href={url('home', locale)}>{ui(locale, 'home')}</a>
+          </li>
+          {crumbs.map((c) => (
+            <li>{c.route ? <a href={url(c.route, locale, c.params)}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</li>
+          ))}
+        </ol>
+      </nav>
+    )
+  }
+  {kicker && <p class="kicker">{kicker}</p>}
+  <h1 lang={titleLang}>{title}</h1>
+  {lead && <p class="lead lead--pilcrow" lang={leadLang}>{lead}</p>}
+  <slot />
+  <div class="double-rule page-head__rule" aria-hidden="true"></div>
+</header>
+
+<style>
+  .kicker {
+    margin-bottom: var(--s-3);
+  }
+  .page-head__rule {
+    margin-top: clamp(1.5rem, 1rem + 2vw, 3rem);
+  }
+</style>

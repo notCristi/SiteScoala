@@ -1,0 +1,142 @@
+---
+/** Three tall panels separated by double rules: emblem, grade range in large numerals, lead, link. */
+import { pick, type Locale } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import type { Page } from '~/server/content';
+import EmblemPrimar from '~/components/svg/EmblemPrimar.astro';
+import EmblemGimnaziu from '~/components/svg/EmblemGimnaziu.astro';
+import EmblemLiceu from '~/components/svg/EmblemLiceu.astro';
+import Icon from '~/components/svg/Icon.astro';
+
+interface Props {
+  locale: Locale;
+  pages: Map<string, Page>;
+}
+const { locale, pages } = Astro.props;
+const cycles = [
+  { key: 'primar', id: 'primar', E: EmblemPrimar, range: 'P – IV' },
+  { key: 'gimnaziu', id: 'gimnazial', E: EmblemGimnaziu, range: 'V – VIII' },
+  { key: 'liceu', id: 'liceal', E: EmblemLiceu, range: 'IX – XII' },
+] as const;
+const rangeDE = { primar: 'VK – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
+const rangeEN = { primar: 'P – 4', gimnaziu: '5 – 8', liceu: '9 – 12' };
+/** Visible link text (the arrow alone is no label): names the stage page it opens. */
+const GO = {
+  primar: { ro: 'Despre ciclul primar', de: 'Zur Grundschule', en: 'About the primary school' },
+  gimnaziu: { ro: 'Despre gimnaziu', de: 'Zur Gymnasialstufe', en: 'About lower secondary' },
+  liceu: { ro: 'Despre liceu', de: 'Zur Lyzealstufe', en: 'About upper secondary' },
+} as const;
+---
+
+<ol role="list" class="triptych">
+  {
+    cycles.map((c, i) => {
+      const p = pages.get(c.key);
+      const E = c.E;
+      return (
+        <li data-reveal style={`--i:${i}`}>
+          <a class="cycle" href={url(c.key, locale)}>
+            <span class="cycle__emblem" aria-hidden="true">
+              <E />
+            </span>
+            <span class="cycle__range" aria-hidden="true">
+              {locale === 'ro' ? c.range : locale === 'de' ? rangeDE[c.key] : rangeEN[c.key]}
+            </span>
+            <span class="cycle__name">{ui(locale, `cycles.${c.id}`)}</span>
+            <span class="cycle__grades">{ui(locale, `grades.${c.id}`)}</span>
+            {p && <span class="cycle__lead">{pick(p, 'lead', locale).value}</span>}
+            <span class="cycle__go" aria-hidden="true">
+              {GO[c.key][locale]}
+              <Icon name="arrow-right" />
+            </span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .triptych {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    border-block: 1px solid var(--ink);
+  }
+  .triptych li + li {
+    border-left: 5px double var(--rule-strong);
+  }
+  @media (max-width: 52rem) {
+    .triptych {
+      grid-template-columns: 1fr;
+    }
+    .triptych li + li {
+      border-left: 0;
+      border-top: 5px double var(--rule-strong);
+    }
+  }
+  .cycle {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    height: 100%;
+    padding: var(--s-6) var(--s-5);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .cycle:hover {
+    background: var(--paper-raised);
+  }
+  .cycle__emblem {
+    width: 3.5rem;
+    color: var(--ink);
+  }
+  .cycle__range {
+    font-family: var(--font-serif);
+    font-size: clamp(2.6rem, 2rem + 2.4vw, 4.2rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin-top: var(--s-4);
+  }
+  .cycle__name {
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+    font-weight: 600;
+  }
+  .cycle__grades {
+    /* small caps on the mixed-case string keep Romanian ordinals legible ("a V-a", not "A V-A") */
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+    font-variant-caps: all-small-caps;
+    font-variant-numeric: lining-nums;
+    letter-spacing: 0.06em;
+    color: var(--rubric);
+  }
+  .cycle__lead {
+    color: var(--ink-2);
+    margin-top: var(--s-2);
+  }
+  .cycle__go {
+    margin-top: auto;
+    padding-top: var(--s-4);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 700;
+    color: var(--lapis);
+  }
+  .cycle:hover .cycle__go {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+  .cycle__go :global(svg) {
+    width: 1.15rem;
+    height: 1.15rem;
+    transition: transform 200ms;
+  }
+  .cycle:hover .cycle__go :global(svg) {
+    transform: translateX(4px);
+  }
+</style>

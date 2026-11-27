@@ -1,0 +1,308 @@
+---
+/**
+ * ⌘K / Ctrl+K search. The index for the current language (~20 KB gzip) is fetched on first open,
+ * cached by the browser and edge, and searched in memory — results update per keystroke (< 16 ms).
+ * Without JS, the header trigger is a plain link to the /search page and its form.
+ */
+import { LOCALE_META, type Locale } from '~/i18n/locales';
+import { COUNT_FORMS } from '~/i18n/plural';
+import { url } from '~/i18n/routes';
+import { UI, ui } from '~/i18n/ui';
+import Icon from '~/components/svg/Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const groups = Object.fromEntries(Object.entries(UI.searchGroups).map(([k, v]) => [k, v[locale]]));
+const emptyHint = {
+  ro: 'Încercați un termen mai scurt sau căutați în Documente.',
+  de: 'Versuchen Sie einen kürzeren Begriff oder sehen Sie unter Dokumente nach.',
+  en: 'Try a shorter word, or look in Documents.',
+}[locale];
+---
+
+<dialog class="search" data-search aria-labelledby="search-label" data-index={`/api/search/${locale}.json`} data-groups={JSON.stringify(groups)} data-noresults={ui(locale, 'searchNoResults')} data-emptyhint={emptyHint} data-hint={ui(locale, 'searchHint')} data-forms={JSON.stringify(COUNT_FORMS.results[locale])} data-intl={LOCALE_META[locale].intl} data-q={locale === 'ro' ? '„…”' : locale === 'de' ? '„…“' : '“…”'}>
+  <form class="search__form" role="search" action={url('search', locale)} method="get">
+    <label id="search-label" for="search-input" class="vh">{ui(locale, 'search')}</label>
+    <Icon name="search" />
+    <input
+      id="search-input"
+      name="q"
+      type="search"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder={ui(locale, 'searchPlaceholder')}
+      role="combobox"
+      aria-expanded="false"
+      aria-controls="search-results"
+      aria-autocomplete="list"
+    />
+    <button type="button" class="search__close" data-search-close>
+      <span>Esc</span><span class="vh">{ui(locale, 'close')}</span>
+    </button>
+  </form>
+  <div class="search__body">
+    <p class="search__status" role="status" aria-live="polite" data-status>{ui(locale, 'searchHint')}</p>
+    <ul id="search-results" role="listbox" class="search__results" data-results aria-label={ui(locale, 'search')}></ul>
+  </div>
+</dialog>
+
+<script>
+  import { searchRecords, type SearchRecord } from '~/lib/search-core';
+  import { countWith, type CountForms } from '~/i18n/plural';
+
+  const dlg = document.querySelector<HTMLDialogElement>('[data-search]')!;
+  const input = dlg.querySelector<HTMLInputElement>('input')!;
+  const list = dlg.querySelector<HTMLUListElement>('[data-results]')!;
+  const status = dlg.querySelector<HTMLElement>('[data-status]')!;
+  const groups = JSON.parse(dlg.dataset.groups!) as Record<string, string>;
+  let index: SearchRecord[] | null = null;
+  let loading: Promise<void> | null = null;
+  let active = -1;
+  let lastFocus: HTMLElement | null = null;
+
+  const load = () =>
+    (loading ??= fetch(dlg.dataset.index!)
+      .then((r) => r.json() as Promise<SearchRecord[]>)
+      .then((d) => {
+        index = d;
+        if (input.value) render();
+      })
+      .catch(() => {
+        loading = null;
+      }));
+
+  function open() {
+    lastFocus = document.activeElement as HTMLElement;
+    dlg.showModal();
+    input.select();
+    void load();
+  }
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  function render() {
+    const q = input.value.trim();
+    active = -1;
+    if (q.length < 2) {
+      list.innerHTML = '';
+      status.textContent = dlg.dataset.hint!;
+      input.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    if (!index) {
+      status.textContent = '…';
+      return;
+    }
+    const res = searchRecords(index, q, 40);
+    if (!res.length) {
+      list.innerHTML = '';
+      const [qo, qc] = [dlg.dataset.q!.slice(0, 1), dlg.dataset.q!.slice(-1)];
+      status.textContent = `${dlg.dataset.noresults} ${qo}${q}${qc}. ${dlg.dataset.emptyhint}`;
+      input.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    const order = ['guide', 'page', 'document', 'person', 'news'];
+    const byKind = order.map((k) => [k, res.filter((r) => r.k === k)] as const).filter(([, v]) => v.length);
+    let i = 0;
+    let shown = 0;
+    list.innerHTML = byKind
+      .map(([k, items]) => {
+        const label = esc(groups[k] ?? k);
+        const opts = items.slice(0, 8);
+        shown += opts.length;
+        return (
+          `<li role="group" aria-label="${label}"><span class="search__group" aria-hidden="true">${label}</span><ul role="none">` +
+          opts
+            .map(
+              (r) =>
+                `<li role="option" id="sr-${i}" data-i="${i++}" aria-selected="false"><a href="${esc(r.u)}"${r.x ? ' target="_blank" rel="noopener"' : ''} tabindex="-1"><span class="t">${esc(r.t)}</span>${r.s ? `<span class="s">${esc(r.s)}</span>` : ''}</a></li>`,
+            )
+            .join('') +
+          `</ul></li>`
+        );
+      })
+      .join('');
+    status.textContent = countWith(shown, dlg.dataset.intl!, JSON.parse(dlg.dataset.forms!) as CountForms);
+    input.setAttribute('aria-expanded', 'true');
+  }
+
+  function move(delta: number) {
+    const opts = [...list.querySelectorAll<HTMLElement>('[role=option]')];
+    if (!opts.length) return;
+    active = (active + delta + opts.length) % opts.length;
+    opts.forEach((o, j) => o.setAttribute('aria-selected', String(j === active)));
+    input.setAttribute('aria-activedescendant', opts[active]!.id);
+    opts[active]!.scrollIntoView({ block: 'nearest' });
+  }
+
+  input.addEventListener('input', render);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+    else if (e.key === 'Escape') {
+      // one press closes (the native search field would otherwise only clear itself first)
+      e.preventDefault();
+      dlg.close();
+    } else if (e.key === 'Enter' && active >= 0) {
+      e.preventDefault();
+      list.querySelector<HTMLAnchorElement>(`#sr-${active} a`)?.click();
+    }
+  });
+  dlg.querySelector('[data-search-close]')!.addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', (e) => {
+    if (e.target === dlg) dlg.close();
+  });
+  dlg.addEventListener('close', () => lastFocus?.focus());
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      dlg.open ? dlg.close() : open();
+    }
+  });
+  // Delegated: the header upgrades its no-JS search link to a button, whichever script runs first.
+  const trigger = (e: Event) => (e.target as Element | null)?.closest?.('[data-search-open]');
+  document.addEventListener('click', (e) => {
+    if (!trigger(e)) return;
+    e.preventDefault();
+    open();
+  });
+  // Warm the index when the user shows intent.
+  document.addEventListener('pointerover', (e) => {
+    if (trigger(e)) void load();
+  });
+</script>
+
+<style>
+  .search {
+    width: min(44rem, calc(100vw - 2rem));
+    max-height: min(36rem, calc(100dvh - 4rem));
+    margin: 8vh auto auto;
+    padding: 0;
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 24px 60px rgb(11 27 77 / 0.25);
+    overflow: hidden;
+  }
+  .search[open] {
+    display: flex;
+    flex-direction: column;
+    animation: rise 140ms var(--ease-out);
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @media (max-width: 40rem) {
+    /* phones: a full-height sheet, the page does not show through underneath */
+    .search {
+      width: 100vw;
+      max-width: none;
+      height: 100dvh;
+      max-height: none;
+      margin: 0;
+      border: 0;
+    }
+  }
+  .search::backdrop {
+    background: rgb(21 23 30 / 0.4);
+  }
+  .search__form {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    gap: var(--s-3);
+    padding: 0 var(--s-4);
+    border-bottom: 1px solid var(--ink);
+  }
+  .search__form > :global(svg) {
+    width: 1.35rem;
+    height: 1.35rem;
+    flex: none;
+    color: var(--ink-2);
+  }
+  .search input {
+    min-width: 0;
+    width: 100%;
+    min-height: 3.75rem;
+    border: 0;
+    background: none;
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    outline: none;
+  }
+  /* visible focus for the field: a lapis rule under the whole input row */
+  .search__form:focus-within {
+    box-shadow: inset 0 -3px 0 var(--lapis);
+  }
+  .search input::-webkit-search-cancel-button {
+    display: none;
+  }
+  .search__close {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper-raised);
+    border-radius: var(--radius);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--ink-2);
+  }
+  .search__body {
+    overflow-y: auto;
+    padding: var(--s-2) 0 var(--s-3);
+  }
+  .search__status {
+    padding: var(--s-2) var(--s-4);
+    font-size: var(--t-small);
+    color: var(--ink-2);
+  }
+  .search__results {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .search__results :global(ul[role='none']) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .search__results :global(.search__group) {
+    display: block;
+    padding: var(--s-3) var(--s-4) var(--s-1);
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rubric);
+  }
+  .search__results :global([role='option'] a) {
+    display: flex;
+    flex-direction: column;
+    padding: 0.55rem var(--s-4);
+    min-height: 2.75rem;
+    justify-content: center;
+    color: var(--ink);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+  }
+  .search__results :global([role='option'] .t) {
+    font-weight: 600;
+  }
+  .search__results :global([role='option'] .s) {
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+  .search__results :global([aria-selected='true'] a),
+  .search__results :global([role='option'] a:hover) {
+    background: var(--paper-sunk);
+    border-left-color: var(--rubric);
+  }
+</style>

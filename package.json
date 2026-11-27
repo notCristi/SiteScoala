@@ -1,0 +1,56 @@
+{
+  "name": "honterus-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Colegiul Național „Johannes Honterus” Brașov — public website and admin CMS on Cloudflare",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.4.9",
+    "astro": "^7.4.13",
+    "drizzle-orm": "^0.45.4",
+    "marked": "^18.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@eslint/js": "^10.0.1",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^10.15.0",
+    "eslint-plugin-astro": "^3.2.2",
+    "globals": "^17.14.0",
+    "opentype.js": "^2.0.0",
+    "potrace": "^2.1.8",
+    "prettier": "^3.10.1",
+    "prettier-plugin-astro": "^1.1.2",
+    "sharp": "^0.35.5",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.74.0",
+    "wrangler": "^4.168.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "npm run build && wrangler dev --port 4321",
+    "check": "npm run typecheck && npm run lint",
+    "typecheck": "astro check",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "cf-types": "wrangler types",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate:prod": "wrangler d1 migrations apply honterus-db --remote",
+    "db:seed:build": "node scripts/seed/build-seed.mjs",
+    "db:seed:local": "node scripts/seed/build-seed.mjs && wrangler d1 execute DB --local --file=seed/seed.sql",
+    "db:seed:prod": "node scripts/seed/build-seed.mjs && wrangler d1 execute honterus-db --remote --file=seed/seed.sql",
+    "db:reset:local": "rm -rf .wrangler/state/v3/d1 && npm run db:migrate:local && npm run db:seed:local",
+    "setup": "npm run db:migrate:local && npm run db:seed:local",
+    "deploy": "wrangler deploy && npm run db:migrate:prod",
+    "media:heritage": "node scripts/media/fetch-heritage.mjs",
+    "brand:logo": "node scripts/brand/build-logo.mjs",
+    "media:legacy-docs": "node scripts/media/import-legacy-documents.mjs download",
+    "media:legacy-docs:local": "node scripts/media/import-legacy-documents.mjs upload --local",
+    "media:legacy-docs:prod": "node scripts/media/import-legacy-documents.mjs upload --remote"
+  }
+}

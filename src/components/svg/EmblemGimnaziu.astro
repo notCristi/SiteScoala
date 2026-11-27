@@ -1,0 +1,42 @@
+---
+/**
+ * <EmblemGimnaziu> — cycle emblem. A pair of dividers scribing a quarter circle on a ruled base — gimnaziu / Gymnasialstufe.
+ * 64 × 64 grid, 1.5 px line (non-scaling, so the weight holds from 32 to 128 px), one ink.
+ */
+interface Props {
+  class?: string;
+  /** Accessible name; omit when the emblem sits next to a visible label (decorative). */
+  title?: string;
+  size?: number | string;
+}
+
+const { class: className, title, size } = Astro.props;
+const dim = typeof size === 'number' ? `${size}px` : size;
+---
+
+<svg
+  class:list={['emblem', className]}
+  viewBox="0 0 64 64"
+  width={dim}
+  height={dim}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  {title && <title>{title}</title>}
+  <path vector-effect="non-scaling-stroke" d="M8 53H57M47 53A31 31 0 0 0 16 22M45.9 45L47.9 44.5M42.8 37.5L44.6 36.5M37.9 31.1L40.2 28.8M31.5 26.2L32.5 24.4M24 23.1L24.5 21.1M16 53L16 56M47 53L47 56M29.5 8.8L16 53L33.5 10.2M29.5 10.2L47 53L33.5 8.8M28.4 9.5a3.1 3.1 0 1 0 6.2 0a3.1 3.1 0 1 0 -6.2 0ZM31.5 6.4L31.5 3" />
+  <path fill="currentColor" stroke="none" d="M30.5 9.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0ZM30 2.1a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0Z" />
+</svg>
+
+<style>
+  .emblem {
+    display: inline-block;
+    vertical-align: middle;
+  }
+</style>

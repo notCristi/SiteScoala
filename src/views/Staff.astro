@@ -1,0 +1,275 @@
+---
+/**
+ * Typographic staff register: grouped by category and department, A–Z by surname (Romanian collation),
+ * instant name/subject filter. No photos unless uploaded with consent (CLAUDE.md rule 3).
+ */
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Picture from '~/components/Picture.astro';
+import Icon from '~/components/svg/Icon.astro';
+import { pick, LOCALE_META } from '~/i18n/locales';
+import { count, COUNT_FORMS } from '~/i18n/plural';
+import { ui } from '~/i18n/ui';
+import { fold } from '~/lib/search-core';
+import { getMediaMap, getPage, listStaff, type Staff } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const [page, { people, depts }] = await Promise.all([getPage('staff'), listStaff()]);
+const photos = await getMediaMap(people.filter((p) => p.photoConsent).map((p) => p.photoMediaId));
+const coll = new Intl.Collator('ro', { sensitivity: 'base' });
+const byName = (a: Staff, b: Staff) => a.sortOrder - b.sortOrder || coll.compare(a.sortName, b.sortName);
+
+const CAT_LABEL: Record<Staff['category'], Record<typeof locale, string>> = {
+  conducere: { ro: 'Conducere', de: 'Schulleitung', en: 'Leadership' },
+  profesori: { ro: 'Personal didactic', de: 'Lehrkräfte', en: 'Teaching staff' },
+  zfa: { ro: 'Profesori din Germania (ZfA)', de: 'Lehrkräfte aus Deutschland (ZfA)', en: 'Teachers from Germany (ZfA)' },
+  auxiliar: { ro: 'Personal didactic auxiliar', de: 'Pädagogisches Hilfspersonal', en: 'Support staff' },
+  nedidactic: { ro: 'Personal nedidactic', de: 'Verwaltung und Technik', en: 'Administrative and technical staff' },
+};
+const groups = (['conducere', 'profesori', 'zfa', 'auxiliar', 'nedidactic'] as const)
+  .map((cat) => {
+    const list = people.filter((p) => p.category === cat).sort(byName);
+    if (cat !== 'profesori') return { cat, sections: [{ title: '', list }] };
+    const sections = depts
+      .map((d) => ({ title: pick(d, 'name', locale).value, list: list.filter((p) => p.departmentId === d.id) }))
+      .filter((s) => s.list.length);
+    const rest = list.filter((p) => !p.departmentId || !depts.some((d) => d.id === p.departmentId));
+    if (rest.length) sections.push({ title: locale === 'ro' ? 'Alte discipline' : locale === 'de' ? 'Weitere Fächer' : 'Other subjects', list: rest });
+    return { cat, sections };
+  })
+  .filter((g) => g.sections.some((s) => s.list.length));
+
+const title = page ? pick(page, 'title', locale).value : CAT_LABEL.profesori[locale];
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const total = people.length;
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: locale === 'ro' ? 'Școala' : locale === 'de' ? 'Schule' : 'Our school', route: 'school' }, { label: title }]} />
+
+  <div class="wrap staff" data-staff>
+    <div class="staff__tools">
+      <div class="filter">
+        <label for="staff-q">{ui(locale, 'staffFilter')}</label>
+        <div class="filter__field">
+          <Icon name="search" />
+          <input id="staff-q" type="search" autocomplete="off" data-staff-q />
+        </div>
+      </div>
+      <nav aria-label={locale === 'ro' ? 'Categorii' : locale === 'de' ? 'Bereiche' : 'Sections'} class="jump">
+        <ul role="list">
+          {
+            groups.map((g) => (
+              <li>
+                <a class="chip" href={`#${g.cat}`}>
+                  {CAT_LABEL[g.cat][locale]}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <p class="staff__count" role="status" aria-live="polite" data-staff-count data-forms={JSON.stringify(COUNT_FORMS.people[locale])} data-intl={LOCALE_META[locale].intl}>
+        {count(total, locale, 'people')}
+      </p>
+    </div>
+
+    {
+      groups.map((g) => (
+        <section class="cat" id={g.cat} aria-labelledby={`h-${g.cat}`} data-group>
+          <h2 id={`h-${g.cat}`}>{CAT_LABEL[g.cat][locale]}</h2>
+          {g.sections.map((s) => (
+            <div class="dept" data-group>
+              {s.title && <h3 class="dept__title">{s.title}</h3>}
+              <ul role="list" class:list={['people', g.cat === 'conducere' && 'people--lead']}>
+                {s.list.map((p) => {
+                  const role = pick(p, 'role', locale).value;
+                  const subject = pick(p, 'subject', locale).value;
+                  const photo = p.photoConsent && p.photoMediaId ? photos.get(p.photoMediaId) : undefined;
+                  return (
+                    <li id={`p${p.id}`} class="person" data-hay={fold(`${p.fullName} ${subject} ${role} ${s.title}`)}>
+                      {photo && (
+                        <span class="person__photo">
+                          <Picture media={photo} locale={locale} sizes="5rem" alt="" ratio="4 / 5" />
+                        </span>
+                      )}
+                      <span class="person__name">
+                        {/* Romanian honorifics ("prof.", "prof. înv. primar") would mislead in German/English: RO only */}
+                        {locale === 'ro' && p.titlePrefix && <span class="person__prefix">{p.titlePrefix} </span>}
+                        {/* compound names never break at their hyphen */}
+                        {p.fullName.replace(/-/g, '\u2011')}
+                      </span>
+                      {/* inside the teachers' group "teacher ·" on every line is noise: the subject says it */}
+                      {(role || subject) && (
+                        <span class="person__role">{(g.cat === 'profesori' && subject ? [subject] : [role, subject]).filter((x, i, a) => x && a.indexOf(x) === i).join(' · ')}</span>
+                      )}
+                      {p.showEmail && p.email && (
+                        <a class="person__mail" href={`mailto:${p.email}`}>
+                          {p.email}
+                        </a>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </section>
+      ))
+    }
+    <p class="note">{ui(locale, 'staffNoPhotos')}</p>
+  </div>
+</Base>
+
+<script>
+  import { fold } from '~/lib/search-core';
+  import { countWith, type CountForms } from '~/i18n/plural';
+  const root = document.querySelector<HTMLElement>('[data-staff]');
+  const input = root?.querySelector<HTMLInputElement>('[data-staff-q]');
+  const count = root?.querySelector<HTMLElement>('[data-staff-count]');
+  input?.addEventListener('input', () => {
+    const words = fold(input.value).split(/\s+/).filter(Boolean);
+    let n = 0;
+    root!.querySelectorAll<HTMLElement>('.person').forEach((li) => {
+      const ok = words.every((w) => li.dataset.hay!.includes(w));
+      li.hidden = !ok;
+      if (ok) n++;
+    });
+    root!.querySelectorAll<HTMLElement>('.dept, .cat').forEach((g) => (g.hidden = !g.querySelector('.person:not([hidden])')));
+    if (count) count.textContent = countWith(n, count.dataset.intl!, JSON.parse(count.dataset.forms!) as CountForms);
+  });
+</script>
+
+<style>
+  .staff {
+    padding-bottom: var(--s-8);
+  }
+  .staff__tools {
+    display: grid;
+    grid-template-columns: minmax(16rem, 24rem) 1fr auto;
+    gap: var(--s-4) var(--s-6);
+    align-items: end;
+    padding-bottom: var(--s-5);
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: calc(var(--header-h) + 0.25rem);
+    background: var(--paper);
+    z-index: 5;
+    padding-top: var(--s-3);
+  }
+  @media (max-width: 52rem) {
+    .staff__tools {
+      grid-template-columns: 1fr;
+      position: static;
+    }
+  }
+  .filter label {
+    display: block;
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin-bottom: 0.35rem;
+  }
+  .filter__field {
+    position: relative;
+  }
+  .filter__field :global(svg) {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    translate: 0 -50%;
+    width: 1.2rem;
+    color: var(--ink-2);
+  }
+  .filter input {
+    width: 100%;
+    min-height: 3rem;
+    padding-left: 2.5rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+  }
+  .jump ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin: 0;
+  }
+  .staff__count {
+    font-size: var(--t-small);
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .cat {
+    margin-top: var(--s-7);
+  }
+  .cat > h2 {
+    padding-bottom: var(--s-3);
+    border-bottom: 1px solid var(--ink);
+  }
+  .dept {
+    margin-top: var(--s-5);
+  }
+  .dept__title {
+    font-family: var(--font-sans);
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rubric);
+    margin-bottom: var(--s-2);
+  }
+  .people {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+    column-gap: var(--s-6);
+    margin: 0;
+  }
+  .person {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--rule);
+    scroll-margin-top: 12rem;
+  }
+  .person:target {
+    background: var(--rubric-soft);
+  }
+  .person__name {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+  .person__prefix {
+    font-size: 0.9em;
+    color: var(--ink-2);
+  }
+  .person__role {
+    font-size: var(--t-small);
+    color: var(--ink-2);
+  }
+  .person__photo {
+    width: 4.5rem;
+    float: left;
+    margin-right: var(--s-3);
+  }
+  .person__photo :global(img) {
+    border-radius: 50% / 45%;
+    object-fit: cover;
+  }
+  .people--lead .person__name {
+    font-size: 1.6rem;
+  }
+  .person__mail {
+    font-size: var(--t-small);
+  }
+  .note {
+    margin-top: var(--s-6);
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--ink-2);
+  }
+</style>

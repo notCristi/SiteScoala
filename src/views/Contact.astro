@@ -1,0 +1,350 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Icon from '~/components/svg/Icon.astro';
+import CompassRose from '~/components/svg/CompassRose.astro';
+import { pick } from '~/i18n/locales';
+import { ui } from '~/i18n/ui';
+import { getPage } from '~/server/content';
+import { turnstileSiteKey } from '~/server/security';
+import { url } from '~/i18n/routes';
+import { emptyValues, type ContactResult } from '~/server/contact';
+import type { ViewProps } from './types';
+
+/** `form` is set when the page answers its own POST with an error: the user's text comes back with the message. */
+const { locale, match, alternates, settings, banners, form } = Astro.props as ViewProps & { form?: ContactResult };
+const L = (k: string) => ui(locale, k);
+const page = await getPage('contact');
+const c = settings.contact;
+const title = page ? pick(page, 'title', locale).value : L('contact');
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const body = page ? pick(page, 'bodyHtml', locale) : undefined;
+// When the editor's text opens with its own heading ("Cum ajungeți la noi"), that heading becomes the section title
+// instead of being printed under ours.
+const lead2 = body?.value?.match(/^\s*<h[23]>(.*?)<\/h[23]>/s);
+const findTitle = lead2 ? lead2[1]!.replace(/<[^>]+>/g, '') : undefined;
+const findBody = lead2 && body?.value ? body.value.slice(lead2[0].length) : body?.value;
+const tel = (p: string) => `tel:+4${p.replace(/\s/g, '')}`;
+const sent = Astro.url.searchParams.get('trimis') === '1';
+const err = form && !form.ok ? form.error : Astro.url.searchParams.get('eroare');
+const v = form && !form.ok ? form.values : emptyValues();
+const T = {
+  formTitle: { ro: 'Scrieți-ne', de: 'Schreiben Sie uns', en: 'Write to us' },
+  name: { ro: 'Nume și prenume', de: 'Vor- und Nachname', en: 'Full name' },
+  phoneOpt: { ro: 'Telefon (opțional)', de: 'Telefon (optional)', en: 'Phone (optional)' },
+  topic: { ro: 'Subiect', de: 'Anliegen', en: 'Topic' },
+  topics: {
+    secretariat: { ro: 'Secretariat', de: 'Sekretariat', en: 'School office' },
+    admitere: { ro: 'Admitere și înscrieri', de: 'Aufnahme und Anmeldung', en: 'Admissions' },
+    documente: { ro: 'Adeverințe și documente', de: 'Bescheinigungen und Dokumente', en: 'Certificates and documents' },
+    altele: { ro: 'Altceva', de: 'Sonstiges', en: 'Something else' },
+  },
+  message: { ro: 'Mesaj', de: 'Nachricht', en: 'Message' },
+  send: { ro: 'Trimiteți mesajul', de: 'Nachricht senden', en: 'Send message' },
+  sent: { ro: 'Mulțumim. Mesajul a fost înregistrat și va primi răspuns de la secretariat.', de: 'Vielen Dank. Ihre Nachricht ist eingegangen; das Sekretariat meldet sich bei Ihnen.', en: 'Thank you. Your message has been received and the school office will reply.' },
+  errData: { ro: 'Completați numele, o adresă de e-mail validă și un mesaj de cel puțin 10 caractere.', de: 'Bitte geben Sie Ihren Namen, eine gültige E-Mail-Adresse und eine Nachricht mit mindestens 10 Zeichen an.', en: 'Please enter your name, a valid email address and a message of at least 10 characters.' },
+  errCheck: { ro: 'Verificarea anti-spam nu a reușit. Textul dumneavoastră este păstrat mai jos; încercați din nou.', de: 'Die Spam-Prüfung ist fehlgeschlagen. Ihr Text ist unten erhalten; bitte versuchen Sie es erneut.', en: 'The spam check failed. Your text is kept below; please try again.' },
+  errLimit: { ro: 'Din această rețea s-au trimis deja mai multe mesaje în ultima oră. Scrieți-ne direct prin e-mail sau sunați la secretariat.', de: 'Aus diesem Netz wurden in der letzten Stunde bereits mehrere Nachrichten gesendet. Bitte schreiben Sie uns direkt per E-Mail oder rufen Sie im Sekretariat an.', en: 'Several messages have already been sent from this network in the last hour. Please email us directly or call the school office.' },
+  privacy: { ro: 'Datele sunt folosite doar pentru a vă răspunde.', de: 'Ihre Angaben werden nur zur Beantwortung verwendet.', en: 'Your details are used only to reply to you.' },
+  find: { ro: 'Cum ajungeți', de: 'Anfahrt', en: 'Finding us' },
+} as const;
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: title }]} />
+  <div class="wrap contact">
+    <section class="card" aria-labelledby="c-addr">
+      <h2 id="c-addr" class="vh">{({ ro: 'Date de contact', de: 'Kontaktdaten', en: 'Contact details' } as const)[locale]}</h2>
+      <p class="school">{ui(locale, 'schoolFull')}</p>
+      <dl class="lines">
+        <div>
+          <dt><Icon name="map-pin" />{L('address')}</dt>
+          <dd><a href={c.mapUrl} target="_blank" rel="noopener">{c.street}, {c.postalCode} {c.city}</a></dd>
+        </div>
+        <div>
+          <dt><Icon name="phone" />{L('phone')}</dt>
+          <dd class="lines__links">{c.phones.map((p) => <a class="num" href={tel(p)}>{p}</a>)}</dd>
+        </div>
+        {c.fax && (<div><dt><Icon name="file-doc" />{L('fax')}</dt><dd class="num">{c.fax}</dd></div>)}
+        <div>
+          <dt><Icon name="mail" />{L('email')}</dt>
+          <dd class="lines__links"><a href={`mailto:${c.email}`}>{c.email}</a>{c.admissionsEmail && <span><span class="muted">{locale === 'ro' ? 'Admitere' : locale === 'de' ? 'Aufnahme' : 'Admissions'}:</span> <a href={`mailto:${c.admissionsEmail}`}>{c.admissionsEmail}</a></span>}</dd>
+        </div>
+        {c.hours && (<div><dt><Icon name="clock" />{L('hours')}</dt><dd>{c.hours[locale] ?? c.hours.ro}</dd></div>)}
+      </dl>
+      <div class="actions">
+        <a class="btn" href={tel(c.phones[0] ?? '')}><Icon name="phone" />{c.phones[0]}</a>
+        <a class="btn btn--ghost" href={c.mapUrl} target="_blank" rel="noopener"><Icon name="map-pin" />{L('map')}</a>
+      </div>
+      <div class="locus">
+        <div class="locus__rose" aria-hidden="true"><CompassRose size="100%" /></div>
+        <p class="coords num">{c.lat.toFixed(4)}° N<br />{c.lng.toFixed(4)}° E</p>
+      </div>
+    </section>
+
+    <section class="find" aria-labelledby="c-find">
+      <h2 id="c-find" lang={findTitle ? body?.lang : undefined}>{findTitle ?? T.find[locale]}</h2>
+      {findBody ? <div class="prose" lang={body?.lang} set:html={findBody} /> : null}
+    </section>
+
+    <section class="form-wrap" id="formular" aria-labelledby="c-form">
+      <h2 id="c-form">{T.formTitle[locale]}</h2>
+      {sent && <p class="msg msg--ok" role="status">{T.sent[locale]}</p>}
+      {
+        err && (
+          <p class="msg msg--err" role="alert">
+            {err === 'verificare' ? T.errCheck[locale] : err === 'limita' ? T.errLimit[locale] : T.errData[locale]}
+            {err === 'limita' && (
+              <>
+                {' '}
+                <a href={`mailto:${c.email}`}>{c.email}</a> · <a href={tel(c.phones[0] ?? '')}>{c.phones[0]}</a>
+              </>
+            )}
+          </p>
+        )
+      }
+      {/* Posts to this page, which answers errors by re-rendering the form with the user's text (works without JS). */}
+      <form method="post" action={`${url('contact', locale)}#formular`} class="form" data-contact-form>
+        <input type="hidden" name="locale" value={locale} />
+        <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+        <div class="row">
+          <label>{T.name[locale]}<input name="name" required minlength="2" maxlength="120" autocomplete="name" value={v.name} /></label>
+          <label>{L('email')}<input name="email" type="email" required maxlength="200" autocomplete="email" value={v.email} /></label>
+        </div>
+        <div class="row">
+          <label>{T.phoneOpt[locale]}<input name="phone" type="tel" maxlength="40" autocomplete="tel" value={v.phone} /></label>
+          <label>{T.topic[locale]}
+            <select name="topic">
+              {(Object.keys(T.topics) as (keyof typeof T.topics)[]).map((k) => <option value={k} selected={k === v.topic}>{T.topics[k][locale]}</option>)}
+            </select>
+          </label>
+        </div>
+        <label>{T.message[locale]}<textarea name="message" required minlength="10" maxlength="5000" rows="6">{v.message}</textarea></label>
+        <div class="cf-turnstile" data-sitekey={turnstileSiteKey()} data-action="contact" data-language={locale}></div>
+        <p class="muted small">{T.privacy[locale]}</p>
+        <button class="btn" type="submit">{T.send[locale]}<Icon name="arrow-right" /></button>
+      </form>
+    </section>
+  </div>
+</Base>
+
+<script>
+  // Turnstile (27 KB) loads only when someone starts using the form, not with the page.
+  // Without it (no JS, or blocked) the server still accepts the message, rate-limited and marked for the office.
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const box = form?.querySelector<HTMLElement>('.cf-turnstile');
+  let state: 'idle' | 'loading' | 'ready' = 'idle';
+  const w = window as unknown as { turnstile?: { render: (el: HTMLElement) => void }; honterusTurnstile?: () => void };
+  const start = () => {
+    if (state !== 'idle' || !box) return;
+    state = 'loading';
+    w.honterusTurnstile = () => {
+      w.turnstile?.render(box);
+      state = 'ready';
+    };
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=honterusTurnstile';
+    s.async = true;
+    document.head.appendChild(s);
+  };
+  form?.addEventListener('focusin', start, { once: true });
+  form?.addEventListener('pointerdown', start, { once: true });
+  // A fast submit waits (up to 5 s) for the widget's token instead of going out unverified.
+  form?.addEventListener('submit', (e) => {
+    const token = () => form.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]')?.value;
+    if (state === 'idle' || token() || form.dataset.waited) return;
+    e.preventDefault();
+    form.dataset.waited = '1';
+    const t0 = Date.now();
+    const tick = () => (token() || Date.now() - t0 > 5000 ? form.requestSubmit() : setTimeout(tick, 150));
+    tick();
+  });
+</script>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s-7) var(--s-7);
+    padding-bottom: var(--s-8);
+  }
+  @media (max-width: 56rem) {
+    .contact {
+      grid-template-columns: 1fr;
+    }
+  }
+  .card {
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-4);
+  }
+  .school {
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+    line-height: 1.2;
+    margin-bottom: var(--s-4);
+  }
+  .lines {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .lines,
+  .lines div,
+  .lines dd {
+    min-width: 0;
+  }
+  .lines div {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--s-3);
+    padding-bottom: var(--s-3);
+    border-bottom: 1px solid var(--rule);
+  }
+  .lines dd {
+    overflow-wrap: anywhere;
+  }
+  .lines__links {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--s-4);
+  }
+  /* phone and e-mail links are primary actions: ≥ 44 px tall */
+  .lines dd a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+  @media (max-width: 30rem) {
+    .lines div {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+  .lines dt {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .lines dt :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--ink-3);
+  }
+  /* Atkinson's slashed zero reads like code in phone numbers and postcodes: set the data in Garamond lining figures */
+  .lines dd {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-variant-numeric: lining-nums;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-5);
+  }
+  .find {
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-4);
+    min-width: 0;
+  }
+  .find .prose {
+    margin-top: var(--s-4);
+  }
+  /* the compass rose and the coordinates: a small cartographic colophon under the address card */
+  .locus {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    margin-top: var(--s-7);
+    padding-top: var(--s-5);
+    border-top: 5px double var(--rule-strong);
+  }
+  .locus__rose {
+    width: 8rem;
+    flex: none;
+    color: var(--ink);
+  }
+  .coords {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  @media (max-width: 40rem) {
+    .locus {
+      margin-top: var(--s-5);
+    }
+    .locus__rose {
+      width: 5rem;
+    }
+  }
+  .form-wrap {
+    grid-column: 1 / -1;
+    max-width: 50rem;
+    scroll-margin-top: 8rem;
+  }
+  .form {
+    display: grid;
+    gap: var(--s-4);
+    margin-top: var(--s-4);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-4);
+  }
+  @media (max-width: 36rem) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .form label {
+    display: grid;
+    gap: 0.35rem;
+    font-weight: 600;
+  }
+  .form input,
+  .form select,
+  .form textarea {
+    min-height: 3rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    font-weight: 400;
+  }
+  .form .btn {
+    justify-self: start;
+  }
+  /* the widget renders after the first interaction: its box is reserved so nothing below moves */
+  .cf-turnstile {
+    min-height: 65px;
+  }
+  :global(.no-js) .cf-turnstile {
+    display: none;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .msg {
+    padding: var(--s-3) var(--s-4);
+    margin-top: var(--s-3);
+    font-weight: 600;
+  }
+  .msg--ok {
+    background: var(--lapis-soft);
+    border-left: 3px solid var(--lapis);
+  }
+  .msg--err {
+    background: var(--rubric-soft);
+    border-left: 3px solid var(--rubric);
+  }
+  .small {
+    font-size: var(--t-small);
+  }
+</style>

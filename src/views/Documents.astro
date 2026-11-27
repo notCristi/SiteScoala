@@ -1,0 +1,500 @@
+---
+/**
+ * Public documents register (transparency hub). One library, filters mirrored in the URL (D-15),
+ * works without JS (GET form), and filters instantly with JS.
+ */
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Icon from '~/components/svg/Icon.astro';
+import { pick, formatBytes, formatDate, formatSchoolYear, LOCALE_META } from '~/i18n/locales';
+import { count, COUNT_FORMS } from '~/i18n/plural';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import { CATEGORY_LABELS, docUrl } from '~/lib/documents';
+import { fold } from '~/lib/search-core';
+import { getPage, listDocuments } from '~/server/content';
+import { DOCUMENT_CATEGORIES, CYCLES } from '~/db/schema';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const L = (k: string) => ui(locale, k);
+const [page, docs] = await Promise.all([getPage('documents'), listDocuments()]);
+const q = Astro.url.searchParams;
+const fCat = q.get('cat') ?? '';
+const fYear = q.get('an') ?? '';
+const fCycle = q.get('ciclu') ?? '';
+const fText = (q.get('q') ?? '').slice(0, 200);
+
+const cats = DOCUMENT_CATEGORIES.filter((c) => docs.some((d) => d.category === c));
+const years = [...new Set(docs.map((d) => d.academicYear).filter((y): y is string => !!y))].sort().reverse();
+const catOrder = new Map(DOCUMENT_CATEGORIES.map((c, i) => [c, i]));
+const rows = docs.map((d) => {
+  const t = pick(d, 'title', locale);
+  return { d, t, cyc: d.cycles ? d.cycles.split(',') : [], hay: fold(`${t.value} ${d.titleRo} ${d.registrationNo ?? ''}`) };
+});
+// Register grouped by school year (newest first; undated documents last), categories in their fixed order inside each year.
+const NO_YEAR = '';
+const groups = [...years, NO_YEAR]
+  .map((y) => ({
+    y,
+    rows: rows
+      .filter((r) => (r.d.academicYear ?? NO_YEAR) === y)
+      .sort((a, b) => (catOrder.get(a.d.category) ?? 99) - (catOrder.get(b.d.category) ?? 99)),
+  }))
+  .filter((g) => g.rows.length);
+const noYearLabel = ({ ro: 'Fără an școlar', de: 'Ohne Schuljahr', en: 'No school year' } as const)[locale];
+const activeFilters = [fCat, fYear, fCycle, fText].filter(Boolean).length;
+const visible = (r: (typeof rows)[number]) =>
+  (!fCat || r.d.category === fCat) && (!fYear || r.d.academicYear === fYear) && (!fCycle || r.cyc.length === 0 || r.cyc.includes(fCycle)) && (!fText || fold(fText).split(/\s+/).every((w) => r.hay.includes(w)));
+const shown = rows.filter(visible).length;
+const title = page ? pick(page, 'title', locale).value : L('documents');
+const lead = page ? pick(page, 'lead', locale) : undefined;
+const ext = (d: (typeof docs)[number]) => (d.fileExt ?? 'pdf').toLowerCase();
+const icon = (e: string) => (e === 'pdf' ? 'pdf' : ['xls', 'xlsx', 'ods'].includes(e) ? 'sheet' : 'doc');
+---
+
+<Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners} noindex={!!(fCat || fYear || fCycle || fText)}>
+  <PageHead locale={locale} kicker={L('publicInfo')} title={title} lead={lead?.value} leadLang={lead?.lang} crumbs={[{ label: title }]} />
+
+  <div class="wrap docs" data-docs>
+    <details class="filters-box" open data-filters-box>
+      <summary>
+        <Icon name="filter" />
+        {L('filters')}
+        <span class="filters-box__n" data-active-n>{activeFilters ? `(${activeFilters})` : ''}</span>
+        <Icon name="chevron-down" />
+      </summary>
+    <form class="filters" method="get" action={url('documents', locale)} data-filters>
+      <input type="hidden" name="cat" value={fCat} />
+      <div class="filters__text">
+        <label for="f-q">{L('filterText')}</label>
+        <div class="input-icon">
+          <Icon name="search" />
+          <input id="f-q" name="q" type="search" value={fText} autocomplete="off" />
+        </div>
+      </div>
+      <div>
+        <label for="f-an">{L('filterYear')}</label>
+        <select id="f-an" name="an">
+          <option value="">{L('filterAll')}</option>
+          {years.map((y) => <option value={y} selected={y === fYear}>{formatSchoolYear(y, locale)}</option>)}
+        </select>
+      </div>
+      <div>
+        <label for="f-ciclu">{L('filterCycle')}</label>
+        <select id="f-ciclu" name="ciclu">
+          <option value="">{L('filterAll')}</option>
+          {CYCLES.map((c) => <option value={c} selected={c === fCycle}>{ui(locale, `cycles.${c}`)}</option>)}
+        </select>
+      </div>
+      <div class="filters__actions">
+        <button class="btn" type="submit" data-nojs>{ui(locale, 'search')}</button>
+        <a class="btn btn--ghost" href={url('documents', locale)} data-clear>{L('clearFilters')}</a>
+      </div>
+    </form>
+
+    <nav class="cats" aria-label={L('filterCategory')}>
+      <p class="cats__label" aria-hidden="true">{L('filterCategory')}</p>
+      <ul role="list">
+        <li><a class="chip" href={url('documents', locale)} aria-current={!fCat ? 'true' : undefined} data-cat="">{L('filterAll')}</a></li>
+        {
+          cats.map((c) => (
+            <li>
+              <a class="chip" href={url('documents', locale, {}, { cat: c })} aria-current={c === fCat ? 'true' : undefined} data-cat={c}>
+                {CATEGORY_LABELS[c][locale]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    </details>
+    <script is:inline>
+      // Phones: filters fold behind one "Filtre (n)" disclosure unless a filter is already set (runs before first paint: no shift).
+      (function () {
+        const d = document.querySelector('[data-filters-box]');
+        if (d && matchMedia('(max-width: 40rem)').matches && !/[?&](cat|an|ciclu|q)=[^&]/.test(location.search)) d.removeAttribute('open');
+      })();
+    </script>
+
+    <p class="count" role="status" aria-live="polite" data-count data-forms={JSON.stringify(COUNT_FORMS.documents[locale])} data-intl={LOCALE_META[locale].intl}>
+      {count(shown, locale, 'documents')}
+    </p>
+
+    <table class="register">
+      <caption class="vh">{title}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{L('docTitle')}</th>
+          <th scope="col">{L('filterCategory')}</th>
+          <th scope="col">{L('filterYear')}</th>
+          <th scope="col">{L('docFormat')}</th>
+        </tr>
+      </thead>
+      {
+        groups.map((g) => (
+      <tbody data-group>
+        <tr class="register__year" hidden={!g.rows.some(visible)}>
+          <th scope="colgroup" colspan="4">{g.y ? formatSchoolYear(g.y, locale) : noYearLabel}</th>
+        </tr>
+        {
+          g.rows.map((r) => (
+            <tr hidden={!visible(r)} data-row data-cat={r.d.category} data-year={r.d.academicYear ?? ''} data-cycles={r.cyc.join(',')} data-hay={r.hay}>
+              <td class="register__title">
+                <a href={docUrl(r.d)} target="_blank" rel="noopener" lang={r.t.lang} data-astro-prefetch="false">
+                  <i class={`ficon ficon--${icon(ext(r.d))}`} aria-hidden="true" />
+                  <span>{r.t.value}</span>
+                </a>
+                {r.d.issuedAt && (
+                  <span class="register__meta">
+                    <time datetime={new Date(r.d.issuedAt).toISOString().slice(0, 10)}>{formatDate(r.d.issuedAt, locale)}</time>
+                    {r.d.registrationNo && ` · nr. ${r.d.registrationNo}`}
+                  </span>
+                )}
+              </td>
+              <td data-label={L('filterCategory')}>{CATEGORY_LABELS[r.d.category][locale]}</td>
+              <td data-label={L('filterYear')} class="num register__yr">{r.d.academicYear ? formatSchoolYear(r.d.academicYear, locale) : '—'}</td>
+              <td data-label={L('docFormat')} class="num">
+                {ext(r.d).toUpperCase()}
+                {r.d.sizeBytes ? ` · ${formatBytes(r.d.sizeBytes, locale)}` : ''}
+                {r.d.docLanguage !== 'ro' && <span class="tag tag--muted lang-tag">{r.d.docLanguage.toUpperCase()}</span>}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+        ))
+      }
+    </table>
+    <p class="empty" hidden={shown > 0} data-empty>{L('docsEmpty')}</p>
+  </div>
+</Base>
+
+<script>
+  import { fold } from '~/lib/search-core';
+  import { countWith, type CountForms } from '~/i18n/plural';
+  const root = document.querySelector<HTMLElement>('[data-docs]');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('[data-filters]')!;
+    const rows = [...root.querySelectorAll<HTMLTableRowElement>('tr[data-row]')];
+    const groups = [...root.querySelectorAll<HTMLTableSectionElement>('tbody[data-group]')];
+    const activeN = root.querySelector<HTMLElement>('[data-active-n]');
+    const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    root.querySelectorAll<HTMLElement>('[data-nojs]').forEach((b) => (b.hidden = true));
+    const apply = (push = true) => {
+      const fd = new FormData(form);
+      const cat = String(fd.get('cat') ?? '');
+      const an = String(fd.get('an') ?? '');
+      const ciclu = String(fd.get('ciclu') ?? '');
+      const words = fold(String(fd.get('q') ?? '')).split(/\s+/).filter(Boolean);
+      let n = 0;
+      for (const r of rows) {
+        const cyc = r.dataset.cycles ? r.dataset.cycles.split(',') : [];
+        const ok = (!cat || r.dataset.cat === cat) && (!an || r.dataset.year === an) && (!ciclu || !cyc.length || cyc.includes(ciclu)) && words.every((w) => r.dataset.hay!.includes(w));
+        r.hidden = !ok;
+        if (ok) n++;
+      }
+      count.textContent = countWith(n, count.dataset.intl!, JSON.parse(count.dataset.forms!) as CountForms);
+      empty.hidden = n > 0;
+      for (const g of groups) g.querySelector<HTMLElement>('.register__year')!.hidden = !g.querySelector('tr[data-row]:not([hidden])');
+      const active = [cat, an, ciclu, words.length ? 'q' : ''].filter(Boolean).length;
+      if (activeN) activeN.textContent = active ? `(${active})` : '';
+      root.querySelectorAll<HTMLAnchorElement>('.cats a').forEach((a) => a.setAttribute('aria-current', String(a.dataset.cat === cat)));
+      if (push) {
+        const u = new URL(location.href);
+        for (const [k, v] of [['cat', cat], ['an', an], ['ciclu', ciclu], ['q', String(fd.get('q') ?? '')]] as const) v ? u.searchParams.set(k, v) : u.searchParams.delete(k);
+        history.replaceState(null, '', u);
+      }
+    };
+    form.addEventListener('input', () => apply());
+    form.addEventListener('submit', (e) => (e.preventDefault(), apply()));
+    root.querySelectorAll<HTMLAnchorElement>('.cats a').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        (form.elements.namedItem('cat') as HTMLInputElement).value = a.dataset.cat ?? '';
+        apply();
+      }),
+    );
+    root.querySelector('[data-clear]')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      form.reset();
+      for (const el of form.elements) if ('value' in el && (el as HTMLInputElement).type !== 'submit') (el as HTMLInputElement).value = '';
+      apply();
+    });
+  }
+</script>
+
+<style is:global>
+  /* global (prefixed by .docs) rather than scoped: 300+ rows would otherwise each carry data-astro-cid attributes */
+  .docs {
+    padding-bottom: var(--s-8);
+  }
+  .docs .filters {
+    display: grid;
+    grid-template-columns: 2fr repeat(3, 1fr) auto;
+    gap: var(--s-4);
+    align-items: end;
+    padding: var(--s-5);
+    background: var(--paper-sunk);
+    border-top: 1px solid var(--ink);
+  }
+  @media (max-width: 64rem) {
+    .docs .filters {
+      grid-template-columns: 1fr 1fr;
+    }
+    .docs .filters__text,
+    .docs .filters__actions {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 36rem) {
+    .docs .filters {
+      grid-template-columns: 1fr;
+    }
+  }
+  .docs .filters label {
+    display: block;
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin-bottom: 0.35rem;
+  }
+  .docs .filters select,
+  .docs .filters input {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+  }
+  .docs .input-icon {
+    position: relative;
+  }
+  .docs .input-icon svg {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    translate: 0 -50%;
+    width: 1.2rem;
+    color: var(--ink-2);
+  }
+  .docs .input-icon input {
+    padding-left: 2.5rem;
+  }
+  /* the submit button is only for visitors without JS; hide it before first paint (no layout shift) */
+  .js .docs [data-nojs] {
+    display: none;
+  }
+  .docs .filters__actions {
+    display: flex;
+    gap: var(--s-2);
+  }
+  .docs .count {
+    margin-top: var(--s-5);
+    font-size: var(--t-small);
+    color: var(--ink-2);
+  }
+  .docs .cats {
+    padding: var(--s-4) var(--s-5) var(--s-5);
+    background: var(--paper-sunk);
+    border-top: 1px solid var(--rule);
+  }
+  .docs .cats__label {
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin-bottom: 0.35rem;
+  }
+  .docs .cats ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin: 0;
+  }
+  .docs .filters-box > summary {
+    display: none;
+  }
+  @media (max-width: 40rem) {
+    .docs .filters-box {
+      border-top: 1px solid var(--ink);
+      background: var(--paper-sunk);
+    }
+    .docs .filters-box > summary {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 3rem;
+      padding: 0 var(--s-4);
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+    .docs .filters-box > summary::-webkit-details-marker {
+      display: none;
+    }
+    .docs .filters-box > summary svg {
+      width: 1.15rem;
+      height: 1.15rem;
+    }
+    .docs .filters-box > summary svg:last-child {
+      margin-left: auto;
+      transition: transform 200ms;
+    }
+    .docs .filters-box[open] > summary svg:last-child {
+      transform: rotate(180deg);
+    }
+    .docs .filters,
+    .docs .cats {
+      padding-inline: var(--s-4);
+      border-top-color: var(--rule);
+    }
+  }
+  .docs .register {
+    width: 100%;
+    font-variant-numeric: tabular-nums;
+  }
+  .docs .register th {
+    text-align: left;
+    font-size: var(--t-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    padding: 0.6rem 1rem 0.6rem 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .docs .register td {
+    padding: 0.85rem 1rem 0.85rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    font-size: var(--t-small);
+  }
+  .docs .register__title a {
+    display: inline-flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    min-height: 2.75rem;
+    padding-block: 0.3rem;
+    font-size: 1.02rem;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .docs .register__yr {
+    white-space: nowrap;
+    min-width: 10ch;
+  }
+  .docs .register th:nth-child(3) {
+    white-space: nowrap;
+  }
+  /* school-year heading rows: the register's running heads */
+  .docs .register__year th {
+    padding: var(--s-6) 0 var(--s-2);
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    font-variant-numeric: lining-nums;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .docs tbody:first-of-type .register__year th {
+    padding-top: var(--s-4);
+  }
+  .docs .register__title a:hover span {
+    text-decoration: underline;
+    text-decoration-color: var(--rubric);
+  }
+  /* file glyphs (the Icon set's file-pdf / file-doc / file-sheet) as CSS masks: one definition instead of an inline SVG per row */
+  .docs .ficon {
+    width: 1.35rem;
+    height: 1.35rem;
+    flex: none;
+    margin-top: 0.05rem;
+    background: var(--ink-3);
+    -webkit-mask: var(--glyph) center / contain no-repeat;
+    mask: var(--glyph) center / contain no-repeat;
+  }
+  .docs .register__title a:hover .ficon {
+    background: var(--lapis);
+  }
+  .docs .ficon--pdf {
+    --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='M6 3H14L19 8V21H6ZM14 3V8H19M9.5 18.5V11H12.4A2.2 2.2 0 0 1 12.4 15.4H9.5'/%3E%3C/svg%3E");
+  }
+  .docs .ficon--doc {
+    --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='M6 3H14L19 8V21H6ZM14 3V8H19M9 12H16M9 15H16M9 18H13.5'/%3E%3C/svg%3E");
+  }
+  .docs .ficon--sheet {
+    --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='M6 3H14L19 8V21H6ZM14 3V8H19M9 11H16V19H9ZM9 15H16M12.5 11V19'/%3E%3C/svg%3E");
+  }
+  .docs .register__meta {
+    display: block;
+    margin: 0 0 0 1.95rem;
+    color: var(--ink-2);
+    font-size: 0.85rem;
+  }
+  .docs .lang-tag {
+    margin-left: 0.4rem;
+  }
+  .docs .empty {
+    padding: var(--s-6) 0;
+    color: var(--ink-2);
+  }
+  @media (max-width: 48rem) {
+    .docs .register thead {
+      position: absolute;
+      clip: rect(0 0 0 0);
+    }
+    .docs .register tr {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--rule);
+      padding: var(--s-3) 0;
+    }
+    .docs .register tr[hidden] {
+      display: none;
+    }
+    .docs .register td {
+      border: 0;
+      padding: 0.15rem 0;
+    }
+    .docs .register td.register__title {
+      grid-column: 1 / -1;
+      padding-bottom: 0.4rem;
+    }
+    .docs .register td[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .docs .register td[data-label]:nth-child(2) {
+      grid-column: 1 / -1;
+    }
+    /* the school year is already the group heading */
+    .docs .register td.register__yr {
+      display: none;
+    }
+    .docs .register tr.register__year {
+      display: block;
+      padding: 0;
+      border: 0;
+    }
+    .docs .register tr.register__year[hidden] {
+      display: none;
+    }
+    .docs .register__year th {
+      display: block;
+    }
+  }
+</style>

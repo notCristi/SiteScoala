@@ -1,0 +1,1380 @@
+[
+  {
+    "key": "home",
+    "title": {
+      "ro": "Colegiul Național „Johannes Honterus” Brașov",
+      "de": "Honterus-Nationalkolleg Kronstadt",
+      "en": "“Johannes Honterus” National College, Brașov"
+    },
+    "lead": {
+      "ro": "Școală cu predare în limba germană, de la clasa pregătitoare la bacalaureat, în Curtea Honterus de lângă Biserica Neagră. Tradiția școlii începe în 1388; Johannes Honterus a reorganizat-o în 1541.",
+      "de": "Schule mit deutscher Unterrichtssprache von der Vorbereitungsklasse bis zum Bakkalaureat, am Honterushof neben der Schwarzen Kirche. Ihre Tradition reicht bis 1388 zurück; 1541 hat Johannes Honterus sie neu geordnet.",
+      "en": "A German-language school from the preparatory class to the baccalaureate, in the Honterus Courtyard beside the Black Church. Its tradition goes back to 1388; Johannes Honterus reorganised it in 1541."
+    },
+    "body_md": {
+      "ro": "",
+      "de": "",
+      "en": ""
+    },
+    "meta_description": {
+      "ro": "Colegiul Național „Johannes Honterus” Brașov: predare în limba germană de la clasa pregătitoare la clasa a XII-a, admitere, examene, DSD, documente și contact.",
+      "de": "Honterus-Nationalkolleg Kronstadt: deutschsprachiger Unterricht von der Vorbereitungsklasse bis zur 12. Klasse – Aufnahme, Prüfungen, DSD, Dokumente und Kontakt.",
+      "en": "“Johannes Honterus” National College, Brașov: German-language education from the preparatory class to Year 12 – admissions, exams, DSD, documents and contact."
+    },
+    "hero_media_id": "h-curtea-honterus",
+    "data_json": {
+      "heritageMediaId": "h-portret-xilogravura",
+      "video": {
+        "id": "rG2qOAP678I",
+        "title": {
+          "ro": "Colegiul Național „Johannes Honterus” se prezintă – film al Forumului Democrat al Germanilor din Brașov (în limba germană)",
+          "de": "Das Johannes-Honterus-Nationalkolleg stellt sich vor – ein Film des Demokratischen Forums der Deutschen in Kronstadt",
+          "en": "The “Johannes Honterus” National College introduces itself – a film by the Democratic Forum of Germans in Brașov (in German)"
+        }
+      }
+    }
+  },
+  {
+    "key": "school",
+    "title": {
+      "ro": "Despre școală",
+      "de": "Über die Schule",
+      "en": "About the school"
+    },
+    "lead": {
+      "ro": "Colegiul Național „Johannes Honterus” este o școală de stat cu predare în limba germană ca limbă maternă, cu câte patru clase pe fiecare an de studiu, de la clasa pregătitoare la clasa a XII-a.",
+      "de": "Das Honterus-Nationalkolleg ist eine staatliche Schule mit Deutsch als muttersprachlicher Unterrichtssprache – mit vier Klassen in jedem Jahrgang, von der Vorbereitungsklasse bis zur 12. Klasse.",
+      "en": "The “Johannes Honterus” National College is a state school that teaches in German as a mother tongue, with four classes in every year group from the preparatory class to Year 12."
+    },
+    "body_md": {
+      "ro": "## O școală, trei cicluri\n\nColegiul cuprinde învățământul primar (clasa pregătitoare și clasele I–IV), învățământul gimnazial (clasele V–VIII) și învățământul liceal (clasele IX–XII). În fiecare an de studiu funcționează patru clase. La liceu, două clase urmează profilul real, specializarea științe ale naturii, iar două profilul umanist, specializarea filologie.\n\nPotrivit Proiectului de dezvoltare instituțională (PDI) 2021–2026, școala are aproximativ 1.400 de elevi în 53 de clase și este cea mai mare unitate de învățământ liceal din județul Brașov.\n\n## Limba germană ca limbă de predare\n\nToate disciplinele se predau în limba germană, după programele pentru limba maternă, de la clasa pregătitoare până la bacalaureat. Elevii studiază limba și literatura română, limba engleză, limba franceză și limba latină; la liceu se adaugă literatura universală. Colegiul este școală parteneră a Zentralstelle für das Auslandsschulwesen (ZfA) și organizează examenul pentru Diploma de limba germană (DSD II).\n\n## Misiune și viziune\n\nViziunea formulată în PDI 2021–2026: *o școală de tradiție în slujba comunității, orientată spre calitatea actului educațional, în concordanță cu valorile și normele naționale și europene.*\n\nMisiunea: colegiul este o comunitate nediscriminatorie, în care elevii trebuie să se simtă protejați, respectați și motivați pentru învățarea permanentă și pentru dobândirea unui nivel optim de disciplină, competențe și comportament social. Elevii sunt pregătiți să devină cetățeni ai unui spațiu european, învățând respectul, toleranța, corectitudinea și demnitatea.\n\n## Clădirile\n\nȘcoala funcționează în clădirile din jurul Curții Johannes Honterus, lângă Biserica Neagră, și în corpul D, fostul Liceu Sportiv, cu intrarea dinspre Poarta Schei.\n\n- **Corpul B** – secretariatul, laboratoarele de informatică, fizică, chimie și biologie, săli de clasă\n- **Corpul C** – laborator de informatică, cabinetul de limba germană, biblioteca, săli de clasă\n- **Corpul D** – săli de clasă, baza sportivă cu teren și trei săli de sport, cabinetul medical\n\nȘcoala are cabinet medical (medic și asistentă), cabinet psihopedagogic și cabinet de logopedie.\n\n## Biblioteca\n\nÎn 1547, biblioteca școlii a primit o clădire proprie – potrivit cronicii școlii, prima clădire din Transilvania construită pentru o bibliotecă. Incendiul din 1689 a distrus-o aproape în întregime. Biblioteca de astăzi, din corpul C, are un fond de 50.845 de volume (PDI 2021–2026).\n\n## Parteneri\n\nPrintre partenerii colegiului se numără Ambasada Republicii Federale Germania, Ambasada Austriei, ZfA, Forumul Democrat al Germanilor, Biserica Neagră și parohia evanghelică, precum și școli partenere din Germania (de exemplu Europaschule Troisdorf), Italia și Nepal. Colegiul face parte din Alianța Colegiilor Centenare.",
+      "de": "## Eine Schule, drei Stufen\n\nDas Kolleg umfasst die Grundschule (Vorbereitungsklasse und Klassen 1–4), die Gymnasialstufe (Klassen 5–8) und die Lyzealstufe (Klassen 9–12). Jeder Jahrgang hat vier Klassen. In der Lyzealstufe folgen zwei Klassen dem Realprofil (Fachrichtung Naturwissenschaften), zwei dem humanistischen Profil (Fachrichtung Philologie).\n\nNach dem Schulentwicklungsplan (PDI) 2021–2026 lernen hier rund 1.400 Schülerinnen und Schüler in 53 Klassen; damit ist das Kolleg die größte Lyzealschule des Kreises Kronstadt.\n\n## Deutsch als Unterrichtssprache\n\nAlle Fächer werden auf Deutsch unterrichtet, nach den Lehrplänen für Deutsch als Muttersprache – von der Vorbereitungsklasse bis zum Bakkalaureat. Hinzu kommen Rumänisch (Sprache und Literatur), Englisch, Französisch und Latein, in der Lyzealstufe außerdem Weltliteratur. Das Kolleg ist Partnerschule der Zentralstelle für das Auslandsschulwesen (ZfA) und nimmt die Prüfung zum Deutschen Sprachdiplom (DSD II) ab.\n\n## Leitbild\n\nDie Vision im PDI 2021–2026: *eine Schule mit Tradition im Dienst der Gemeinschaft, die sich an der Qualität des Unterrichts sowie an nationalen und europäischen Werten und Normen ausrichtet.*\n\nDer Auftrag: Das Kolleg versteht sich als diskriminierungsfreie Gemeinschaft, in der sich Schülerinnen und Schüler geschützt, respektiert und zum lebenslangen Lernen ermutigt fühlen und Disziplin, Kompetenz und soziales Verhalten entwickeln. Sie sollen als Bürgerinnen und Bürger eines gemeinsamen Europas Respekt, Toleranz, Fairness und Würde lernen.\n\n## Die Gebäude\n\nDie Schule nutzt die Gebäude rund um den Honterushof an der Schwarzen Kirche sowie Gebäude D, das frühere Sportlyzeum, mit dem Eingang an der Poarta Schei.\n\n- **Gebäude B** – Sekretariat, Fachräume für Informatik, Physik, Chemie und Biologie, Klassenräume\n- **Gebäude C** – Informatikraum, Fachraum Deutsch, Bibliothek, Klassenräume\n- **Gebäude D** – Klassenräume, Sportanlage mit Platz und drei Turnhallen, Arztzimmer\n\nZur Schule gehören ein Arztzimmer (Ärztin bzw. Arzt und Pflegekraft), eine schulpsychologische Beratung und eine logopädische Praxis.\n\n## Die Bibliothek\n\nDie Schulbibliothek erhielt 1547 ein eigenes Gebäude – nach der Schulchronik das erste eigens für eine Bibliothek errichtete Haus in Siebenbürgen. Der Stadtbrand von 1689 vernichtete sie fast vollständig. Die heutige Bibliothek in Gebäude C umfasst 50.845 Bände (PDI 2021–2026).\n\n## Partner\n\nZu den Partnern des Kollegs gehören die Botschaft der Bundesrepublik Deutschland, die Österreichische Botschaft, die ZfA, das Demokratische Forum der Deutschen, die Schwarze Kirche und die evangelische Kirchengemeinde sowie Partnerschulen in Deutschland (etwa die Europaschule Troisdorf), Italien und Nepal. Das Kolleg gehört der Allianz der hundertjährigen Kollegien (Alianța Colegiilor Centenare) an.",
+      "en": "## One school, three stages\n\nThe college covers primary education (the preparatory class and Years 1–4), lower secondary (Years 5–8) and upper secondary (Years 9–12). Each year group has four classes. In the upper school, two classes follow the science track (*profil real*, natural sciences) and two the humanities track (*profil umanist*, philology).\n\nAccording to the school’s Institutional Development Plan (PDI) 2021–2026, about 1,400 students attend in 53 classes, making it the largest upper-secondary school in Brașov County.\n\n## German as the language of instruction\n\nEvery subject is taught in German, following the mother-tongue curricula, from the preparatory class to the baccalaureate. Students also study Romanian language and literature, English, French and Latin, with world literature added in the upper school. The college is a partner school of the German Central Agency for Schools Abroad (ZfA) and holds the examination for the German Language Diploma (DSD II).\n\n## Mission and vision\n\nThe vision in the PDI 2021–2026: *a school of tradition serving its community, focused on the quality of teaching and aligned with national and European values and standards.*\n\nThe mission: the college is a non-discriminatory community in which students should feel protected, respected and motivated to keep learning and to develop discipline, competence and social conduct. They are prepared to become citizens of a shared Europe, learning respect, tolerance, fairness and dignity.\n\n## The buildings\n\nThe school occupies the buildings around the Honterus Courtyard beside the Black Church, and Building D, the former Sports Lyceum, entered from Poarta Schei.\n\n- **Building B** – the school office, laboratories for computing, physics, chemistry and biology, classrooms\n- **Building C** – computer room, German department room, library, classrooms\n- **Building D** – classrooms, sports facilities with an outdoor pitch and three gymnasiums, the medical room\n\nThe school has a medical room (doctor and nurse), a school counselling office and a speech therapy room.\n\n## The library\n\nIn 1547 the school library received a building of its own – according to the school chronicle, the first in Transylvania built for a library. The fire of 1689 destroyed it almost entirely. Today’s library in Building C holds 50,845 volumes (PDI 2021–2026).\n\n## Partners\n\nThe college’s partners include the Embassy of the Federal Republic of Germany, the Austrian Embassy, the ZfA, the Democratic Forum of Germans, the Black Church and its Evangelical parish, and partner schools in Germany (such as the Europaschule Troisdorf), Italy and Nepal. The college belongs to the Alliance of Centenary Colleges."
+    },
+    "meta_description": {
+      "ro": "Colegiul Național „Johannes Honterus” Brașov pe scurt: trei cicluri, predare în limba germană, misiune, clădiri, bibliotecă și parteneri.",
+      "de": "Das Honterus-Nationalkolleg im Überblick: drei Schulstufen, Deutsch als Unterrichtssprache, Leitbild, Gebäude, Bibliothek und Partner.",
+      "en": "The “Johannes Honterus” National College at a glance: three school stages, German-language teaching, mission, buildings, library and partners."
+    },
+    "hero_media_id": "h-scoala",
+    "data_json": {
+      "facts": [
+        {
+          "label": {
+            "ro": "Reorganizată de Honterus",
+            "de": "Neuordnung durch Honterus",
+            "en": "Reorganised by Honterus"
+          },
+          "value": "1541"
+        },
+        {
+          "label": {
+            "ro": "Tradiție școlară",
+            "de": "Schultradition",
+            "en": "School tradition"
+          },
+          "value": {
+            "ro": "din 1388",
+            "de": "seit 1388",
+            "en": "since 1388"
+          }
+        },
+        {
+          "label": {
+            "ro": "Cicluri",
+            "de": "Schulstufen",
+            "en": "Stages"
+          },
+          "value": {
+            "ro": "clasa pregătitoare – clasa a XII-a",
+            "de": "Vorbereitungsklasse bis 12. Klasse",
+            "en": "preparatory class to Year 12"
+          }
+        },
+        {
+          "label": {
+            "ro": "Limba de predare",
+            "de": "Unterrichtssprache",
+            "en": "Language of instruction"
+          },
+          "value": {
+            "ro": "germană (limbă maternă)",
+            "de": "Deutsch (Muttersprache)",
+            "en": "German (mother tongue)"
+          }
+        },
+        {
+          "label": {
+            "ro": "Clase",
+            "de": "Klassen",
+            "en": "Classes"
+          },
+          "value": {
+            "ro": "4 pe fiecare an de studiu",
+            "de": "4 je Jahrgang",
+            "en": "4 per year group"
+          }
+        },
+        {
+          "label": {
+            "ro": "Colegiu Național",
+            "de": "Nationalkolleg",
+            "en": "National College"
+          },
+          "value": {
+            "ro": "din 2019",
+            "de": "seit 2019",
+            "en": "since 2019"
+          }
+        },
+        {
+          "label": {
+            "ro": "Adresa",
+            "de": "Anschrift",
+            "en": "Address"
+          },
+          "value": "Curtea Honterus nr. 3, 500025 Brașov"
+        }
+      ],
+      "related": [
+        {
+          "route": "history",
+          "label": {
+            "ro": "Istoric: 1388 – azi",
+            "de": "Geschichte: 1388 bis heute",
+            "en": "History: 1388 to today"
+          }
+        },
+        {
+          "route": "honterus",
+          "label": {
+            "ro": "Johannes Honterus",
+            "de": "Johannes Honterus",
+            "en": "Johannes Honterus"
+          }
+        },
+        {
+          "route": "campus",
+          "label": {
+            "ro": "Curtea Honterus și clădirile",
+            "de": "Der Honterushof und die Gebäude",
+            "en": "The Honterus Courtyard and buildings"
+          }
+        },
+        {
+          "route": "staff",
+          "label": {
+            "ro": "Conducere și personal",
+            "de": "Schulleitung und Kollegium",
+            "en": "Leadership and staff"
+          }
+        },
+        {
+          "route": "documents",
+          "label": {
+            "ro": "Documente (PDI, regulamente)",
+            "de": "Dokumente (PDI, Ordnungen)",
+            "en": "Documents (PDI, regulations)"
+          }
+        }
+      ],
+      "notes": [
+        {
+          "title": {
+            "ro": "Sursa cifrelor",
+            "de": "Quelle der Zahlen",
+            "en": "Source of figures"
+          },
+          "text": {
+            "ro": "Numărul de elevi și de volume provine din PDI 2021–2026 al colegiului.",
+            "de": "Schüler- und Bandzahlen stammen aus dem PDI 2021–2026 des Kollegs.",
+            "en": "Student and library figures are taken from the college’s PDI 2021–2026."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "honterus",
+    "title": {
+      "ro": "Johannes Honterus",
+      "de": "Johannes Honterus",
+      "en": "Johannes Honterus"
+    },
+    "lead": {
+      "ro": "Cartograf, xilograf, tipograf, profesor și reformator: Johannes Honterus (1498–1549) a reorganizat școala Brașovului după modelul umanist și i-a dat, în 1543, propriul regulament.",
+      "de": "Kartograph, Formschneider, Drucker, Lehrer und Reformator: Johannes Honterus (1498–1549) ordnete die Kronstädter Schule nach humanistischem Vorbild neu und gab ihr 1543 eine eigene Schulordnung.",
+      "en": "Cartographer, woodcutter, printer, teacher and reformer: Johannes Honterus (1498–1549) reorganised the Brașov school on the humanist model and gave it its own constitution in 1543."
+    },
+    "body_md": {
+      "ro": "## Un brașovean la Viena, Cracovia și Basel\n\nJohannes Honterus s-a născut în 1498 la Brașov, fiu al tăbăcarului Georg Austen (Aust), din burghezia înstărită a orașului. Numele de Honterus, folosit mai târziu, este forma latinizată a săsescului „Hontert”, adică soc (*Holunder*).\n\nÎn 1520 s-a înscris la Universitatea din Viena ca *Johannes Aust ex Corona*. A devenit baccalaureus în 1522 și magister artium în 1525. În 1529, când armatele otomane asediau Viena, s-a refugiat la Regensburg, la istoricul Johannes Aventinus. În 1530 se afla la Cracovia, unde a publicat o gramatică latină – retipărită de circa cincisprezece ori până în 1562 – și prima versiune a cosmografiei sale. Între 1530 și 1533 a trăit la Basel, centrul tiparului umanist, unde a lucrat ca corector și xilograf.\n\n## Cartograful\n\nÎn 1532 a gravat și a publicat la Basel *Chorographia Transylvaniae – Sybembürgen*, prima hartă tipărită a Transilvaniei, tăiată în două blocuri mari de lemn și semnată cu monograma J.H.C. (*Johannes Honterus Coronensis*). Singurul exemplar cunoscut al primei ediții se află la Biblioteca Națională Széchényi din Budapesta. Sebastian Münster și Abraham Ortelius și-au construit hărțile Transilvaniei pe baza ei.\n\nCosmografia sa, *Rudimenta Cosmographica*, a crescut de la un manual de 16 file (Cracovia, 1530) la un poem didactic de 1.366 de hexametri, cu un atlas de hărți gravate în lemn (Brașov, 1542). Era scrisă pentru ca elevii să poată învăța geografia pe de rost, în versuri, și a cunoscut zeci de ediții.\n\n## Tipograful\n\nDin 1539, tipografia lui Honterus de la Brașov a tipărit manuale școlare, texte ale Părinților Bisericii, texte juridice, scrieri ale Reformei și muzică; a funcționat până în jurul anului 1594. Marca ei tipografică era stema Brașovului – coroana deasupra unui trunchi cu rădăcini –, așezată într-un scut renascentist după modelul tipografilor din Basel. Aceeași coroană cu rădăcini apare astăzi în sigiliul colegiului. În 1546, la inițiativa sa, s-a înființat la Brașov o moară de hârtie.\n\n## Reformatorul școlii\n\nHonterus a transformat vechea școală a orașului într-un gimnaziu umanist. În 1541 a început construcția unei clădiri noi pe locul fostei mănăstiri Sf. Ecaterina. În 1543 a dat școlii *Constitutio Scholae Coronensis*, primul regulament școlar din țara noastră, care a întemeiat [Coetus](/ro/viata-scolara/coetus), comunitatea elevilor claselor mari. În 1547 biblioteca școlii a primit o clădire proprie. Rectorul Valentin Wagner a fost colaboratorul și succesorul său.\n\n## Reformatorul Bisericii\n\nÎn 1543 Honterus a publicat *Reformatio ecclesiae Coronensis ac totius Barcensis provinciae*, programul Reformei la Brașov și în Țara Bârsei, și *Apologia*, prin care a apărat-o. Luther a lăudat cartea într-o scrisoare din 1543. La 22 aprilie 1544 a fost ales paroh al orașului. *Kirchenordnung aller Deutschen in Sybembürgen* (1547), scrisă de el, a devenit lege în 1550 prin hotărârea Universității Săsești.\n\n## Moartea și memoria\n\nHonterus a murit la Brașov la 23 ianuarie 1549 și a fost înmormântat în corul Bisericii Negre. Contemporanul său, organistul și cronicarul Hieronymus Ostermayer, scria despre el: *„Dieser Mann war ein Mann, seinem Vaterland zu dienen und was demselbigen nutz, zu fordern und zu fördern.”* („Acesta a fost un om care și-a slujit patria și a promovat ceea ce îi era de folos.”)\n\nStatuia de bronz realizată de Harro Magnussen a fost dezvelită în curtea bisericii la 21 august 1898, la 400 de ani de la nașterea sa. Honterus arată cu o mână spre școală și ține în cealaltă o carte deschisă.",
+      "de": "## Ein Kronstädter in Wien, Krakau und Basel\n\nJohannes Honterus wurde 1498 in Kronstadt als Sohn des Lederers Georg Austen (Aust) geboren, der zum wohlhabenden Bürgertum der Stadt gehörte. Der Name Honterus, den er später führte, ist die latinisierte Form des siebenbürgisch-sächsischen „Hontert“ – Holunder.\n\n1520 schrieb er sich als *Johannes Aust ex Corona* an der Universität Wien ein, wurde 1522 Baccalaureus und 1525 Magister artium. Als die Osmanen 1529 Wien belagerten, wich er nach Regensburg zu dem Geschichtsschreiber Johannes Aventinus aus. 1530 war er in Krakau, wo er eine lateinische Grammatik – bis 1562 rund fünfzehnmal nachgedruckt – und die erste Fassung seiner Kosmographie herausgab. Von 1530 bis 1533 lebte er in Basel, dem Zentrum des humanistischen Buchdrucks, und arbeitete dort als Korrektor und Formschneider.\n\n## Der Kartograph\n\n1532 schnitt und veröffentlichte er in Basel die *Chorographia Transylvaniae – Sybembürgen*, die erste gedruckte Karte Siebenbürgens, auf zwei großen Holzstöcken und mit dem Monogramm J.H.C. (*Johannes Honterus Coronensis*) signiert. Das einzige bekannte Exemplar der Erstausgabe bewahrt die Széchényi-Nationalbibliothek in Budapest. Sebastian Münster und Abraham Ortelius stützten ihre Siebenbürgen-Karten darauf.\n\nSeine *Rudimenta Cosmographica* wuchsen von einem Lehrbuch mit 16 Blättern (Krakau 1530) zu einem Lehrgedicht in 1.366 Hexametern mit einem Atlas aus Holzschnittkarten (Kronstadt 1542). Die Schüler sollten die Erdkunde in Versen auswendig lernen können; das Werk erlebte Dutzende von Auflagen.\n\n## Der Drucker\n\nAb 1539 druckte die Honterus-Presse in Kronstadt Schulbücher, Kirchenväter, Rechtstexte, reformatorische Schriften und Musik; sie bestand bis um 1594. Ihr Druckerzeichen war das Kronstädter Wappen – die Krone über einem Wurzelstock – in einem Renaissanceschild nach dem Vorbild der Basler Drucker. Dieselbe Krone mit Wurzel trägt heute das Siegel des Kollegs. 1546 entstand auf sein Betreiben in Kronstadt eine Papiermühle.\n\n## Der Schulreformer\n\nHonterus machte aus der alten Stadtschule ein humanistisches Gymnasium. 1541 begann auf dem Gelände des ehemaligen Katharinenklosters der Bau eines neuen Schulhauses. 1543 gab er der Schule die *Constitutio Scholae Coronensis*, die erste Schulordnung des Landes; sie begründete den [Coetus](/de/schulleben/coetus), die Gemeinschaft der oberen Schüler. 1547 erhielt die Schulbibliothek ein eigenes Gebäude. Rektor Valentin Wagner war sein Mitarbeiter und Nachfolger.\n\n## Der Reformator\n\n1543 veröffentlichte Honterus das *Reformationsbüchlein* – *Reformatio ecclesiae Coronensis ac totius Barcensis provinciae* – als Programm der Reformation in Kronstadt und im Burzenland, dazu die *Apologia*, mit der er es verteidigte. Luther lobte die Schrift 1543 in einem Brief. Am 22. April 1544 wurde Honterus zum Stadtpfarrer gewählt. Die von ihm verfasste *Kirchenordnung aller Deutschen in Sybembürgen* (1547) erhob die Sächsische Nationsuniversität 1550 zum Gesetz.\n\n## Tod und Gedächtnis\n\nHonterus starb am 23. Januar 1549 in Kronstadt und wurde im Chor der Schwarzen Kirche beigesetzt. Sein Zeitgenosse, der Organist und Chronist Hieronymus Ostermayer, schrieb über ihn: *„Dieser Mann war ein Mann, seinem Vaterland zu dienen und was demselbigen nutz, zu fordern und zu fördern.“*\n\nDas Bronzedenkmal von Harro Magnussen wurde am 21. August 1898, zum 400. Geburtstag, auf dem Kirchhof enthüllt. Honterus weist mit der einen Hand auf die Schule und hält in der anderen ein aufgeschlagenes Buch.",
+      "en": "## A Brașov man in Vienna, Kraków and Basel\n\nJohannes Honterus was born in Brașov in 1498, the son of Georg Austen (Aust), a tanner from the town’s prosperous burgher class. The name Honterus, which he used later, is the Latinised form of the Transylvanian Saxon “Hontert”, meaning elder (the shrub).\n\nIn 1520 he enrolled at the University of Vienna as *Johannes Aust ex Corona*, becoming bachelor in 1522 and magister artium in 1525. When the Ottoman army besieged Vienna in 1529 he moved to Regensburg to join the historian Johannes Aventinus. In 1530 he was in Kraków, where he published a Latin grammar – reprinted some fifteen times by 1562 – and the first version of his cosmography. From 1530 to 1533 he lived in Basel, the centre of humanist printing, working as a proofreader and woodcutter.\n\n## The cartographer\n\nIn 1532, in Basel, he cut and published the *Chorographia Transylvaniae – Sybembürgen*, the first printed map of Transylvania, on two large woodblocks signed with the monogram J.H.C. (*Johannes Honterus Coronensis*). The only known copy of the first edition is held by the National Széchényi Library in Budapest. Sebastian Münster and Abraham Ortelius based their maps of Transylvania on it.\n\nHis *Rudimenta Cosmographica* grew from a 16-leaf textbook (Kraków, 1530) into a teaching poem of 1,366 hexameters with an atlas of woodcut maps (Brașov, 1542). It was written so that pupils could learn geography by heart in verse, and it ran to dozens of editions.\n\n## The printer\n\nFrom 1539 Honterus’s press in Brașov printed school books, the Church Fathers, legal texts, Reformation writings and music; it remained active until about 1594. Its printer’s mark was the arms of Brașov – a crown above a rooted stump – in a Renaissance shield modelled on those of the Basel printers. The same crown and roots appear in the college’s seal today. In 1546 a paper mill was founded in Brașov on his initiative.\n\n## The school reformer\n\nHonterus turned the old town school into a humanist gymnasium. In 1541 building began on a new school on the site of the former St Catherine’s convent. In 1543 he gave the school the *Constitutio Scholae Coronensis*, the first school regulation in the country, which founded the [Coetus](/en/school-life/coetus), the community of senior pupils. In 1547 the school library received its own building. Rector Valentin Wagner was his collaborator and successor.\n\n## The church reformer\n\nIn 1543 Honterus published the *Reformatio ecclesiae Coronensis ac totius Barcensis provinciae*, the programme of the Reformation in Brașov and the Burzenland, together with the *Apologia* defending it. Luther praised the book in a letter of 1543. On 22 April 1544 Honterus was elected town pastor. His *Kirchenordnung aller Deutschen in Sybembürgen* (1547) was made law by the Saxon Nations-University in 1550.\n\n## Death and memory\n\nHonterus died in Brașov on 23 January 1549 and was buried in the choir of the Black Church. His contemporary, the organist and chronicler Hieronymus Ostermayer, wrote of him: *“Dieser Mann war ein Mann, seinem Vaterland zu dienen und was demselbigen nutz, zu fordern und zu fördern”* – “This man was a man to serve his homeland and to promote what was useful to it.”\n\nHarro Magnussen’s bronze statue was unveiled in the churchyard on 21 August 1898, the 400th anniversary of his birth. Honterus points towards the school with one hand and holds an open book in the other."
+    },
+    "meta_description": {
+      "ro": "Johannes Honterus (1498–1549): cartograf, tipograf, reformator al școlii și al Bisericii din Brașov, autorul regulamentului școlar din 1543.",
+      "de": "Johannes Honterus (1498–1549): Kartograph, Drucker, Schul- und Kirchenreformer in Kronstadt, Verfasser der Schulordnung von 1543.",
+      "en": "Johannes Honterus (1498–1549): cartographer, printer and reformer of school and church in Brașov, author of the 1543 school constitution."
+    },
+    "hero_media_id": "h-harta-transilvaniei-1532",
+    "data_json": {
+      "facts": [
+        {
+          "label": {
+            "ro": "Născut",
+            "de": "Geboren",
+            "en": "Born"
+          },
+          "value": {
+            "ro": "1498, Brașov",
+            "de": "1498, Kronstadt",
+            "en": "1498, Brașov"
+          }
+        },
+        {
+          "label": {
+            "ro": "Murit",
+            "de": "Gestorben",
+            "en": "Died"
+          },
+          "value": {
+            "ro": "23 ianuarie 1549, Brașov",
+            "de": "23. Januar 1549, Kronstadt",
+            "en": "23 January 1549, Brașov"
+          }
+        },
+        {
+          "label": {
+            "ro": "Studii",
+            "de": "Studium",
+            "en": "Studies"
+          },
+          "value": {
+            "ro": "Viena, Cracovia, Basel",
+            "de": "Wien, Krakau, Basel",
+            "en": "Vienna, Kraków, Basel"
+          }
+        },
+        {
+          "label": {
+            "ro": "Harta Transilvaniei",
+            "de": "Siebenbürgen-Karte",
+            "en": "Map of Transylvania"
+          },
+          "value": "1532"
+        },
+        {
+          "label": {
+            "ro": "Tipografia",
+            "de": "Druckerei",
+            "en": "Printing press"
+          },
+          "value": {
+            "ro": "din 1539",
+            "de": "ab 1539",
+            "en": "from 1539"
+          }
+        },
+        {
+          "label": {
+            "ro": "Regulamentul școlar",
+            "de": "Schulordnung",
+            "en": "School constitution"
+          },
+          "value": "1543"
+        },
+        {
+          "label": {
+            "ro": "Statuia",
+            "de": "Denkmal",
+            "en": "Statue"
+          },
+          "value": {
+            "ro": "Harro Magnussen, 1898",
+            "de": "Harro Magnussen, 1898",
+            "en": "Harro Magnussen, 1898"
+          }
+        }
+      ],
+      "related": [
+        {
+          "route": "history",
+          "label": {
+            "ro": "Istoricul școlii",
+            "de": "Geschichte der Schule",
+            "en": "History of the school"
+          }
+        },
+        {
+          "route": "coetus",
+          "label": {
+            "ro": "Coetus, din 1543",
+            "de": "Der Coetus seit 1543",
+            "en": "The Coetus since 1543"
+          }
+        },
+        {
+          "route": "campus",
+          "label": {
+            "ro": "Curtea Honterus",
+            "de": "Der Honterushof",
+            "en": "The Honterus Courtyard"
+          }
+        }
+      ],
+      "notes": [
+        {
+          "title": {
+            "ro": "Surse",
+            "de": "Quellen",
+            "en": "Sources"
+          },
+          "text": {
+            "ro": "Neue Deutsche Biographie (1972); G. Nussbächer, Kulturstiftung der deutschen Vertriebenen; G. Borsa, studii despre Honterus ca ilustrator de carte; cronica școlii.",
+            "de": "Neue Deutsche Biographie (1972); G. Nussbächer, Kulturstiftung der deutschen Vertriebenen; G. Borsa, Studien zu Honterus als Buchillustrator; Schulchronik.",
+            "en": "Neue Deutsche Biographie (1972); G. Nussbächer, Kulturstiftung der deutschen Vertriebenen; G. Borsa, studies of Honterus as a book illustrator; the school chronicle."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "campus",
+    "title": {
+      "ro": "Curtea Honterus",
+      "de": "Der Honterushof",
+      "en": "The Honterus Courtyard"
+    },
+    "lead": {
+      "ro": "Clădirile colegiului închid curtea din jurul Bisericii Negre, fostul cimitir al parohiei. Pe acest loc se învață din 1388.",
+      "de": "Die Schulgebäude umschließen den Hof rund um die Schwarze Kirche, den einstigen Friedhof der Stadtpfarrkirche. An diesem Ort wird seit 1388 unterrichtet.",
+      "en": "The college buildings enclose the courtyard around the Black Church, once the parish churchyard. There has been a school on this spot since 1388."
+    },
+    "body_md": {
+      "ro": "## Curtea\n\nCurtea Johannes Honterus este fostul cimitir al parohiei din jurul Bisericii Negre. Clădirile școlii și casele parohiale o închid pe toate laturile. Școala a început ca școală a bisericii parohiale – *schola ecclesiae parochialis Coronensis* – iar Honterus a fost deopotrivă reorganizatorul școlii și parohul bisericii. Până în 1941/1948, școala a fost administrată de Biserica Evanghelică.\n\n## Clădirile\n\n**Corpul B – „vechiul gimnaziu”.** Se află pe locul mănăstirii de surori menționate în 1235, unde a funcționat și școala construită în 1541. Clădirea actuală a fost ridicată din temelii între 1743 și 1748; cele două etaje superioare au fost refăcute în stil clasicist în 1834. A fost renovată temeinic în 1994–1996, cu sprijin din Germania. Astăzi găzduiește secretariatul, laboratoarele și săli de clasă.\n\n**Corpul C – „vechiul muzeu”.** Construit în 1793, cu un etaj pentru biblioteca școlii, pe locul capelei Sf. Ecaterina, care a existat până în 1559. În 1855 a primit un al doilea etaj, pentru muzeul școlii. A fost renovat în 1991, cu ajutor din Austria și Germania, și din nou în 2005, cu finanțare de la Banca Mondială. Aici se află biblioteca și cabinetul de limba germană.\n\n**Corpul A – fosta școală de băieți.** Clădirea cu fațadă roșiatică a fost construită în 1822–1823 ca școală elementară pentru băieți și a fost atribuită liceului în 1971.\n\n**Corpul D – fostul Liceu Sportiv.** Se intră dinspre Poarta Schei. Cuprinde săli de clasă, baza sportivă cu teren și trei săli de sport și cabinetul medical. Aici au loc ziua porților deschise și festivitatea de deschidere a anului școlar.\n\n## Locul bibliotecii din 1547\n\nÎn fața portalului de vest al Bisericii Negre s-a aflat clădirea bibliotecii școlii, ridicată în 1547 pe locul primei școli: biblioteca la etaj, sala de prelegeri la parter. Etajul a fost distrus în incendiul din 1689. Două plăci în limba latină, așezate în 2021, marchează locul: *HIC FUIT PRIMA SCHOLA ECCLESIAE PAROCHIALIS CORONENSIS 1388–1547* și *HIC FUIT BIBLIOTHECA SCHOLAE CORONENSIS · IOHANNES HONTERUS · 1547*.\n\n## Statuia lui Honterus\n\nStatuia de bronz, înaltă de 2,5 metri, este opera sculptorului berlinez Harro Magnussen și a fost dezvelită la 21 august 1898. Ea stă în fața turnului de sud al bisericii. Honterus arată cu mâna spre școală și ține o carte deschisă. Reliefurile de pe soclu îl arată corectând o coală în tipografie și împărtășind un bolnav.\n\n## Biserica Neagră\n\nBiserica Neagră este o biserică-hală gotică, începută în jurul anului 1383 și terminată în jurul anului 1477. A ars la 21 aprilie 1689; zidurile înnegrite i-au dat numele. Este biserica principală a parohiei evanghelice C.A. Honterus. În corul ei se află mormântul lui Honterus. Biserica păstrează una dintre cele mai mari colecții de covoare otomane „transilvănene” și orga Buchholz (1836–1839). Anul școlar începe, prin tradiție, cu o slujbă ecumenică în Biserica Neagră.",
+      "de": "## Der Hof\n\nDer Honterushof ist der frühere Friedhof rund um die Schwarze Kirche. Schulgebäude und Pfarrhäuser umschließen ihn von allen Seiten. Die Schule begann als Schule der Stadtpfarrkirche – *schola ecclesiae parochialis Coronensis* –, und Honterus war zugleich Erneuerer der Schule und Pfarrer der Kirche. Bis 1941/1948 stand die Schule in der Trägerschaft der Evangelischen Kirche.\n\n## Die Gebäude\n\n**Gebäude B – das „alte Gymnasium“.** Es steht an der Stelle des 1235 erwähnten Schwesternklosters, wo auch die Schule von 1541 untergebracht war. Das heutige Haus wurde 1743–1748 von Grund auf neu errichtet; die beiden Obergeschosse erhielten 1834 ihre klassizistische Gestalt. 1994–1996 wurde es mit deutscher Unterstützung gründlich renoviert. Heute befinden sich hier das Sekretariat, die Fachräume und Klassenzimmer.\n\n**Gebäude C – das „alte Museum“.** 1793 mit einem Geschoss für die Schulbibliothek errichtet, an der Stelle der Katharinenkapelle, die bis 1559 bestand. 1855 kam ein zweites Obergeschoss für das Schulmuseum hinzu. Renoviert wurde das Haus 1991 mit Hilfe aus Österreich und Deutschland und erneut 2005 mit Mitteln der Weltbank. Hier liegen die Bibliothek und der Fachraum Deutsch.\n\n**Gebäude A – die frühere Knabenschule.** Das rötlich verputzte Haus wurde 1822/23 als Knabenelementarschule gebaut und 1971 dem Lyzeum zugewiesen.\n\n**Gebäude D – das frühere Sportlyzeum.** Der Eingang liegt an der Poarta Schei. Hier befinden sich Klassenräume, die Sportanlage mit Platz und drei Turnhallen sowie das Arztzimmer; hier finden auch der Tag der offenen Tür und die Eröffnungsfeier des Schuljahres statt.\n\n## Der Ort der Bibliothek von 1547\n\nGegenüber dem Westportal der Schwarzen Kirche stand das 1547 an der Stelle der ersten Schule errichtete Bibliotheksgebäude: oben die Bücherei, unten der Hörsaal. Das Obergeschoss ging im Brand von 1689 verloren. Zwei lateinische Tafeln von 2021 bezeichnen den Ort: *HIC FUIT PRIMA SCHOLA ECCLESIAE PAROCHIALIS CORONENSIS 1388–1547* und *HIC FUIT BIBLIOTHECA SCHOLAE CORONENSIS · IOHANNES HONTERUS · 1547*.\n\n## Das Honterus-Denkmal\n\nDas 2,5 Meter hohe Bronzedenkmal schuf der Berliner Bildhauer Harro Magnussen; enthüllt wurde es am 21. August 1898. Es steht vor dem Südturm der Kirche. Honterus weist mit der Hand auf die Schule und hält ein aufgeschlagenes Buch. Die Sockelreliefs zeigen ihn beim Prüfen eines Druckbogens in der Werkstatt und beim Abendmahl am Krankenbett.\n\n## Die Schwarze Kirche\n\nDie Schwarze Kirche ist eine gotische Hallenkirche, um 1383 begonnen und um 1477 vollendet. Am 21. April 1689 brannte sie aus; die geschwärzten Mauern gaben ihr den Namen. Sie ist die Hauptkirche der Honterusgemeinde der Evangelischen Kirche A.B. Im Chor liegt das Grab des Honterus. Die Kirche bewahrt eine der größten Sammlungen osmanischer „Siebenbürgischer Teppiche“ und die Buchholz-Orgel (1836–1839). Traditionell beginnt das Schuljahr mit einem ökumenischen Gottesdienst in der Schwarzen Kirche.",
+      "en": "## The courtyard\n\nThe Honterus Courtyard is the former churchyard around the Black Church. School buildings and parish houses enclose it on every side. The school began as the school of the parish church – *schola ecclesiae parochialis Coronensis* – and Honterus was both the school’s reformer and the church’s pastor. Until 1941/1948 the school was run by the Evangelical Church.\n\n## The buildings\n\n**Building B – the “old gymnasium”.** It stands on the site of the convent recorded in 1235, where the school of 1541 was also housed. The present building was rebuilt from the ground up between 1743 and 1748; its two upper floors were remodelled in Classicist style in 1834. It was thoroughly renovated in 1994–96 with German support. Today it houses the school office, the laboratories and classrooms.\n\n**Building C – the “old museum”.** Built in 1793 with a floor for the school library, on the site of St Catherine’s chapel, which stood until 1559. A second floor was added in 1855 for the school museum. It was renovated in 1991 with help from Austria and Germany, and again in 2005 with World Bank funding. It holds the library and the German department room.\n\n**Building A – the former boys’ school.** The building with the reddish façade was built in 1822–23 as the boys’ elementary school and was assigned to the lyceum in 1971.\n\n**Building D – the former Sports Lyceum.** It is entered from Poarta Schei. It contains classrooms, the sports facilities with an outdoor pitch and three gymnasiums, and the medical room; the open day and the opening ceremony of the school year take place here.\n\n## The site of the 1547 library\n\nOpposite the west portal of the Black Church stood the library building of 1547, raised on the site of the first school: the library upstairs, the lecture hall below. The upper floor was lost in the fire of 1689. Two Latin plaques placed in 2021 mark the spot: *HIC FUIT PRIMA SCHOLA ECCLESIAE PAROCHIALIS CORONENSIS 1388–1547* and *HIC FUIT BIBLIOTHECA SCHOLAE CORONENSIS · IOHANNES HONTERUS · 1547*.\n\n## The Honterus statue\n\nThe 2.5-metre bronze statue is the work of the Berlin sculptor Harro Magnussen and was unveiled on 21 August 1898. It stands before the south tower of the church. Honterus points towards the school and holds an open book. The reliefs on the plinth show him checking a proof in the printing shop and giving communion to a sick man.\n\n## The Black Church\n\nThe Black Church is a Gothic hall church, begun around 1383 and completed around 1477. It burned on 21 April 1689, and its blackened walls gave it its name. It is the main church of the Honterus parish of the Evangelical Church of the Augsburg Confession. Honterus’s grave lies in the choir. The church keeps one of the largest collections of Ottoman “Transylvanian” carpets and the Buchholz organ (1836–39). By tradition, the school year opens with an ecumenical service in the Black Church."
+    },
+    "meta_description": {
+      "ro": "Curtea Johannes Honterus din Brașov: clădirile colegiului, locul bibliotecii din 1547, statuia lui Honterus și Biserica Neagră.",
+      "de": "Der Honterushof in Kronstadt: die Schulgebäude, der Ort der Bibliothek von 1547, das Honterus-Denkmal und die Schwarze Kirche.",
+      "en": "The Honterus Courtyard in Brașov: the college buildings, the site of the 1547 library, the Honterus statue and the Black Church."
+    },
+    "hero_media_id": "h-biserica-neagra-statuie",
+    "data_json": {
+      "facts": [
+        {
+          "label": {
+            "ro": "Adresa",
+            "de": "Anschrift",
+            "en": "Address"
+          },
+          "value": "Curtea Honterus nr. 3, 500025 Brașov"
+        },
+        {
+          "label": {
+            "ro": "Corpul B",
+            "de": "Gebäude B",
+            "en": "Building B"
+          },
+          "value": "1743–1748"
+        },
+        {
+          "label": {
+            "ro": "Corpul C",
+            "de": "Gebäude C",
+            "en": "Building C"
+          },
+          "value": "1793 / 1855"
+        },
+        {
+          "label": {
+            "ro": "Corpul A",
+            "de": "Gebäude A",
+            "en": "Building A"
+          },
+          "value": "1822–1823"
+        },
+        {
+          "label": {
+            "ro": "Statuia",
+            "de": "Denkmal",
+            "en": "Statue"
+          },
+          "value": {
+            "ro": "21 august 1898",
+            "de": "21. August 1898",
+            "en": "21 August 1898"
+          }
+        }
+      ],
+      "related": [
+        {
+          "route": "honterus",
+          "label": {
+            "ro": "Johannes Honterus",
+            "de": "Johannes Honterus",
+            "en": "Johannes Honterus"
+          }
+        },
+        {
+          "route": "history",
+          "label": {
+            "ro": "Istoricul școlii",
+            "de": "Geschichte der Schule",
+            "en": "History of the school"
+          }
+        },
+        {
+          "route": "contact",
+          "label": {
+            "ro": "Cum ajungeți la noi",
+            "de": "Anfahrt und Kontakt",
+            "en": "How to find us"
+          }
+        }
+      ],
+      "notes": [
+        {
+          "title": {
+            "ro": "Surse",
+            "de": "Quellen",
+            "en": "Sources"
+          },
+          "text": {
+            "ro": "Cronica școlii; G. Nussbächer, „270 Jahre seit dem Neubau des Honterus-Gymnasiums” (ADZ, 2013); parohia evanghelică Honterus (2021).",
+            "de": "Schulchronik; G. Nussbächer, „270 Jahre seit dem Neubau des Honterus-Gymnasiums“ (ADZ, 2013); Honterusgemeinde (2021).",
+            "en": "School chronicle; G. Nussbächer, “270 Jahre seit dem Neubau des Honterus-Gymnasiums” (ADZ, 2013); Honterus parish (2021)."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "history",
+    "title": {
+      "ro": "Istoric",
+      "de": "Geschichte",
+      "en": "History"
+    },
+    "lead": {
+      "ro": "De la școala parohială menționată în 1388 la gimnaziul umanist al lui Honterus și la colegiul național de astăzi.",
+      "de": "Von der 1388 erwähnten Pfarrschule über das humanistische Gymnasium des Honterus bis zum heutigen Nationalkolleg.",
+      "en": "From the parish school recorded in 1388 to Honterus’s humanist gymnasium and today’s national college."
+    },
+    "body_md": {
+      "ro": "Colegiul folosește anul **1541** ca an al întemeierii: atunci a început, sub Johannes Honterus, construcția noii școli. Școala orașului este însă mai veche – primul ei om cunoscut după nume apare în 1388 –, iar regulamentul din 1543 și prima matricolă din 1544 au fost la rândul lor considerate repere. Jubileele de 300 de ani (1845) și de 400 de ani (1944) au fost socotite de la 1544.\n\nNumele purtate de școală în epoca modernă: Gimnaziul „Johannes Honterus” (1903–1948), Liceul mixt german (după 1948), Liceul de cultură generală „Johannes Honterus” (1971–1977), liceu de filologie-istorie cu secție de matematică-fizică (1977–1990), Liceul Teoretic „Johannes Honterus” (1990–2019) și, din 2019, Colegiul Național „Johannes Honterus”.",
+      "de": "Das Kolleg betrachtet **1541** als Gründungsjahr: Damals begann unter Johannes Honterus der Bau des neuen Schulhauses. Die Stadtschule selbst ist älter – ihr erster namentlich bekannter Schulmann erscheint 1388 –, und auch die Schulordnung von 1543 und die erste Matrikel von 1544 galten als Bezugspunkte. Das 300- und das 400-jährige Jubiläum (1845 und 1944) wurden von 1544 an gezählt.\n\nDie Namen der Schule in der Neuzeit: Honterus-Gymnasium (1903–1948), „Liceul mixt german“ (deutschsprachiges koedukatives Lyzeum, nach 1948), Allgemeinbildendes Lyzeum „Johannes Honterus“ (1971–1977), Lyzeum für Philologie und Geschichte mit mathematisch-physikalischer Abteilung (1977–1990), Theoretisches Lyzeum „Johannes Honterus“ (1990–2019) und seit 2019 Nationalkolleg „Johannes Honterus“.",
+      "en": "The college takes **1541** as its founding year: that is when building began on the new school under Johannes Honterus. The town school itself is older – its first named schoolman appears in 1388 – and the constitution of 1543 and the first register of 1544 have also served as reference points. The 300th and 400th anniversaries (1845 and 1944) were counted from 1544.\n\nThe school’s names in modern times: Honterus-Gymnasium (1903–1948), “Liceul mixt german” (a co-educational German-language lyceum, after 1948), “Johannes Honterus” General Lyceum (1971–1977), lyceum of philology and history with a mathematics and physics section (1977–1990), “Johannes Honterus” Theoretical Lyceum (1990–2019) and, since 2019, the “Johannes Honterus” National College."
+    },
+    "meta_description": {
+      "ro": "Istoria Colegiului Național „Johannes Honterus” Brașov, de la școala parohială din 1388 și gimnaziul din 1541 până astăzi.",
+      "de": "Die Geschichte des Honterus-Nationalkollegs: von der Pfarrschule von 1388 und dem Gymnasium von 1541 bis heute.",
+      "en": "The history of the “Johannes Honterus” National College, from the parish school of 1388 and the gymnasium of 1541 to the present."
+    },
+    "hero_media_id": "h-rudimenta-1542",
+    "data_json": {
+      "related": [
+        {
+          "route": "honterus",
+          "label": {
+            "ro": "Johannes Honterus",
+            "de": "Johannes Honterus",
+            "en": "Johannes Honterus"
+          }
+        },
+        {
+          "route": "coetus",
+          "label": {
+            "ro": "Coetus, din 1543",
+            "de": "Der Coetus seit 1543",
+            "en": "The Coetus since 1543"
+          }
+        },
+        {
+          "route": "campus",
+          "label": {
+            "ro": "Curtea Honterus",
+            "de": "Der Honterushof",
+            "en": "The Honterus Courtyard"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "staff",
+    "title": {
+      "ro": "Conducere și personal",
+      "de": "Schulleitung und Kollegium",
+      "en": "Leadership and staff"
+    },
+    "lead": {
+      "ro": "Conducerea colegiului și cadrele didactice, grupate pe arii curriculare și catedre, așa cum le publică școala. Componența conducerii este cea publicată în 2022 și urmează să fie actualizată.",
+      "de": "Schulleitung und Lehrkräfte des Kollegs, nach Fachbereichen geordnet, wie von der Schule veröffentlicht. Stand der Schulleitung: Angaben der Schule von 2022, Aktualisierung folgt.",
+      "en": "The college’s leadership and teaching staff, grouped by subject area and department, as published by the school. The leadership list is as published in 2022; an update is pending."
+    },
+    "body_md": {
+      "ro": "Pentru a lua legătura cu un profesor, scrieți secretariatului la [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com) sau folosiți [formularul de contact](/ro/contact). Adresele de e-mail ale profesorilor apar doar cu acordul lor.",
+      "de": "Wenn Sie eine Lehrkraft erreichen möchten, schreiben Sie bitte an das Sekretariat ([liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com)) oder nutzen Sie das [Kontaktformular](/de/kontakt). E-Mail-Adressen von Lehrkräften werden nur mit deren Einverständnis angezeigt.",
+      "en": "To reach a teacher, please write to the school office at [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com) or use the [contact form](/en/contact). Teachers’ e-mail addresses are shown only with their consent."
+    },
+    "meta_description": {
+      "ro": "Conducerea și cadrele didactice ale Colegiului Național „Johannes Honterus” Brașov, pe arii curriculare și catedre.",
+      "de": "Schulleitung und Lehrkräfte des Honterus-Nationalkollegs Kronstadt, nach Fachbereichen geordnet.",
+      "en": "Leadership and teaching staff of the “Johannes Honterus” National College, Brașov, by subject area."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "education",
+    "title": {
+      "ro": "Educație",
+      "de": "Bildung",
+      "en": "Education"
+    },
+    "lead": {
+      "ro": "Trei cicluri de învățământ cu predare în limba germană, de la clasa pregătitoare la bacalaureat, cu Diploma de limba germană (DSD II) în clasa a XII-a.",
+      "de": "Drei Schulstufen mit deutscher Unterrichtssprache, von der Vorbereitungsklasse bis zum Bakkalaureat, mit dem Deutschen Sprachdiplom (DSD II) in der 12. Klasse.",
+      "en": "Three stages of education taught in German, from the preparatory class to the baccalaureate, with the German Language Diploma (DSD II) in Year 12."
+    },
+    "body_md": {
+      "ro": "La Honterus, germana este limba în care se predau toate disciplinele, după programele pentru limba maternă. Limba și literatura română se studiază în fiecare an, alături de engleză, franceză și latină.\n\nElevii parcurg examenele naționale ca toți elevii din România – Evaluarea Națională la sfârșitul clasei a VIII-a și examenul de bacalaureat la sfârșitul clasei a XII-a –, cu probe suplimentare de limba și literatura germană maternă.",
+      "de": "Am Honterus-Kolleg ist Deutsch die Sprache, in der alle Fächer unterrichtet werden – nach den Lehrplänen für Deutsch als Muttersprache. Rumänische Sprache und Literatur wird in jedem Jahrgang unterrichtet, dazu Englisch, Französisch und Latein.\n\nDie Schülerinnen und Schüler legen dieselben landesweiten Prüfungen ab wie alle Schüler Rumäniens – die Nationale Evaluierung am Ende der 8. Klasse und das Bakkalaureat am Ende der 12. Klasse –, jeweils mit zusätzlichen Prüfungen in deutscher Sprache und Literatur.",
+      "en": "At Honterus every subject is taught in German, following the mother-tongue curricula. Romanian language and literature is studied in every year, alongside English, French and Latin.\n\nStudents sit the same national examinations as all students in Romania – the National Assessment at the end of Year 8 and the baccalaureate at the end of Year 12 – with additional papers in German language and literature."
+    },
+    "meta_description": {
+      "ro": "Învățământ primar, gimnazial și liceal cu predare în limba germană la Colegiul Național „Johannes Honterus” Brașov.",
+      "de": "Grundschule, Gymnasial- und Lyzealstufe mit deutscher Unterrichtssprache am Honterus-Nationalkolleg Kronstadt.",
+      "en": "Primary, lower and upper secondary education taught in German at the “Johannes Honterus” National College, Brașov."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "primar",
+    "title": {
+      "ro": "Învățământ primar",
+      "de": "Grundschule",
+      "en": "Primary school"
+    },
+    "lead": {
+      "ro": "Clasa pregătitoare și clasele I–IV, cu predare în limba germană: câte patru clase pe fiecare an de studiu.",
+      "de": "Vorbereitungsklasse und Klassen 1–4 mit deutscher Unterrichtssprache: vier Klassen in jedem Jahrgang.",
+      "en": "The preparatory class and Years 1–4, taught in German: four classes in each year group."
+    },
+    "body_md": {
+      "ro": "## Primii ani în limba germană\n\nÎnvățământul primar cuprinde clasa pregătitoare și clasele I–IV. În fiecare an de studiu funcționează patru clase. Copiii învață să citească și să scrie în limba germană, după programele pentru limba maternă; limba și literatura română se studiază în paralel.\n\nFiecare clasă are o învățătoare care predă majoritatea disciplinelor. Potrivit ofertei educaționale 2024–2025, în învățământul primar al colegiului predau 20 de învățătoare.\n\n## Înscrierea în clasa pregătitoare\n\nÎnscrierea se face după calendarul și metodologia stabilite anual de Ministerul Educației. Pentru că predarea se face în limba germană, colegiul organizează o **evaluare a cunoștințelor de limba germană** a copiilor – un „interviu prin joc” –, după o procedură proprie publicată în fiecare primăvară. Pentru anul școlar 2026–2027 au fost alocate 76 de locuri (4 clase), toate ocupate.\n\nPașii, documentele și întrebările frecvente sunt în [ghidul pentru clasa pregătitoare](/ro/admitere/clasa-pregatitoare).\n\n## Tradiții\n\nClasele primare sărbătoresc în noiembrie *Martinsfest*, în Biserica Neagră. Bazarul de Crăciun și cel de Paști și serbarea câmpenească *Honterusfest* adună în fiecare an elevii, părinții și profesorii.\n\n## Sprijin\n\nȘcoala are cabinet de logopedie, cabinet psihopedagogic și cabinet medical.",
+      "de": "## Die ersten Schuljahre auf Deutsch\n\nDie Grundschule umfasst die Vorbereitungsklasse und die Klassen 1 bis 4, mit vier Klassen in jedem Jahrgang. Die Kinder lernen nach den Lehrplänen für Deutsch als Muttersprache auf Deutsch lesen und schreiben; rumänische Sprache und Literatur kommt von Anfang an hinzu.\n\nJede Klasse wird von einer Klassenlehrerin geführt, die die meisten Fächer unterrichtet. Laut dem Bildungsangebot 2024/25 unterrichten in der Grundschule des Kollegs 20 Grundschullehrerinnen.\n\n## Aufnahme in die Vorbereitungsklasse\n\nDie Anmeldung richtet sich nach dem Zeitplan und der Verordnung, die das Bildungsministerium jedes Jahr festlegt. Da der Unterricht auf Deutsch stattfindet, führt das Kolleg eine **Überprüfung der Deutschkenntnisse** der Kinder durch – ein spielerisches Aufnahmegespräch (*interviu prin joc*) nach einem eigenen Verfahren, das jedes Frühjahr veröffentlicht wird. Für das Schuljahr 2026/27 standen 76 Plätze (4 Klassen) zur Verfügung; alle wurden vergeben.\n\nSchritte, Unterlagen und häufige Fragen finden Sie im [Leitfaden zur Vorbereitungsklasse](/de/aufnahme/vorbereitungsklasse).\n\n## Brauchtum\n\nIm November feiern die Grundschulklassen in der Schwarzen Kirche das Martinsfest. Der Weihnachts- und der Osterbasar sowie das Honterusfest bringen jedes Jahr Schüler, Eltern und Lehrkräfte zusammen.\n\n## Unterstützung\n\nDie Schule verfügt über eine logopädische Praxis, eine schulpsychologische Beratung und ein Arztzimmer.",
+      "en": "## The first years in German\n\nPrimary school covers the preparatory class and Years 1 to 4, with four classes in each year group. Children learn to read and write in German, following the mother-tongue curricula; Romanian language and literature is taught alongside from the start.\n\nEach class has a class teacher who teaches most subjects. According to the 2024–25 educational offer, 20 primary teachers work in the college’s primary school.\n\n## Enrolment in the preparatory class\n\nEnrolment follows the calendar and the rules set each year by the Ministry of Education. Because teaching is in German, the college holds an **assessment of the children’s German** – a play-based interview (*interviu prin joc*) – under its own procedure, published each spring. For 2026–27 there were 76 places (4 classes), all of them taken.\n\nSteps, documents and frequently asked questions are in the [preparatory class guide](/en/admissions/preparatory-class).\n\n## Traditions\n\nIn November the primary classes celebrate Martinsfest in the Black Church. The Christmas and Easter bazaars and the Honterusfest bring pupils, parents and teachers together every year.\n\n## Support\n\nThe school has a speech therapy room, a school counselling office and a medical room."
+    },
+    "meta_description": {
+      "ro": "Învățământ primar în limba germană la Colegiul „Johannes Honterus”: clasa pregătitoare și clasele I–IV, admitere și tradiții.",
+      "de": "Deutschsprachige Grundschule am Honterus-Nationalkolleg: Vorbereitungsklasse und Klassen 1–4, Aufnahme und Brauchtum.",
+      "en": "German-language primary school at the Honterus National College: preparatory class and Years 1–4, admission and traditions."
+    },
+    "data_json": {
+      "facts": [
+        {
+          "label": {
+            "ro": "Clase",
+            "de": "Klassen",
+            "en": "Years"
+          },
+          "value": {
+            "ro": "pregătitoare, I–IV",
+            "de": "Vorbereitungsklasse, 1–4",
+            "en": "preparatory, 1–4"
+          }
+        },
+        {
+          "label": {
+            "ro": "Clase pe an",
+            "de": "Klassen je Jahrgang",
+            "en": "Classes per year"
+          },
+          "value": "4"
+        },
+        {
+          "label": {
+            "ro": "Limba de predare",
+            "de": "Unterrichtssprache",
+            "en": "Taught in"
+          },
+          "value": {
+            "ro": "germană",
+            "de": "Deutsch",
+            "en": "German"
+          }
+        },
+        {
+          "label": {
+            "ro": "Admitere",
+            "de": "Aufnahme",
+            "en": "Admission"
+          },
+          "value": {
+            "ro": "evaluarea cunoștințelor de limba germană",
+            "de": "Überprüfung der Deutschkenntnisse",
+            "en": "assessment of German"
+          }
+        },
+        {
+          "label": {
+            "ro": "Locuri 2026–2027",
+            "de": "Plätze 2026/27",
+            "en": "Places 2026–27"
+          },
+          "value": "76"
+        }
+      ],
+      "related": [
+        {
+          "route": "guide",
+          "params": {
+            "kind": "pregatitoare"
+          },
+          "label": {
+            "ro": "Înscrierea în clasa pregătitoare",
+            "de": "Aufnahme in die Vorbereitungsklasse",
+            "en": "Enrolment in the preparatory class"
+          }
+        },
+        {
+          "route": "gimnaziu",
+          "label": {
+            "ro": "Gimnaziul (V–VIII)",
+            "de": "Gymnasialstufe (5–8)",
+            "en": "Lower secondary (5–8)"
+          }
+        },
+        {
+          "route": "german",
+          "label": {
+            "ro": "Germana și DSD",
+            "de": "Deutsch und DSD",
+            "en": "German and DSD"
+          }
+        },
+        {
+          "route": "documents",
+          "label": {
+            "ro": "Documente",
+            "de": "Dokumente",
+            "en": "Documents"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "gimnaziu",
+    "title": {
+      "ro": "Învățământ gimnazial",
+      "de": "Gymnasialstufe",
+      "en": "Lower secondary"
+    },
+    "lead": {
+      "ro": "Clasele V–VIII, cu predare în limba germană și Evaluarea Națională la final, inclusiv proba de limba și literatura germană maternă.",
+      "de": "Die Klassen 5–8 mit deutscher Unterrichtssprache und der Nationalen Evaluierung zum Abschluss, einschließlich der Prüfung in Deutsch als Muttersprache.",
+      "en": "Years 5–8, taught in German, ending with the National Assessment, including a paper in German as a mother tongue."
+    },
+    "body_md": {
+      "ro": "## Clasele V–VIII\n\nÎnvățământul gimnazial are patru clase pe fiecare an de studiu. Elevii claselor a IV-a ale colegiului își continuă studiile în gimnaziu. Disciplinele se predau în limba germană, de profesori de specialitate; limba și literatura română și limbile străine au ore proprii.\n\n## Evaluarea Națională\n\nLa sfârșitul clasei a VIII-a, elevii susțin Evaluarea Națională la limba și literatura română, la matematică și la **limba și literatura germană maternă**. Părinții pot opta ca media de la Evaluarea Națională să fie calculată fără proba de limbă maternă, printr-o declarație depusă la secretariat în termenul anunțat. Colegiul organizează în fiecare an și simularea Evaluării Naționale.\n\nDetaliile sunt în [ghidul pentru Evaluarea Națională](/ro/admitere/evaluare-nationala).\n\n## Dincolo de ore\n\nElevii pot participa la olimpiade și concursuri – colegiul găzduiește etapa județeană a olimpiadei de limba și literatura germană maternă –, la *Jugend debattiert*, la ansamblul coral, la dansuri populare și în echipele sportive ale școlii.",
+      "de": "## Klassen 5 bis 8\n\nDie Gymnasialstufe hat vier Klassen je Jahrgang. Die Schülerinnen und Schüler der 4. Klassen des Kollegs setzen hier ihre Schullaufbahn fort. Unterrichtet wird auf Deutsch, von Fachlehrkräften; Rumänisch und die Fremdsprachen haben eigene Stunden.\n\n## Die Nationale Evaluierung\n\nAm Ende der 8. Klasse legen die Schülerinnen und Schüler die Nationale Evaluierung (*Evaluarea Națională*) in Rumänisch, Mathematik und **Deutsch als Muttersprache** ab. Die Eltern können innerhalb der angekündigten Frist im Sekretariat erklären, dass die Durchschnittsnote ohne die Prüfung in der Muttersprache berechnet werden soll. Jedes Jahr findet außerdem eine Probeprüfung statt.\n\nEinzelheiten enthält der [Leitfaden zur Nationalen Evaluierung](/de/aufnahme/nationale-evaluierung).\n\n## Über den Unterricht hinaus\n\nDie Schülerinnen und Schüler können an Olympiaden und Wettbewerben teilnehmen – das Kolleg richtet die Kreisstufe der Olympiade in Deutsch als Muttersprache aus –, an *Jugend debattiert*, im Schulchor, in der Volkstanzgruppe und in den Schulmannschaften.",
+      "en": "## Years 5 to 8\n\nLower secondary has four classes in each year group. Pupils from the college’s Year 4 classes continue here. Subjects are taught in German by specialist teachers; Romanian and foreign languages have their own lessons.\n\n## The National Assessment\n\nAt the end of Year 8, students sit the National Assessment (*Evaluarea Națională*) in Romanian, mathematics and **German as a mother tongue**. Parents may choose, by a declaration filed with the school office within the announced deadline, to have the average calculated without the mother-tongue paper. The college also runs a mock assessment every year.\n\nDetails are in the [National Assessment guide](/en/admissions/national-assessment).\n\n## Beyond lessons\n\nStudents can take part in olympiads and competitions – the college hosts the county stage of the German mother-tongue olympiad – as well as *Jugend debattiert*, the choir, folk dance and the school sports teams."
+    },
+    "meta_description": {
+      "ro": "Învățământ gimnazial în limba germană la Colegiul „Johannes Honterus”: clasele V–VIII și Evaluarea Națională.",
+      "de": "Gymnasialstufe mit deutscher Unterrichtssprache am Honterus-Nationalkolleg: Klassen 5–8 und Nationale Evaluierung.",
+      "en": "German-language lower secondary at the Honterus National College: Years 5–8 and the National Assessment."
+    },
+    "data_json": {
+      "facts": [
+        {
+          "label": {
+            "ro": "Clase",
+            "de": "Klassen",
+            "en": "Years"
+          },
+          "value": "V–VIII"
+        },
+        {
+          "label": {
+            "ro": "Clase pe an",
+            "de": "Klassen je Jahrgang",
+            "en": "Classes per year"
+          },
+          "value": "4"
+        },
+        {
+          "label": {
+            "ro": "Limba de predare",
+            "de": "Unterrichtssprache",
+            "en": "Taught in"
+          },
+          "value": {
+            "ro": "germană",
+            "de": "Deutsch",
+            "en": "German"
+          }
+        },
+        {
+          "label": {
+            "ro": "Examen",
+            "de": "Prüfung",
+            "en": "Examination"
+          },
+          "value": {
+            "ro": "Evaluarea Națională: română, matematică, germană maternă",
+            "de": "Nationale Evaluierung: Rumänisch, Mathematik, Deutsch (Muttersprache)",
+            "en": "National Assessment: Romanian, mathematics, German (mother tongue)"
+          }
+        }
+      ],
+      "related": [
+        {
+          "route": "guide",
+          "params": {
+            "kind": "evaluare-nationala"
+          },
+          "label": {
+            "ro": "Evaluarea Națională",
+            "de": "Nationale Evaluierung",
+            "en": "National Assessment"
+          }
+        },
+        {
+          "route": "guide",
+          "params": {
+            "kind": "clasa-v"
+          },
+          "label": {
+            "ro": "Admitere în clasa a V-a",
+            "de": "Aufnahme in die 5. Klasse",
+            "en": "Admission to Year 5"
+          }
+        },
+        {
+          "route": "liceu",
+          "label": {
+            "ro": "Liceul (IX–XII)",
+            "de": "Lyzealstufe (9–12)",
+            "en": "Upper secondary (9–12)"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "liceu",
+    "title": {
+      "ro": "Învățământ liceal",
+      "de": "Lyzealstufe",
+      "en": "Upper secondary"
+    },
+    "lead": {
+      "ro": "Clasele IX–XII: două clase pe an la profilul real, specializarea științe ale naturii, și două la profilul umanist, specializarea filologie.",
+      "de": "Klassen 9–12: je Jahrgang zwei Klassen im Realprofil (Fachrichtung Naturwissenschaften) und zwei im humanistischen Profil (Fachrichtung Philologie).",
+      "en": "Years 9–12: two classes a year on the science track (natural sciences) and two on the humanities track (philology)."
+    },
+    "body_md": {
+      "ro": "## Profiluri și specializări\n\n| Profil | Specializare | Clase pe an |\n|---|---|---|\n| Real | Științe ale naturii | 2 |\n| Umanist | Filologie | 2 |\n\nToate clasele învață în limba germană, după programele pentru limba maternă. La profilul umanist se studiază, între altele, literatura universală și limba latină; la profilul real, biologia, chimia, fizica și informatica, în laboratoarele din corpurile B și C.\n\n## Admiterea în clasa a IX-a\n\nRepartizarea se face computerizat, la nivel național, după media de admitere și opțiunile completate de candidați. Candidații care nu au studiat în gimnaziu în limba germană maternă susțin în prealabil o **probă de verificare a cunoștințelor de limba germană maternă**, organizată de colegiu în luna mai. Pașii sunt descriși în [ghidul pentru clasa a IX-a](/ro/admitere/clasa-a-ix-a).\n\n## Examene\n\nLa sfârșitul clasei a XII-a, elevii susțin examenul de bacalaureat, inclusiv proba de limba și literatura germană maternă. În clasa a XII-a, elevii susțin și examenul pentru [Diploma de limba germană (DSD II)](/ro/admitere/dsd) a Conferinței permanente a miniștrilor educației și culturii din landurile germane (KMK).\n\n## Proiecte și activități\n\nElevii de liceu participă la mobilitățile Erasmus+, la schimburi cu școli partenere – de exemplu cu Europaschule Troisdorf –, la *Jugend debattiert* și la revista școlii. Elevii claselor IX–XII organizează în februarie carnavalul *Fasching*.",
+      "de": "## Profile und Fachrichtungen\n\n| Profil | Fachrichtung | Klassen je Jahrgang |\n|---|---|---|\n| Realprofil | Naturwissenschaften | 2 |\n| Humanistisches Profil | Philologie | 2 |\n\nAlle Klassen lernen auf Deutsch, nach den Lehrplänen für Deutsch als Muttersprache. Zum humanistischen Profil gehören unter anderem Weltliteratur und Latein, zum Realprofil Biologie, Chemie, Physik und Informatik – unterrichtet in den Fachräumen der Gebäude B und C.\n\n## Aufnahme in die 9. Klasse\n\nDie Plätze werden landesweit über ein computergestütztes Verfahren vergeben, nach der Aufnahmedurchschnittsnote und den Wünschen der Bewerberinnen und Bewerber. Wer in der Gymnasialstufe nicht in deutscher Muttersprache unterrichtet wurde, legt vorher eine **Prüfung der Deutschkenntnisse (Muttersprache)** ab, die das Kolleg im Mai durchführt. Die Schritte beschreibt der [Leitfaden zur 9. Klasse](/de/aufnahme/klasse-9).\n\n## Prüfungen\n\nAm Ende der 12. Klasse legen die Schülerinnen und Schüler das Bakkalaureat ab, einschließlich der Prüfung in deutscher Sprache und Literatur. In der 12. Klasse wird zudem die Prüfung zum [Deutschen Sprachdiplom (DSD II)](/de/aufnahme/dsd) der Kultusministerkonferenz abgenommen.\n\n## Projekte und Aktivitäten\n\nDie Lyzealschüler nehmen an Erasmus+-Mobilitäten teil, an Austauschprogrammen mit Partnerschulen – etwa mit der Europaschule Troisdorf –, an *Jugend debattiert* und an der Schülerzeitschrift. Die Klassen 9 bis 12 gestalten im Februar den Fasching.",
+      "en": "## Tracks and specialisations\n\n| Track (*profil*) | Specialisation | Classes per year |\n|---|---|---|\n| Science (*real*) | Natural sciences | 2 |\n| Humanities (*umanist*) | Philology | 2 |\n\nAll classes are taught in German, following the mother-tongue curricula. The philology track includes world literature and Latin; the science track includes biology, chemistry, physics and computing, taught in the laboratories of Buildings B and C.\n\n## Admission to Year 9\n\nPlaces are allocated through Romania’s national computerised system, according to each candidate’s admission average and listed preferences. Candidates who were not taught in German as a mother tongue in lower secondary first sit a **German-language test**, held by the college in May. The steps are set out in the [Year 9 guide](/en/admissions/year-9).\n\n## Examinations\n\nAt the end of Year 12 students sit the baccalaureate, including a paper in German language and literature. In Year 12 they also take the examination for the [German Language Diploma (DSD II)](/en/admissions/dsd) of the Kultusministerkonferenz.\n\n## Projects and activities\n\nUpper-school students take part in Erasmus+ mobilities, in exchanges with partner schools – such as the Europaschule Troisdorf – in *Jugend debattiert* and in the school magazine. Years 9 to 12 organise the Fasching carnival in February."
+    },
+    "meta_description": {
+      "ro": "Liceu cu predare în limba germană: profil real – științe ale naturii și profil umanist – filologie, admitere, bacalaureat și DSD II.",
+      "de": "Lyzealstufe mit deutscher Unterrichtssprache: Realprofil und humanistisches Profil, Aufnahme, Bakkalaureat und DSD II.",
+      "en": "German-language upper secondary: natural sciences and philology tracks, admission, baccalaureate and DSD II."
+    },
+    "data_json": {
+      "facts": [
+        {
+          "label": {
+            "ro": "Clase",
+            "de": "Klassen",
+            "en": "Years"
+          },
+          "value": "IX–XII"
+        },
+        {
+          "label": {
+            "ro": "Profil real",
+            "de": "Realprofil",
+            "en": "Science track"
+          },
+          "value": {
+            "ro": "științe ale naturii, 2 clase/an",
+            "de": "Naturwissenschaften, 2 Klassen",
+            "en": "natural sciences, 2 classes"
+          }
+        },
+        {
+          "label": {
+            "ro": "Profil umanist",
+            "de": "Humanistisches Profil",
+            "en": "Humanities track"
+          },
+          "value": {
+            "ro": "filologie, 2 clase/an",
+            "de": "Philologie, 2 Klassen",
+            "en": "philology, 2 classes"
+          }
+        },
+        {
+          "label": {
+            "ro": "Limba de predare",
+            "de": "Unterrichtssprache",
+            "en": "Taught in"
+          },
+          "value": {
+            "ro": "germană",
+            "de": "Deutsch",
+            "en": "German"
+          }
+        },
+        {
+          "label": {
+            "ro": "Examene",
+            "de": "Prüfungen",
+            "en": "Examinations"
+          },
+          "value": {
+            "ro": "bacalaureat, DSD II",
+            "de": "Bakkalaureat, DSD II",
+            "en": "baccalaureate, DSD II"
+          }
+        }
+      ],
+      "related": [
+        {
+          "route": "guide",
+          "params": {
+            "kind": "clasa-ix"
+          },
+          "label": {
+            "ro": "Admitere în clasa a IX-a",
+            "de": "Aufnahme in die 9. Klasse",
+            "en": "Admission to Year 9"
+          }
+        },
+        {
+          "route": "guide",
+          "params": {
+            "kind": "bacalaureat"
+          },
+          "label": {
+            "ro": "Bacalaureat",
+            "de": "Bakkalaureat",
+            "en": "Baccalaureate"
+          }
+        },
+        {
+          "route": "guide",
+          "params": {
+            "kind": "dsd"
+          },
+          "label": {
+            "ro": "DSD II",
+            "de": "DSD II",
+            "en": "DSD II"
+          }
+        },
+        {
+          "route": "guide",
+          "params": {
+            "kind": "transfer"
+          },
+          "label": {
+            "ro": "Transferuri",
+            "de": "Schulwechsel",
+            "en": "Transfers"
+          }
+        },
+        {
+          "route": "projects",
+          "label": {
+            "ro": "Proiecte și Erasmus+",
+            "de": "Projekte und Erasmus+",
+            "en": "Projects and Erasmus+"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "german",
+    "title": {
+      "ro": "Limba germană și DSD",
+      "de": "Deutsch und DSD",
+      "en": "German and the DSD"
+    },
+    "lead": {
+      "ro": "La Honterus, germana nu este doar o materie, ci limba în care se învață toate materiile – de la clasa pregătitoare până la bacalaureat și la Diploma de limba germană (DSD II).",
+      "de": "Am Honterus-Kolleg ist Deutsch nicht nur ein Fach, sondern die Sprache aller Fächer – von der Vorbereitungsklasse bis zum Bakkalaureat und zum Deutschen Sprachdiplom (DSD II).",
+      "en": "At Honterus, German is not just a subject but the language in which every subject is taught – from the preparatory class to the baccalaureate and the German Language Diploma (DSD II)."
+    },
+    "body_md": {
+      "ro": "## Germana ca limbă maternă\n\nColegiul face parte din rețeaua școlilor cu predare în limba germană din România. Elevii învață după programele pentru limba germană maternă, iar la Evaluarea Națională și la bacalaureat susțin probe de limba și literatura germană maternă. Comunitatea germană din Brașov subliniază că, în estul Europei, doar în România un învățământ complet în limba germană ca limbă maternă a trecut în mare măsură nevătămat prin deceniile comunismului. Astăzi, cererea pentru aceste școli este foarte mare, inclusiv din partea populației majoritare.\n\n## Profesori din Germania\n\nColegiul este școală parteneră a **Zentralstelle für das Auslandsschulwesen (ZfA)**. Alături de profesorii colegiului predau cadre didactice din spațiul de limbă germană. Profesorii interesați de un post la Brașov găsesc informații la ZfA ([auslandsschulwesen.de](https://www.auslandsschulwesen.de)), la Asociația profesorilor germani din străinătate ([vdlia.de](https://vdlia.de)) și, pentru voluntariat, la [kulturweit](https://www.kulturweit.de).\n\n## Diploma de limba germană (DSD)\n\n*Deutsches Sprachdiplom der Kultusministerkonferenz* este diploma de limbă germană acordată de Conferința Miniștrilor Culturii din Germania. La Honterus, elevii susțin examenul DSD II în clasa a XII-a. Potrivit *Allgemeine Deutsche Zeitung*, colegiul organizează examenul din 1995; la 8 mai 2025, la împlinirea a 30 de ani, au fost înmânate 96 de diplome DSD II. Structura examenului și pașii sunt descriși în [ghidul DSD](/ro/admitere/dsd).\n\n## Școală PASCH\n\nColegiul face parte din rețeaua **PASCH – Schulen: Partner der Zukunft**, inițiativa Ministerului german de Externe care leagă școlile din lume în care limba germană are un rol important.\n\n## Germana în viața școlii\n\n*Jugend debattiert*, concursul de dezbateri în limba germană, schimburile cu școli din Germania, olimpiada de limba și literatura germană maternă – a cărei etapă județeană are loc la colegiu –, *Martinsfest*, *Fasching* și *Honterusfest* fac din germană limba de zi cu zi a școlii, nu doar limba orelor.",
+      "de": "## Deutsch als Muttersprache\n\nDas Kolleg gehört zu den Schulen mit deutscher Unterrichtssprache in Rumänien. Unterrichtet wird nach den Lehrplänen für Deutsch als Muttersprache; in der Nationalen Evaluierung und im Bakkalaureat werden Prüfungen in deutscher Sprache und Literatur abgelegt. Die deutsche Minderheit in Kronstadt weist darauf hin, dass im östlichen Europa allein in Rumänien ein umfassendes muttersprachliches deutsches Schulwesen die Jahrzehnte des Kommunismus weitgehend unbeschadet überstanden hat. Die Nachfrage ist heute groß – auch bei der rumänischen Mehrheitsbevölkerung.\n\n## Lehrkräfte aus Deutschland\n\nDas Kolleg ist Partnerschule der **Zentralstelle für das Auslandsschulwesen (ZfA)**. Neben den Lehrkräften des Kollegs unterrichten Kolleginnen und Kollegen aus dem deutschen Sprachraum. Wer sich für eine Tätigkeit in Kronstadt interessiert, findet Informationen bei der ZfA ([auslandsschulwesen.de](https://www.auslandsschulwesen.de)), beim Verband Deutscher Lehrer im Ausland ([vdlia.de](https://vdlia.de)) und – für einen Freiwilligendienst – bei [kulturweit](https://www.kulturweit.de).\n\n## Das Deutsche Sprachdiplom\n\nDas *Deutsche Sprachdiplom der Kultusministerkonferenz* (DSD) wird am Honterus-Kolleg in der 12. Klasse als DSD II abgelegt. Nach einem Bericht der *Allgemeinen Deutschen Zeitung* nimmt das Kolleg die Prüfung seit 1995 ab; am 8. Mai 2025, zum 30-jährigen Jubiläum, wurden 96 DSD-II-Diplome überreicht. Aufbau und Ablauf der Prüfung beschreibt der [Leitfaden DSD](/de/aufnahme/dsd).\n\n## PASCH-Schule\n\nDas Kolleg gehört zum Netzwerk **PASCH – Schulen: Partner der Zukunft**, der Initiative des Auswärtigen Amts, die weltweit Schulen verbindet, an denen Deutsch eine besondere Rolle spielt.\n\n## Deutsch im Schulleben\n\n*Jugend debattiert*, der Austausch mit Schulen in Deutschland, die Olympiade in deutscher Sprache und Literatur – deren Kreisstufe am Kolleg stattfindet –, das Martinsfest, der Fasching und das Honterusfest machen Deutsch zur Sprache des Schulalltags, nicht nur des Unterrichts.",
+      "en": "## German as a mother tongue\n\nThe college is one of Romania’s German-language schools. Students follow the curricula for German as a mother tongue and sit German language and literature papers in the National Assessment and the baccalaureate. Brașov’s German community points out that, in eastern Europe, only in Romania did a complete German mother-tongue school system come through the decades of communism largely intact. Demand is high today, including among the Romanian majority.\n\n## Teachers from Germany\n\nThe college is a partner school of the **German Central Agency for Schools Abroad (Zentralstelle für das Auslandsschulwesen, ZfA)**. Teachers from German-speaking countries work alongside the college’s own staff. Teachers interested in a post in Brașov can find information from the ZfA ([auslandsschulwesen.de](https://www.auslandsschulwesen.de)), the Association of German Teachers Abroad ([vdlia.de](https://vdlia.de)) and, for volunteers, [kulturweit](https://www.kulturweit.de).\n\n## The German Language Diploma\n\nThe *Deutsches Sprachdiplom der Kultusministerkonferenz* (DSD) is the German language diploma of the Standing Conference of German Education Ministers. At Honterus students sit the DSD II in Year 12. According to the *Allgemeine Deutsche Zeitung*, the college has held the examination since 1995; on 8 May 2025, marking 30 years, 96 DSD II diplomas were presented. The structure and steps are described in the [DSD guide](/en/admissions/dsd).\n\n## A PASCH school\n\nThe college belongs to the **PASCH – Schools: Partners for the Future** network, the German Federal Foreign Office initiative linking schools worldwide where German plays a special role.\n\n## German in school life\n\n*Jugend debattiert*, the German debating competition, exchanges with schools in Germany, the German language and literature olympiad – whose county stage is held at the college – Martinsfest, Fasching and the Honterusfest make German the everyday language of the school, not only of its lessons."
+    },
+    "meta_description": {
+      "ro": "Predare în limba germană maternă, profesori ZfA, Diploma de limba germană DSD II și rețeaua PASCH la Colegiul „Johannes Honterus” Brașov.",
+      "de": "Deutsch als Muttersprache, ZfA-Lehrkräfte, Deutsches Sprachdiplom (DSD II) und PASCH am Honterus-Nationalkolleg Kronstadt.",
+      "en": "German mother-tongue teaching, ZfA teachers, the DSD II German Language Diploma and the PASCH network at the Honterus National College."
+    },
+    "data_json": {
+      "facts": [
+        {
+          "label": {
+            "ro": "Limba de predare",
+            "de": "Unterrichtssprache",
+            "en": "Language of instruction"
+          },
+          "value": {
+            "ro": "germană (limbă maternă)",
+            "de": "Deutsch (Muttersprache)",
+            "en": "German (mother tongue)"
+          }
+        },
+        {
+          "label": {
+            "ro": "Diplomă",
+            "de": "Diplom",
+            "en": "Diploma"
+          },
+          "value": {
+            "ro": "DSD II, clasa a XII-a",
+            "de": "DSD II, 12. Klasse",
+            "en": "DSD II, Year 12"
+          }
+        },
+        {
+          "label": {
+            "ro": "DSD la Honterus",
+            "de": "DSD am Honterus",
+            "en": "DSD at Honterus"
+          },
+          "value": {
+            "ro": "din 1995 (potrivit ADZ)",
+            "de": "seit 1995 (laut ADZ)",
+            "en": "since 1995 (according to the ADZ)"
+          }
+        },
+        {
+          "label": {
+            "ro": "Partener",
+            "de": "Partner",
+            "en": "Partner"
+          },
+          "value": "ZfA"
+        },
+        {
+          "label": {
+            "ro": "Rețea",
+            "de": "Netzwerk",
+            "en": "Network"
+          },
+          "value": "PASCH"
+        }
+      ],
+      "related": [
+        {
+          "route": "guide",
+          "params": {
+            "kind": "dsd"
+          },
+          "label": {
+            "ro": "Ghidul DSD",
+            "de": "Leitfaden DSD",
+            "en": "DSD guide"
+          }
+        },
+        {
+          "route": "guide",
+          "params": {
+            "kind": "pregatitoare"
+          },
+          "label": {
+            "ro": "Clasa pregătitoare",
+            "de": "Vorbereitungsklasse",
+            "en": "Preparatory class"
+          }
+        },
+        {
+          "route": "guide",
+          "params": {
+            "kind": "clasa-ix"
+          },
+          "label": {
+            "ro": "Clasa a IX-a",
+            "de": "9. Klasse",
+            "en": "Year 9"
+          }
+        },
+        {
+          "route": "projects",
+          "label": {
+            "ro": "Proiecte și schimburi",
+            "de": "Projekte und Austausch",
+            "en": "Projects and exchanges"
+          }
+        }
+      ],
+      "notes": [
+        {
+          "title": {
+            "ro": "Sursa",
+            "de": "Quelle",
+            "en": "Source"
+          },
+          "text": {
+            "ro": "L. Căpățână Juller, „30 Jahre Deutsches Sprachdiplom am Honterus-Nationalkolleg”, ADZ/Karpatenrundschau, 16 mai 2025.",
+            "de": "L. Căpățână Juller, „30 Jahre Deutsches Sprachdiplom am Honterus-Nationalkolleg“, ADZ/Karpatenrundschau, 16. Mai 2025.",
+            "en": "L. Căpățână Juller, “30 Jahre Deutsches Sprachdiplom am Honterus-Nationalkolleg”, ADZ/Karpatenrundschau, 16 May 2025."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "admissions",
+    "title": {
+      "ro": "Admitere și examene",
+      "de": "Aufnahme und Prüfungen",
+      "en": "Admissions and examinations"
+    },
+    "lead": {
+      "ro": "Pașii pentru înscrierea în clasa pregătitoare, în clasa a V-a și în clasa a IX-a, pentru transferuri și pentru examene, cu documentele de adus la fiecare pas.",
+      "de": "Die Schritte zur Aufnahme in die Vorbereitungsklasse, die 5. und die 9. Klasse, zum Schulwechsel und zu den Prüfungen – mit den Unterlagen für jeden Schritt.",
+      "en": "The steps for admission to the preparatory class, Year 5 and Year 9, for transfers and for examinations, with the documents needed at each step."
+    },
+    "body_md": {
+      "ro": "Pentru că la Honterus se învață în limba germană, la fiecare intrare în școală – clasa pregătitoare, clasa a IX-a, transfer – există o verificare a cunoștințelor de limba germană. Calendarul fiecărei etape este stabilit anual de Ministerul Educației; colegiul publică datele exacte pe această pagină și în [Noutăți](/ro/noutati) imediat după aprobarea lor.\n\nÎntrebări despre admitere: [admitere@liceulhonterusbrasov.ro](mailto:admitere@liceulhonterusbrasov.ro) · secretariat 0268 470 802.",
+      "de": "Da am Honterus-Kolleg auf Deutsch unterrichtet wird, gehört zu jedem Eintritt in die Schule – Vorbereitungsklasse, 9. Klasse, Schulwechsel – eine Überprüfung der Deutschkenntnisse. Den Zeitplan jeder Phase legt das Bildungsministerium jährlich fest; das Kolleg veröffentlicht die genauen Termine hier und unter [Aktuelles](/de/aktuelles), sobald sie genehmigt sind.\n\nFragen zur Aufnahme: [admitere@liceulhonterusbrasov.ro](mailto:admitere@liceulhonterusbrasov.ro) · Sekretariat +40 268 470 802.",
+      "en": "Because Honterus teaches in German, every point of entry – the preparatory class, Year 9 and transfers – includes a check of the candidate’s German. The calendar for each stage is set every year by the Ministry of Education; the college publishes the exact dates here and under [News](/en/news) as soon as they are approved.\n\nAdmissions questions: [admitere@liceulhonterusbrasov.ro](mailto:admitere@liceulhonterusbrasov.ro) · school office +40 268 470 802."
+    },
+    "meta_description": {
+      "ro": "Admitere la Colegiul „Johannes Honterus”: clasa pregătitoare, clasa a V-a, clasa a IX-a, transferuri, Evaluarea Națională, bacalaureat, DSD.",
+      "de": "Aufnahme am Honterus-Nationalkolleg: Vorbereitungsklasse, 5. und 9. Klasse, Schulwechsel, Nationale Evaluierung, Bakkalaureat, DSD.",
+      "en": "Admissions at the Honterus National College: preparatory class, Year 5, Year 9, transfers, National Assessment, baccalaureate, DSD."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "life",
+    "title": {
+      "ro": "Viața școlară",
+      "de": "Schulleben",
+      "en": "School life"
+    },
+    "lead": {
+      "ro": "Coetus-ul din 1543, Consiliul Elevilor, Honterusfest, Fasching, cor, sport și dezbateri: viața școlii dincolo de ore.",
+      "de": "Der Coetus von 1543, der Schülerrat, Honterusfest, Fasching, Chor, Sport und Debatten: das Schulleben jenseits des Unterrichts.",
+      "en": "The Coetus of 1543, the Student Council, the Honterusfest, Fasching, choir, sport and debating: school life beyond lessons."
+    },
+    "body_md": {
+      "ro": "Activitățile extrașcolare din oferta educațională a colegiului: ansamblul coral, dansuri populare, echipe sportive (handbal, baschet, volei, fotbal, șah, arte marțiale), *Jugend debattiert*, revista școlii, voluntariat, activități ecologice și drumeții cu Siebenbürgischer Karpatenverein (SKV).",
+      "de": "Außerunterrichtliche Angebote laut Bildungsangebot des Kollegs: Schulchor, Volkstanz, Schulmannschaften (Handball, Basketball, Volleyball, Fußball, Schach, Kampfsport), *Jugend debattiert*, Schülerzeitschrift, Freiwilligenarbeit, Umweltprojekte und Wanderungen mit dem Siebenbürgischen Karpatenverein (SKV).",
+      "en": "Extracurricular activities in the college’s educational offer: choir, folk dance, sports teams (handball, basketball, volleyball, football, chess, martial arts), *Jugend debattiert*, the school magazine, volunteering, environmental activities and hiking with the Transylvanian Carpathian Society (SKV)."
+    },
+    "meta_description": {
+      "ro": "Viața școlară la Colegiul „Johannes Honterus”: Coetus, Consiliul Elevilor, Honterusfest, tradiții, sport, cor și dezbateri.",
+      "de": "Schulleben am Honterus-Nationalkolleg: Coetus, Schülerrat, Honterusfest, Brauchtum, Sport, Chor und Debatten.",
+      "en": "School life at the Honterus National College: Coetus, Student Council, Honterusfest, traditions, sport, choir and debating."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "coetus",
+    "title": {
+      "ro": "Coetus, din 1543",
+      "de": "Der Coetus seit 1543",
+      "en": "The Coetus, since 1543"
+    },
+    "lead": {
+      "ro": "Regulamentul dat școlii de Honterus în 1543 i-a organizat pe elevii claselor mari într-o comunitate cu reprezentanți aleși și răspunderi reale: Coetus.",
+      "de": "Die Schulordnung des Honterus von 1543 schloss die oberen Schüler zu einer Gemeinschaft mit gewählten Amtsträgern und echten Pflichten zusammen: dem Coetus.",
+      "en": "The constitution Honterus gave the school in 1543 organised the senior pupils into a community with elected officers and real responsibilities: the Coetus."
+    },
+    "body_md": {
+      "ro": "## Un „mic stat” al elevilor\n\n*Constitutio Scholae Coronensis*, regulamentul scris de Johannes Honterus în 1543, a întemeiat **Coetus**-ul: comunitatea elevilor claselor mari, organizată ca un „mic stat” (*kleines Staatswesen*). Elevii își alegeau conducerea și răspundeau de viața de zi cu zi a școlii, de serbări și de elevii mai mici. Scopul pedagogic era educarea pentru răspundere comună în viața publică. Cronica școlii îl numește prima organizație de elevi din țara noastră; la Brașov purta numele de *Coetus Honteri*.\n\nModelul a fost preluat de gimnaziile săsești din Sibiu, Bistrița, Sighișoara și Mediaș.\n\n## Cum era organizat\n\nStatutele din perioada interbelică descriu funcțiile alese:\n\n- **Präfekt** – conducătorul Coetus-ului, ales de elevi și confirmat de director (la Sighișoara se numea *Rex*);\n- **Propräfekt** – adjunctul său;\n- **Fuchsmajor** – mentorul noilor membri, numiți „Füchse”;\n- **Primus musicus** – responsabilul cu muzica;\n- reprezentanții claselor, bibliotecarul și stegarul.\n\nHotărârile importante le lua adunarea generală, *Konvent*.\n\n## Ce făcea\n\nCoetus-ul organiza evenimente publice: serbări, spectacole de teatru, seri literare și muzicale. Din veniturile lor se plăteau excursiile de absolvire. Potrivit lui Walter König, din 1928 Coetus-ul a organizat și „olimpiade ale elevilor”, cu probe sportive și culturale.\n\n## Sfârșitul\n\nAnul școlar 1938/39 a fost ultimul an obișnuit al Coetus-ului. După octombrie 1940, sub presiunea politică a vremii, organizația a încetat practic să mai existe.\n\n## Astăzi: Consiliul Elevilor\n\nIdeea din 1543 – elevi aleși de colegii lor, care răspund pentru viața școlii și îi îndrumă pe cei mai mici – continuă în **Consiliul Elevilor** al colegiului, care reunește reprezentanții claselor și transmite conducerii școlii propunerile elevilor.\n\n## Pentru cine vrea să citească mai mult\n\n- Walter König, [„Der Coetus an siebenbürgisch-sächsischen Schulen”](https://www.siebenbuerger.de/zeitung/artikel/kultur/8914-der-coetus-an-siebenbuergisch.html), *Siebenbürgische Zeitung*, 2009\n- Ute Monika Schuller, [*Der Coetus am Honterus-Gymnasium zu Kronstadt in Siebenbürgen 1544–1941*](https://utheses.univie.ac.at/thesis/41519), lucrare de diplomă, Universitatea din Viena",
+      "de": "## Ein „kleines Staatswesen“ der Schüler\n\nDie *Constitutio Scholae Coronensis*, die Schulordnung des Johannes Honterus von 1543, begründete den **Coetus**: die Gemeinschaft der oberen Schüler, verfasst als „kleines Staatswesen“. Die Schüler wählten ihre Amtsträger selbst und trugen Verantwortung für den Schulalltag, für die Feste und für die Jüngeren. Ziel war die Erziehung zur gemeinsamen Verantwortung im öffentlichen Leben. Die Schulchronik nennt ihn die erste Schülerorganisation des Landes; in Kronstadt hieß er *Coetus Honteri*.\n\nDas Vorbild machte an den sächsischen Gymnasien in Hermannstadt, Bistritz, Schäßburg und Mediasch Schule.\n\n## Die Ämter\n\nDie Statuten der Zwischenkriegszeit nennen die gewählten Ämter:\n\n- **Präfekt** – Leiter des Coetus, von den Schülern gewählt und vom Rektor bestätigt (in Schäßburg *Rex* genannt);\n- **Propräfekt** – sein Stellvertreter;\n- **Fuchsmajor** – Mentor der neuen Mitglieder, der „Füchse“;\n- **Primus musicus** – verantwortlich für die Musik;\n- Klassenvertreter, Bibliothekar und Fahnenträger.\n\nWichtige Fragen entschied die Vollversammlung, der *Konvent*.\n\n## Das Wirken\n\nDer Coetus veranstaltete öffentliche Feste, Theateraufführungen, Literatur- und Musikabende; aus den Einnahmen wurden die Abschlussreisen bezahlt. Nach Walter König richtete er ab 1928 auch „Schülerolympiaden“ mit sportlichen und kulturellen Wettbewerben aus.\n\n## Das Ende\n\nDas Schuljahr 1938/39 war das letzte reguläre Coetus-Jahr. Nach Oktober 1940 löste sich die Schülergemeinschaft unter dem politischen Druck der Zeit faktisch auf.\n\n## Heute: der Schülerrat\n\nDer Gedanke von 1543 – von ihren Mitschülern gewählte Schüler, die Verantwortung für das Schulleben übernehmen und die Jüngeren begleiten – lebt im **Schülerrat** (*Consiliul Elevilor*) des Kollegs fort. Er vereint die Klassenvertreter und trägt die Anliegen der Schülerschaft an die Schulleitung heran.\n\n## Zum Weiterlesen\n\n- Walter König, [„Der Coetus an siebenbürgisch-sächsischen Schulen“](https://www.siebenbuerger.de/zeitung/artikel/kultur/8914-der-coetus-an-siebenbuergisch.html), *Siebenbürgische Zeitung*, 2009\n- Ute Monika Schuller, [*Der Coetus am Honterus-Gymnasium zu Kronstadt in Siebenbürgen 1544–1941*](https://utheses.univie.ac.at/thesis/41519), Diplomarbeit, Universität Wien",
+      "en": "## A “small commonwealth” of students\n\nThe *Constitutio Scholae Coronensis*, the school constitution written by Johannes Honterus in 1543, founded the **Coetus**: the community of senior pupils, organised as a “small commonwealth” (*kleines Staatswesen*). Students elected their own officers and took responsibility for daily school life, for festivals and for the younger pupils. Its educational aim was self-education for shared responsibility in public life. The school chronicle calls it the first student organisation in the country; in Brașov it was known as the *Coetus Honteri*.\n\nThe model was taken up by the Saxon gymnasia of Sibiu, Bistrița, Sighișoara and Mediaș.\n\n## How it was organised\n\nThe inter-war statutes list the elected offices:\n\n- **Präfekt** – head of the Coetus, elected by the students and confirmed by the headmaster (called *Rex* in Sighișoara);\n- **Propräfekt** – his deputy;\n- **Fuchsmajor** – mentor to the new members, the “Füchse”;\n- **Primus musicus** – in charge of music;\n- class representatives, a librarian and a standard-bearer.\n\nImportant matters were decided by the general assembly, the *Konvent*.\n\n## What it did\n\nThe Coetus organised public events: festivals, plays, literary and musical evenings. The income paid for the graduation trips. According to Walter König, from 1928 it also held “student olympiads” with sporting and cultural contests.\n\n## The end\n\nThe 1938/39 school year was the Coetus’s last regular year. After October 1940, under the political pressure of the time, the student body effectively ceased to exist.\n\n## Today: the Student Council\n\nThe idea of 1543 – students elected by their peers, responsible for school life and guiding the younger ones – continues in the college’s **Student Council** (*Consiliul Elevilor*), which brings together the class representatives and puts students’ proposals to the school leadership.\n\n## Further reading\n\n- Walter König, [“Der Coetus an siebenbürgisch-sächsischen Schulen”](https://www.siebenbuerger.de/zeitung/artikel/kultur/8914-der-coetus-an-siebenbuergisch.html), *Siebenbürgische Zeitung*, 2009\n- Ute Monika Schuller, [*Der Coetus am Honterus-Gymnasium zu Kronstadt in Siebenbürgen 1544–1941*](https://utheses.univie.ac.at/thesis/41519), diploma thesis, University of Vienna"
+    },
+    "meta_description": {
+      "ro": "Coetus, comunitatea elevilor întemeiată de regulamentul școlar al lui Honterus din 1543, și Consiliul Elevilor de astăzi.",
+      "de": "Der Coetus, die durch die Honterus-Schulordnung von 1543 begründete Schülergemeinschaft, und der heutige Schülerrat.",
+      "en": "The Coetus, the student community founded by Honterus’s school constitution of 1543, and today’s Student Council."
+    },
+    "hero_media_id": "h-curtea-honterus-2",
+    "data_json": {
+      "facts": [
+        {
+          "label": {
+            "ro": "Întemeiat",
+            "de": "Gegründet",
+            "en": "Founded"
+          },
+          "value": "1543"
+        },
+        {
+          "label": {
+            "ro": "Prin",
+            "de": "Durch",
+            "en": "By"
+          },
+          "value": "Constitutio Scholae Coronensis"
+        },
+        {
+          "label": {
+            "ro": "Nume",
+            "de": "Name",
+            "en": "Name"
+          },
+          "value": "Coetus Honteri"
+        },
+        {
+          "label": {
+            "ro": "Activ până",
+            "de": "Bestand bis",
+            "en": "Active until"
+          },
+          "value": "1940/41"
+        },
+        {
+          "label": {
+            "ro": "Astăzi",
+            "de": "Heute",
+            "en": "Today"
+          },
+          "value": {
+            "ro": "Consiliul Elevilor",
+            "de": "Schülerrat",
+            "en": "Student Council"
+          }
+        }
+      ],
+      "related": [
+        {
+          "route": "honterus",
+          "label": {
+            "ro": "Johannes Honterus",
+            "de": "Johannes Honterus",
+            "en": "Johannes Honterus"
+          }
+        },
+        {
+          "route": "history",
+          "label": {
+            "ro": "Istoricul școlii",
+            "de": "Geschichte der Schule",
+            "en": "History of the school"
+          }
+        },
+        {
+          "route": "life",
+          "label": {
+            "ro": "Viața școlară",
+            "de": "Schulleben",
+            "en": "School life"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "projects",
+    "title": {
+      "ro": "Proiecte și Erasmus+",
+      "de": "Projekte und Erasmus+",
+      "en": "Projects and Erasmus+"
+    },
+    "lead": {
+      "ro": "Acreditare Erasmus+ pentru educație școlară 2021–2027, parteneriate europene, schimburi de elevi și proiecte cu finanțare europeană.",
+      "de": "Erasmus+-Akkreditierung für Schulbildung 2021–2027, europäische Partnerschaften, Schüleraustausch und EU-geförderte Projekte.",
+      "en": "Erasmus+ accreditation for school education 2021–2027, European partnerships, student exchanges and EU-funded projects."
+    },
+    "body_md": {
+      "ro": "Colegiul deține acreditarea **Erasmus+ pentru educație școlară 2021–2027** (cod 2022-1-RO01-KA120-SCH-000105343). Apelurile de selecție pentru elevi și profesori se publică în [Noutăți](/ro/noutati) și pe pagina fiecărui proiect.",
+      "de": "Das Kolleg ist für **2021–2027 im Programm Erasmus+ (Schulbildung) akkreditiert** (Akkreditierungsnummer 2022-1-RO01-KA120-SCH-000105343). Ausschreibungen für Schüler und Lehrkräfte erscheinen unter [Aktuelles](/de/aktuelles) und auf der Seite des jeweiligen Projekts.",
+      "en": "The college holds an **Erasmus+ accreditation for school education 2021–2027** (code 2022-1-RO01-KA120-SCH-000105343). Calls for students and staff are published under [News](/en/news) and on each project’s page."
+    },
+    "meta_description": {
+      "ro": "Proiectele Colegiului „Johannes Honterus”: Erasmus+ KA1 și KA2, schimburi de elevi, PASCH, DSD și proiecte FSE+.",
+      "de": "Projekte des Honterus-Nationalkollegs: Erasmus+ KA1 und KA2, Schüleraustausch, PASCH, DSD und ESF+-Projekte.",
+      "en": "Projects at the Honterus National College: Erasmus+ KA1 and KA2, student exchanges, PASCH, DSD and ESF+ projects."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "news",
+    "title": {
+      "ro": "Noutăți",
+      "de": "Aktuelles",
+      "en": "News"
+    },
+    "lead": {
+      "ro": "Anunțurile colegiului: admitere, examene, burse, evenimente și proiecte.",
+      "de": "Mitteilungen des Kollegs: Aufnahme, Prüfungen, Stipendien, Veranstaltungen und Projekte.",
+      "en": "Announcements from the college: admissions, examinations, scholarships and grants, events and projects."
+    },
+    "body_md": {
+      "ro": "",
+      "de": "",
+      "en": ""
+    },
+    "meta_description": {
+      "ro": "Noutăți și anunțuri de la Colegiul Național „Johannes Honterus” Brașov.",
+      "de": "Aktuelle Mitteilungen des Honterus-Nationalkollegs Kronstadt.",
+      "en": "News and announcements from the “Johannes Honterus” National College, Brașov."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "documents",
+    "title": {
+      "ro": "Documente",
+      "de": "Dokumente",
+      "en": "Documents"
+    },
+    "lead": {
+      "ro": "Regulamente, PDI, oferta educațională, formulare, documente de admitere și examene, burse și informații de interes public, într-un singur registru.",
+      "de": "Ordnungen, Schulentwicklungsplan, Bildungsangebot, Formulare, Unterlagen zu Aufnahme und Prüfungen, Stipendien und Pflichtinformationen – in einem Verzeichnis.",
+      "en": "Regulations, the development plan, the educational offer, forms, admission and exam papers, scholarships and grants and public-interest information, in a single register."
+    },
+    "body_md": {
+      "ro": "Majoritatea documentelor sunt în limba română. Filtrați după categorie, ciclu și an școlar; adresa paginii păstrează filtrele, ca să le puteți trimite mai departe.",
+      "de": "Die meisten Dokumente liegen nur auf Rumänisch vor. Sie können nach Kategorie, Schulstufe und Schuljahr filtern; die Adresse der Seite behält die Filter, sodass Sie sie weitergeben können.",
+      "en": "Most documents are in Romanian only. Filter by category, school stage and year; the page address keeps your filters so you can share them."
+    },
+    "meta_description": {
+      "ro": "Documentele Colegiului Național „Johannes Honterus”: ROI, ROFUIP, PDI, formulare, admitere, examene, burse.",
+      "de": "Dokumente des Honterus-Nationalkollegs: Schulordnung, ROFUIP, PDI, Formulare, Aufnahme, Prüfungen, Stipendien.",
+      "en": "Documents of the Honterus National College: internal rules, ROFUIP, PDI, forms, admissions, exams, scholarships and grants."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "gallery",
+    "title": {
+      "ro": "Galerie",
+      "de": "Galerie",
+      "en": "Gallery"
+    },
+    "lead": {
+      "ro": "Imagini din viața școlii și din Curtea Honterus.",
+      "de": "Bilder aus dem Schulleben und vom Honterushof.",
+      "en": "Pictures of school life and the Honterus Courtyard."
+    },
+    "body_md": {
+      "ro": "Fotografiile cu elevi se publică numai cu acordul elevilor și al părinților.",
+      "de": "Fotos von Schülerinnen und Schülern werden nur mit Einwilligung der Betroffenen und ihrer Eltern veröffentlicht.",
+      "en": "Photographs of students are published only with the consent of the students and their parents."
+    },
+    "meta_description": {
+      "ro": "Galeria foto a Colegiului Național „Johannes Honterus” Brașov.",
+      "de": "Bildergalerie des Honterus-Nationalkollegs Kronstadt.",
+      "en": "Photo gallery of the “Johannes Honterus” National College, Brașov."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "search",
+    "title": {
+      "ro": "Căutare",
+      "de": "Suche",
+      "en": "Search"
+    },
+    "lead": {
+      "ro": "Căutați în pagini, anunțuri, documente și lista profesorilor. Scurtătură: Ctrl + K (⌘ + K pe Mac).",
+      "de": "Durchsuchen Sie Seiten, Mitteilungen, Dokumente und das Kollegium. Tastenkürzel: Strg + K (⌘ + K auf dem Mac).",
+      "en": "Search pages, announcements, documents and the staff list. Shortcut: Ctrl + K (⌘ + K on a Mac)."
+    },
+    "body_md": {
+      "ro": "",
+      "de": "",
+      "en": ""
+    },
+    "meta_description": {
+      "ro": "Căutare pe site-ul Colegiului Național „Johannes Honterus” Brașov.",
+      "de": "Suche auf der Website des Honterus-Nationalkollegs Kronstadt.",
+      "en": "Search the website of the “Johannes Honterus” National College, Brașov."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "contact",
+    "title": {
+      "ro": "Contact",
+      "de": "Kontakt",
+      "en": "Contact"
+    },
+    "lead": {
+      "ro": "Secretariatul colegiului se află în corpul B, în Curtea Honterus, lângă Biserica Neagră.",
+      "de": "Das Sekretariat des Kollegs befindet sich in Gebäude B am Honterushof, neben der Schwarzen Kirche.",
+      "en": "The college office is in Building B, in the Honterus Courtyard beside the Black Church."
+    },
+    "body_md": {
+      "ro": "Colegiul se află în centrul vechi al Brașovului, în Curtea Johannes Honterus – curtea din jurul Bisericii Negre, la câțiva pași de Piața Sfatului. Clădirile școlii închid curtea; statuia lui Honterus stă în fața turnului de sud al bisericii.\n\n- **Secretariatul** este în **corpul B** (sala B15). Aici se depun cererile de înscriere, dosarele de bursă și celelalte acte.\n- **Corpul D**, fostul Liceu Sportiv, are intrarea dinspre **Poarta Schei**. Aici se află baza sportivă și cabinetul medical (sala D32, program 08:00–13:45) și aici au loc ziua porților deschise și festivitatea de deschidere a anului școlar.\n- **Biblioteca** este în **corpul C**.\n\n## Programul\n\nProgramul pentru înscrieri se anunță la fiecare etapă de admitere. Dacă nu puteți veni în timpul programului, scrieți la [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com) sau sunați pentru o programare.",
+      "de": "Das Kolleg liegt in der Kronstädter Altstadt am Honterushof – dem Hof rund um die Schwarze Kirche, wenige Schritte vom Marktplatz (Piața Sfatului). Die Schulgebäude umschließen den Hof; das Honterus-Denkmal steht vor dem Südturm der Kirche.\n\n- Das **Sekretariat** befindet sich in **Gebäude B** (Raum B15). Hier werden Anmeldungen, Stipendienanträge und andere Unterlagen abgegeben.\n- **Gebäude D**, das frühere Sportlyzeum, hat seinen Eingang an der **Poarta Schei**. Hier liegen die Sportanlage und das Arztzimmer (Raum D32, 8.00–13.45 Uhr); hier finden auch der Tag der offenen Tür und die Eröffnungsfeier des Schuljahres statt.\n- Die **Bibliothek** ist in **Gebäude C**.\n\n## Öffnungszeiten\n\nDie Zeiten für Anmeldungen werden zu jeder Aufnahmephase bekannt gegeben. Wenn Sie zu diesen Zeiten nicht kommen können, schreiben Sie bitte an [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com) oder rufen Sie an, um einen Termin zu vereinbaren.",
+      "en": "The college is in Brașov’s old town, in the Honterus Courtyard – the courtyard around the Black Church, a few steps from Council Square (Piața Sfatului). The school buildings enclose the courtyard; the Honterus statue stands before the church’s south tower.\n\n- The **school office** is in **Building B** (room B15). Enrolment forms, scholarship and grant applications and other papers are handed in here.\n- **Building D**, the former Sports Lyceum, is entered from **Poarta Schei**. It houses the sports facilities and the medical room (room D32, 08:00–13:45), and it is where the open day and the opening ceremony of the school year take place.\n- The **library** is in **Building C**.\n\n## Opening hours\n\nHours for enrolment are announced for each admission stage. If you cannot come during those hours, please write to [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com) or call to make an appointment."
+    },
+    "meta_description": {
+      "ro": "Contact Colegiul Național „Johannes Honterus” Brașov: Curtea Honterus nr. 3, 500025 Brașov, tel. 0268 470 802, liceulhonterus@yahoo.com.",
+      "de": "Kontakt Honterus-Nationalkolleg: Curtea Honterus nr. 3, 500025 Brașov, Tel. +40 268 470 802, liceulhonterus@yahoo.com.",
+      "en": "Contact the Honterus National College: Curtea Honterus nr. 3, 500025 Brașov, tel. +40 268 470 802, liceulhonterus@yahoo.com."
+    },
+    "hero_media_id": "h-panorama",
+    "data_json": {}
+  },
+  {
+    "key": "privacy",
+    "title": {
+      "ro": "Protecția datelor personale",
+      "de": "Datenschutzerklärung",
+      "en": "Privacy notice"
+    },
+    "lead": {
+      "ro": "Ce date personale prelucrează acest site, de ce, cât timp și ce drepturi aveți, conform Regulamentului (UE) 2016/679 (RGPD).",
+      "de": "Welche personenbezogenen Daten diese Website verarbeitet, warum, wie lange und welche Rechte Sie haben – nach der Datenschutz-Grundverordnung (DSGVO).",
+      "en": "What personal data this website processes, why, for how long and what your rights are under the General Data Protection Regulation (GDPR)."
+    },
+    "body_md": {
+      "ro": "## Operatorul\n\nOperatorul datelor este **Colegiul Național „Johannes Honterus” Brașov**, Curtea Honterus nr. 3, 500025 Brașov, România, tel. 0268 470 802, e-mail [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com).\n\n**Responsabilul cu protecția datelor (DPO):** datele de contact vor fi publicate de școală. Până atunci, solicitările privind datele personale se trimit la adresa de e-mail a colegiului, cu mențiunea „Protecția datelor”.\n\n## Ce date prelucrăm\n\n**Vizitarea site-ului.** Site-ul nu folosește module cookie de urmărire, de analiză sau de publicitate și nu creează profiluri ale vizitatorilor. Pentru livrarea paginilor și protecția împotriva atacurilor, furnizorul de găzduire, Cloudflare, prelucrează temporar date tehnice (adresa IP, tipul browserului, pagina solicitată, ora accesării).\n\n**Formularul de contact.** Când ne scrieți, prelucrăm numele, adresa de e-mail, numărul de telefon (dacă îl completați), subiectul și mesajul, limba paginii și o formă prescurtată a adresei IP. Folosim aceste date **numai pentru a vă răspunde** și pentru a da curs solicitării. Ele sunt citite doar de personalul autorizat al școlii și nu sunt transmise altor persoane, cu excepția cazurilor prevăzute de lege.\n\n**Verificarea anti-spam.** Formularul este protejat de **Cloudflare Turnstile**, care verifică, fără puzzle-uri vizuale, că mesajul este trimis de o persoană. Pentru aceasta, Cloudflare prelucrează date tehnice despre browser și conexiune.\n\n**Videoclipuri YouTube.** Videoclipurile nu se încarcă automat. Până la clic, pagina afișează doar imaginea de previzualizare, preluată de pe serverele YouTube (i.ytimg.com). Abia după ce apăsați „Redă”, videoclipul se încarcă de pe youtube-nocookie.com, iar Google/YouTube poate prelucra date conform propriei politici de confidențialitate.\n\n**Stocare locală în browser.** Lista de verificare din ghidurile de admitere și anunțurile pe care le-ați închis sunt memorate doar pe dispozitivul dumneavoastră (localStorage). Aceste informații nu ajung la noi și le puteți șterge oricând din setările browserului.\n\n**Zona de administrare.** Personalul școlii care actualizează site-ul folosește un cookie de sesiune strict necesar pentru autentificare. Vizitatorii obișnuiți nu primesc acest cookie.\n\n**Fonturi.** Fonturile sunt găzduite pe serverul site-ului; nu se încarcă fonturi de la terți.\n\n## Temeiul legal\n\nRăspunsul la mesaje și informarea publicului se fac în temeiul art. 6 alin. (1) lit. (e) RGPD (îndeplinirea unei sarcini de interes public a unei unități de învățământ de stat). Securitatea site-ului și protecția împotriva mesajelor automate se fac în temeiul art. 6 alin. (1) lit. (f) RGPD.\n\n## Cât timp păstrăm datele\n\nMesajele trimise prin formular se păstrează cât este necesar pentru a răspunde solicitării, apoi se arhivează sau se șterg conform regulilor de arhivare ale școlii. Termenul exact va fi stabilit și publicat de școală.\n\n## Drepturile dumneavoastră\n\nAveți dreptul de acces la date, de rectificare, de ștergere, de restricționare a prelucrării, de opoziție și, după caz, dreptul la portabilitatea datelor. Pentru exercitarea lor, scrieți la [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com).\n\nDacă considerați că datele v-au fost prelucrate cu încălcarea legii, puteți depune plângere la **Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)** – [www.dataprotection.ro](https://www.dataprotection.ro).\n\n## Linkuri externe\n\nSite-ul trimite către alte platforme (de exemplu catalogul electronic, ISJ Brașov, Ministerul Educației). Acestea au propriile politici de confidențialitate, pentru care colegiul nu răspunde.",
+      "de": "## Verantwortliche Stelle\n\nVerantwortlich ist das **Colegiul Național „Johannes Honterus“ Brașov** (Honterus-Nationalkolleg), Curtea Honterus nr. 3, 500025 Brașov, Rumänien, Tel. +40 268 470 802, E-Mail [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com).\n\n**Datenschutzbeauftragte(r):** Die Kontaktdaten werden von der Schule veröffentlicht. Bis dahin richten Sie Anfragen zum Datenschutz bitte an die E-Mail-Adresse des Kollegs, Betreff „Datenschutz“.\n\n## Welche Daten wir verarbeiten\n\n**Besuch der Website.** Die Website setzt keine Tracking-, Analyse- oder Werbe-Cookies ein und bildet keine Nutzerprofile. Zur Auslieferung der Seiten und zum Schutz vor Angriffen verarbeitet der Hosting-Anbieter Cloudflare vorübergehend technische Daten (IP-Adresse, Browsertyp, aufgerufene Seite, Zeitpunkt).\n\n**Kontaktformular.** Wenn Sie uns schreiben, verarbeiten wir Name, E-Mail-Adresse, Telefonnummer (falls angegeben), Thema und Nachricht, die Sprache der Seite sowie eine gekürzte IP-Adresse. Wir nutzen diese Daten **ausschließlich, um Ihnen zu antworten** und Ihr Anliegen zu bearbeiten. Sie werden nur von befugtem Schulpersonal gelesen und nicht an Dritte weitergegeben, soweit das Gesetz nichts anderes vorschreibt.\n\n**Spamschutz.** Das Formular ist durch **Cloudflare Turnstile** geschützt, das ohne Bilderrätsel prüft, ob die Nachricht von einem Menschen stammt. Dazu verarbeitet Cloudflare technische Angaben zu Browser und Verbindung.\n\n**YouTube-Videos.** Videos werden nicht automatisch geladen. Bis zum Klick zeigt die Seite nur ein Vorschaubild, das von den YouTube-Servern (i.ytimg.com) abgerufen wird. Erst wenn Sie auf „Abspielen“ klicken, wird das Video von youtube-nocookie.com geladen; Google/YouTube kann dann Daten nach eigener Datenschutzerklärung verarbeiten.\n\n**Lokale Speicherung im Browser.** Die Checkliste in den Aufnahme-Leitfäden und geschlossene Hinweise werden nur auf Ihrem Gerät gespeichert (localStorage). Diese Angaben erreichen uns nicht; Sie können sie jederzeit in den Browsereinstellungen löschen.\n\n**Verwaltungsbereich.** Schulpersonal, das die Website pflegt, verwendet ein technisch notwendiges Sitzungs-Cookie für die Anmeldung. Gewöhnliche Besucher erhalten dieses Cookie nicht.\n\n**Schriften.** Die Schriften liegen auf dem Server der Website; es werden keine Schriften von Drittanbietern geladen.\n\n## Rechtsgrundlage\n\nDie Beantwortung von Anfragen und die Information der Öffentlichkeit beruhen auf Art. 6 Abs. 1 lit. e DSGVO (Wahrnehmung einer Aufgabe im öffentlichen Interesse durch eine staatliche Schule). Die Sicherheit der Website und der Schutz vor automatisierten Nachrichten beruhen auf Art. 6 Abs. 1 lit. f DSGVO.\n\n## Speicherdauer\n\nÜber das Formular gesendete Nachrichten werden so lange gespeichert, wie es für die Bearbeitung erforderlich ist, und danach nach den Aufbewahrungsregeln der Schule archiviert oder gelöscht. Die genaue Frist legt die Schule fest und veröffentlicht sie.\n\n## Ihre Rechte\n\nSie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Widerspruch und gegebenenfalls Datenübertragbarkeit. Wenden Sie sich dazu an [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com).\n\nSind Sie der Ansicht, dass Ihre Daten rechtswidrig verarbeitet werden, können Sie sich bei der rumänischen Datenschutzaufsichtsbehörde beschweren, der **Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)** – [www.dataprotection.ro](https://www.dataprotection.ro).\n\n## Externe Links\n\nDie Website verweist auf andere Plattformen (etwa das elektronische Notenbuch, das Kreisschulinspektorat Brașov oder das Bildungsministerium). Für deren Datenschutz ist das Kolleg nicht verantwortlich.",
+      "en": "## Data controller\n\nThe controller is the **“Johannes Honterus” National College, Brașov** (*Colegiul Național „Johannes Honterus” Brașov*), Curtea Honterus nr. 3, 500025 Brașov, Romania, tel. +40 268 470 802, e-mail [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com).\n\n**Data Protection Officer:** contact details will be published by the school. Until then, please send data protection requests to the college’s e-mail address with the subject “Data protection”.\n\n## What data we process\n\n**Visiting the site.** The site uses no tracking, analytics or advertising cookies and builds no visitor profiles. To deliver pages and protect against attacks, the hosting provider, Cloudflare, temporarily processes technical data (IP address, browser type, page requested, time of access).\n\n**Contact form.** When you write to us, we process your name, e-mail address, telephone number (if given), topic and message, the page language and a shortened IP address. We use this data **only to reply to you** and deal with your request. It is read only by authorised school staff and is not passed to anyone else unless the law requires it.\n\n**Spam protection.** The form is protected by **Cloudflare Turnstile**, which checks without picture puzzles that a person is sending the message. To do this, Cloudflare processes technical information about your browser and connection.\n\n**YouTube videos.** Videos do not load automatically. Until you click, the page shows only a preview image fetched from YouTube’s servers (i.ytimg.com). Only when you press “Play” does the video load from youtube-nocookie.com, after which Google/YouTube may process data under its own privacy policy.\n\n**Storage in your browser.** The checklist in the admission guides and notices you have dismissed are stored only on your device (localStorage). This information never reaches us, and you can delete it at any time in your browser settings.\n\n**Administration area.** School staff who maintain the site use a strictly necessary session cookie to sign in. Ordinary visitors do not receive this cookie.\n\n**Fonts.** Fonts are served from the site’s own server; no third-party fonts are loaded.\n\n## Legal basis\n\nReplying to messages and informing the public rest on Art. 6(1)(e) GDPR (a task carried out in the public interest by a state school). Site security and protection against automated messages rest on Art. 6(1)(f) GDPR.\n\n## How long we keep data\n\nMessages sent through the form are kept for as long as needed to deal with the request and are then archived or deleted under the school’s records rules. The exact period will be set and published by the school.\n\n## Your rights\n\nYou have the right of access, rectification, erasure, restriction of processing, objection and, where applicable, data portability. To exercise them, write to [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com).\n\nIf you believe your data has been processed unlawfully, you may complain to the Romanian supervisory authority, the **Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)** – [www.dataprotection.ro](https://www.dataprotection.ro).\n\n## External links\n\nThe site links to other platforms (for example the electronic gradebook, the Brașov County School Inspectorate and the Ministry of Education). They have their own privacy policies, for which the college is not responsible."
+    },
+    "meta_description": {
+      "ro": "Informare privind protecția datelor personale pe site-ul Colegiului Național „Johannes Honterus” Brașov (RGPD).",
+      "de": "Datenschutzerklärung der Website des Honterus-Nationalkollegs Kronstadt (DSGVO).",
+      "en": "Privacy notice for the website of the “Johannes Honterus” National College, Brașov (GDPR)."
+    },
+    "data_json": {}
+  },
+  {
+    "key": "accessibility",
+    "title": {
+      "ro": "Declarație de accesibilitate",
+      "de": "Erklärung zur Barrierefreiheit",
+      "en": "Accessibility statement"
+    },
+    "lead": {
+      "ro": "Site-ul colegiului urmărește nivelul AA al Ghidului de accesibilitate pentru conținut web (WCAG) 2.2, astfel încât să poată fi folosit de toți elevii, părinții și profesorii.",
+      "de": "Die Website des Kollegs richtet sich nach Konformitätsstufe AA der Web Content Accessibility Guidelines (WCAG) 2.2, damit alle Schüler, Eltern und Lehrkräfte sie nutzen können.",
+      "en": "The college website aims to meet level AA of the Web Content Accessibility Guidelines (WCAG) 2.2, so that every student, parent and teacher can use it."
+    },
+    "body_md": {
+      "ro": "## Angajamentul nostru\n\nColegiul Național „Johannes Honterus” Brașov se angajează să își facă site-ul accesibil, în conformitate cu Ordonanța de urgență a Guvernului nr. 112/2018 privind accesibilitatea site-urilor web și a aplicațiilor mobile ale organismelor din sectorul public, care transpune Directiva (UE) 2016/2102. Ținta noastră este nivelul AA al WCAG 2.2.\n\n## Ce am făcut\n\n- Întregul site poate fi folosit doar cu tastatura; un link „Salt la conținut” duce direct la textul paginii, iar elementul activ are un contur vizibil.\n- Căutarea se deschide cu **Ctrl + K** (**⌘ + K** pe Mac) și se folosește cu săgețile și tasta Enter.\n- Textul are un contrast de cel puțin 4,5 : 1 față de fundal; butoanele și linkurile au cel puțin 44 × 44 pixeli.\n- Paginile au titluri ierarhice, repere ARIA și limba marcată corect, iar fiecare pagină există în română, germană și engleză, cu trecere directă la aceeași pagină în altă limbă.\n- Imaginile au text alternativ; imaginile decorative sunt ignorate de cititoarele de ecran.\n- Nu există conținut care pornește singur. Animațiile se opresc când sistemul de operare cere „mișcare redusă”.\n- Pașii de admitere, termenele și documentele necesare sunt scrise în pagină, nu doar în fișiere PDF.\n- Paginile se pot mări până la 200 % fără pierderea conținutului și se afișează corect pe ecrane de 320 de pixeli lățime.\n\n## Limitări cunoscute\n\n- O parte dintre documentele preluate de pe site-ul anterior sunt fișiere PDF scanate, fără text recunoscut. Le înlocuim treptat cu versiuni accesibile; până atunci, vi le putem trimite într-un format accesibil, la cerere.\n- Videoclipurile YouTube ale altor autori nu au întotdeauna subtitrări.\n\n## Feedback și contact\n\nDacă întâmpinați o barieră pe acest site sau aveți nevoie de o informație într-un alt format, scrieți-ne la [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com) sau sunați la 0268 470 802. Vă răspundem cât mai curând și vă oferim informația într-un format accesibil.\n\nDeclarația se revizuiește anual și după fiecare modificare importantă a site-ului.",
+      "de": "## Unser Anspruch\n\nDas Honterus-Nationalkolleg möchte seine Website barrierefrei zugänglich machen – im Einklang mit der rumänischen Dringlichkeitsverordnung Nr. 112/2018 über die Barrierefreiheit der Websites und mobilen Anwendungen öffentlicher Stellen, mit der die Richtlinie (EU) 2016/2102 umgesetzt wird. Unser Ziel ist Konformitätsstufe AA der WCAG 2.2.\n\n## Was wir umgesetzt haben\n\n- Die gesamte Website lässt sich allein mit der Tastatur bedienen; ein Link „Zum Inhalt springen“ führt direkt zum Seitentext, das aktive Element ist deutlich umrandet.\n- Die Suche öffnet sich mit **Strg + K** (**⌘ + K** auf dem Mac) und lässt sich mit Pfeiltasten und Eingabetaste bedienen.\n- Texte haben einen Kontrast von mindestens 4,5 : 1; Schaltflächen und Links sind mindestens 44 × 44 Pixel groß.\n- Die Seiten haben eine klare Überschriftenstruktur, ARIA-Landmarken und eine korrekt ausgezeichnete Sprache. Jede Seite gibt es auf Rumänisch, Deutsch und Englisch, mit direktem Wechsel zur entsprechenden Seite.\n- Bilder haben Alternativtexte; dekorative Bilder werden von Screenreadern übergangen.\n- Nichts startet von selbst. Animationen entfallen, wenn das Betriebssystem „Bewegung reduzieren“ verlangt.\n- Aufnahmeschritte, Fristen und erforderliche Unterlagen stehen als Text auf der Seite, nicht nur in PDF-Dateien.\n- Die Seiten lassen sich ohne Inhaltsverlust auf 200 % vergrößern und werden auch auf 320 Pixel breiten Bildschirmen richtig dargestellt.\n\n## Bekannte Einschränkungen\n\n- Ein Teil der von der früheren Website übernommenen Dokumente sind gescannte PDF-Dateien ohne erkannten Text. Wir ersetzen sie nach und nach durch barrierefreie Fassungen; bis dahin senden wir sie Ihnen auf Wunsch in zugänglicher Form zu.\n- YouTube-Videos anderer Urheber haben nicht immer Untertitel.\n\n## Rückmeldung und Kontakt\n\nWenn Sie auf dieser Website auf eine Barriere stoßen oder eine Information in anderer Form benötigen, schreiben Sie uns an [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com) oder rufen Sie an: +40 268 470 802. Wir antworten so bald wie möglich und stellen Ihnen die Information in zugänglicher Form bereit.\n\nDiese Erklärung wird jährlich und nach jeder größeren Änderung der Website überprüft.",
+      "en": "## Our commitment\n\nThe “Johannes Honterus” National College is committed to making its website accessible, in line with Romanian Government Emergency Ordinance No. 112/2018 on the accessibility of public sector websites and mobile applications, which transposes Directive (EU) 2016/2102. Our target is WCAG 2.2 level AA.\n\n## What we have done\n\n- The whole site can be used with the keyboard alone; a “Skip to content” link leads straight to the page text, and the focused element has a visible outline.\n- Search opens with **Ctrl + K** (**⌘ + K** on a Mac) and works with the arrow and Enter keys.\n- Text has a contrast ratio of at least 4.5:1; buttons and links are at least 44 × 44 pixels.\n- Pages have a clear heading structure, ARIA landmarks and correctly marked language. Every page exists in Romanian, German and English, with a direct switch to the same page in another language.\n- Images have text alternatives; decorative images are ignored by screen readers.\n- Nothing plays by itself. Animations stop when the operating system asks for reduced motion.\n- Admission steps, deadlines and required documents are written on the page, not only in PDF files.\n- Pages can be zoomed to 200% without loss of content and display correctly on screens 320 pixels wide.\n\n## Known limitations\n\n- Some documents carried over from the previous website are scanned PDF files without recognised text. We are replacing them with accessible versions; until then we can send them to you in an accessible format on request.\n- YouTube videos by other authors do not always have subtitles.\n\n## Feedback and contact\n\nIf you meet a barrier on this site or need information in another format, write to [liceulhonterus@yahoo.com](mailto:liceulhonterus@yahoo.com) or call +40 268 470 802. We will reply as soon as we can and provide the information in an accessible format.\n\nThis statement is reviewed every year and after every major change to the site."
+    },
+    "meta_description": {
+      "ro": "Declarația de accesibilitate a site-ului Colegiului Național „Johannes Honterus” Brașov (WCAG 2.2 AA).",
+      "de": "Erklärung zur Barrierefreiheit der Website des Honterus-Nationalkollegs Kronstadt (WCAG 2.2 AA).",
+      "en": "Accessibility statement for the website of the “Johannes Honterus” National College, Brașov (WCAG 2.2 AA)."
+    },
+    "data_json": {}
+  }
+]

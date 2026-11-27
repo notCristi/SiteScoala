@@ -1,0 +1,95 @@
+---
+/** Audit log viewer (admin only), filterable by action / entity / person. */
+import { and, desc, eq, like, lt } from 'drizzle-orm';
+import Admin from '~/layouts/Admin.astro';
+import { db, schema as s } from '~/server/db';
+import { can } from '~/server/admin/audit';
+import { translator } from '~/server/admin/i18n';
+import { fmtDate } from '~/server/admin/util';
+
+const user = Astro.locals.admin!;
+const t = translator(user.uiLocale);
+if (!can(user, 'admin')) return Astro.redirect('/admin?err=errForbidden', 303);
+const sp = Astro.url.searchParams;
+const action = (sp.get('action') ?? '').slice(0, 40);
+const entity = (sp.get('entity') ?? '').slice(0, 40);
+const who = (sp.get('who') ?? '').slice(0, 64);
+const q = (sp.get('q') ?? '').slice(0, 80).replace(/[%_]/g, '');
+const before = Number(sp.get('before') ?? 0) || 0;
+const rows = await db()
+  .select({ id: s.auditLog.id, at: s.auditLog.at, action: s.auditLog.action, entityType: s.auditLog.entityType, entityId: s.auditLog.entityId, summary: s.auditLog.summary, ip: s.auditLog.ipPrefix, who: s.adminUsers.displayName })
+  .from(s.auditLog)
+  .leftJoin(s.adminUsers, eq(s.adminUsers.id, s.auditLog.userId))
+  .where(
+    and(
+      action ? eq(s.auditLog.action, action) : undefined,
+      entity ? eq(s.auditLog.entityType, entity) : undefined,
+      who ? eq(s.auditLog.userId, who) : undefined,
+      q ? like(s.auditLog.summary, `%${q}%`) : undefined,
+      before ? lt(s.auditLog.id, before) : undefined,
+    ),
+  )
+  .orderBy(desc(s.auditLog.id))
+  .limit(100);
+const users = await db().select({ id: s.adminUsers.id, name: s.adminUsers.displayName }).from(s.adminUsers);
+const actions = (await db().selectDistinct({ a: s.auditLog.action }).from(s.auditLog)).map((r) => r.a).sort();
+const entities = (await db().selectDistinct({ e: s.auditLog.entityType }).from(s.auditLog)).map((r) => r.e).filter((x): x is string => !!x).sort();
+const nextQs = (() => {
+  const u = new URLSearchParams(sp);
+  u.set('before', String(rows.at(-1)?.id ?? 0));
+  return `?${u}`;
+})();
+---
+
+<Admin title={t('auditLog')} active="jurnal">
+  <header class="adm-head"><h1>{t('auditLog')}</h1></header>
+  <form class="toolbar" method="get">
+    <div class="f grow">
+      <label for="q">{t('search')}</label>
+      <input type="search" id="q" name="q" value={q} />
+    </div>
+    <div class="f">
+      <label for="action">{t('a_action')}</label>
+      <select id="action" name="action" data-autosubmit>
+        <option value="">{t('all')}</option>
+        {actions.map((a) => <option selected={a === action}>{a}</option>)}
+      </select>
+    </div>
+    <div class="f">
+      <label for="entity">{t('a_entity')}</label>
+      <select id="entity" name="entity" data-autosubmit>
+        <option value="">{t('all')}</option>
+        {entities.map((e) => <option selected={e === entity}>{e}</option>)}
+      </select>
+    </div>
+    <div class="f">
+      <label for="who">{t('a_who')}</label>
+      <select id="who" name="who" data-autosubmit>
+        <option value="">{t('all')}</option>
+        {users.map((u) => <option value={u.id} selected={u.id === who}>{u.name}</option>)}
+      </select>
+    </div>
+    <button class="btn" type="submit">{t('filter')}</button>
+  </form>
+  <div class="table-wrap">
+    <table class="t cards">
+      <thead>
+        <tr><th>{t('a_when')}</th><th>{t('a_who')}</th><th>{t('a_action')}</th><th>{t('a_entity')}</th><th>{t('a_details')}</th></tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((r) => (
+            <tr>
+              <td><time>{fmtDate(r.at, user.uiLocale)}</time></td>
+              <td data-l={t('a_who')}>{r.who ?? '—'}</td>
+              <td data-l={t('a_action')}><span class={`chip ${r.action === 'login_fail' || r.action === 'delete' ? 'chip--missing' : ''}`}>{r.action}</span></td>
+              <td data-l={t('a_entity')}>{r.entityType ?? ''}{r.entityId ? ` #${r.entityId.slice(0, 40)}` : ''}</td>
+              <td data-l={t('a_details')}>{r.summary ?? ''} <small style="color:var(--ink-3)">{r.ip ?? ''}</small></td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+  {rows.length === 100 && <nav class="pager"><a href={nextQs}>{t('next')} →</a></nav>}
+</Admin>

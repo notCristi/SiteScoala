@@ -1,0 +1,109 @@
+---
+import Base from '~/layouts/Base.astro';
+import PageHead from '~/components/PageHead.astro';
+import Picture from '~/components/Picture.astro';
+import { pick, formatDate } from '~/i18n/locales';
+import { url } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+import Fleuron from '~/components/svg/Fleuron.astro';
+import Icon from '~/components/svg/Icon.astro';
+import { getMediaMap, listGalleries } from '~/server/content';
+import type { ViewProps } from './types';
+
+const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+const galleries = await listGalleries();
+const media = await getMediaMap(galleries.map((g) => g.coverMediaId));
+const title = ({ ro: 'Galerie', de: 'Galerie', en: 'Gallery' } as const)[locale];
+---
+
+<Base locale={locale} title={title} description={({ ro: 'Fotografii din viața Colegiului Național „Johannes Honterus” Brașov: festivități, proiecte, concursuri și Curtea Honterus.', de: 'Fotos aus dem Leben des Honterus-Nationalkollegs Kronstadt: Feiern, Projekte, Wettbewerbe und der Honterushof.', en: 'Photographs from the life of the “Johannes Honterus” National College: ceremonies, projects, competitions and the Honterus Courtyard.' } as const)[locale]} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+  <PageHead locale={locale} title={title} crumbs={[{ label: ({ ro: 'Viața școlară', de: 'Schulleben', en: 'School life' } as const)[locale], route: 'life' }, { label: title }]} />
+  {
+    galleries.length === 0 && (
+      <div class="wrap-narrow empty">
+        <span class="empty__mark" aria-hidden="true">
+          <Fleuron size={36} />
+        </span>
+        <p class="empty__text">{ui(locale, 'galleryEmpty')}</p>
+        <ul role="list" class="empty__links">
+          <li>
+            <a class="link-arrow" href={url('news', locale)}>
+              {({ ro: 'Noutăți', de: 'Aktuelles', en: 'News' } as const)[locale]}
+              <Icon name="arrow-right" />
+            </a>
+          </li>
+          <li>
+            <a class="link-arrow" href={url('life', locale)}>
+              {({ ro: 'Viața școlară', de: 'Schulleben', en: 'School life' } as const)[locale]}
+              <Icon name="arrow-right" />
+            </a>
+          </li>
+        </ul>
+      </div>
+    )
+  }
+  <ul role="list" class="wrap grid" hidden={galleries.length === 0}>
+    {
+      galleries.map((g) => {
+        const m = g.coverMediaId ? media.get(g.coverMediaId) : undefined;
+        return (
+          <li>
+            <a href={url('galleryItem', locale, { slug: g.slug })} class="g">
+              {m && <span class="plate"><Picture media={m} locale={locale} sizes="(min-width: 60rem) 24rem, (min-width: 40rem) 45vw, calc(100vw - 3rem)" ratio="4 / 3" alt="" /></span>}
+              <span class="g__t" lang={pick(g, 'title', locale).lang}>{pick(g, 'title', locale).value}</span>
+              {g.eventDate && <span class="g__d">{formatDate(g.eventDate, locale, 'month-year')}</span>}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</Base>
+
+<style>
+  .empty {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--s-4);
+    padding-block: var(--s-6) var(--s-8);
+  }
+  .empty__mark {
+    color: var(--ink);
+  }
+  .empty__text {
+    max-width: 32rem;
+    font-family: var(--font-serif);
+    font-size: var(--t-lead);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .empty__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s-2) var(--s-6);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    gap: var(--s-6) var(--s-5);
+  }
+  .g {
+    display: grid;
+    gap: var(--s-2);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .g__t {
+    font-family: var(--font-serif);
+    font-size: var(--t-h3);
+  }
+  .g:hover .g__t {
+    text-decoration: underline;
+  }
+  .g__d {
+    color: var(--ink-2);
+    font-size: var(--t-small);
+  }
+</style>
