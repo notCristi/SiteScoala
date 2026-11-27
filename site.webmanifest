@@ -1,0 +1,13 @@
+{
+  "name": "Colegiul Național „Johannes Honterus” Brașov",
+  "short_name": "Honterus",
+  "start_url": "/SiteScoala/ro/",
+  "display": "browser",
+  "background_color": "#F7F3EA",
+  "theme_color": "#0B1B4D",
+  "icons": [
+    { "src": "/SiteScoala/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/SiteScoala/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/SiteScoala/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
