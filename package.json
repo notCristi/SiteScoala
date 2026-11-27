@@ -51,6 +51,7 @@
     "brand:logo": "node scripts/brand/build-logo.mjs",
     "media:legacy-docs": "node scripts/media/import-legacy-documents.mjs download",
     "media:legacy-docs:local": "node scripts/media/import-legacy-documents.mjs upload --local",
-    "media:legacy-docs:prod": "node scripts/media/import-legacy-documents.mjs upload --remote"
+    "media:legacy-docs:prod": "node scripts/media/import-legacy-documents.mjs upload --remote",
+    "pages:snapshot": "node scripts/pages/snapshot.mjs --origin http://127.0.0.1:4321 --base /SiteScoala --out .pages"
   }
 }
