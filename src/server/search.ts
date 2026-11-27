@@ -12,7 +12,26 @@ const KEYWORDS: Partial<Record<RouteId, string>> = {
   contact: 'secretariat secretariatul sekretariat school office secretary telefon telephone phone fax adresa adresă anschrift address program sprechzeiten office hours e-mail email harta karte map',
   documents: 'regulament ordnung regulations rof roi formular formulare antrag forms',
   admissions: 'inscriere înscriere anmeldung enrolment enrollment',
-  staff: 'profesori profesor lehrer lehrkraft teachers teacher conducere director schulleitung headteacher secretar',
+  staff: 'profesori profesor personal lehrer lehrkraft lehrerinnen kollegium teachers teacher staff conducere director directoare schulleitung headteacher secretar',
+  education: 'educatie educație bildung education oferta educationala profil real umanist',
+  life: 'viata scolara viața școlară schulleben school life',
+  news: 'noutati noutăți anunturi anunțuri aktuelles news',
+  history: 'istoric istorie geschichte history',
+};
+
+/**
+ * Official Romanian names of exams and entry points, indexed in every language: parents in Brașov say
+ * „bacalaureat” or „evaluare națională” whatever the interface language (and vice versa).
+ */
+const GUIDE_KEYWORDS: Record<string, string> = {
+  pregatitoare: 'clasa pregatitoare pregătitoare clasa 0 vorbereitungsklasse preparatory class reception înscriere inscriere anmeldung admitere',
+  'clasa-v': 'clasa a v-a clasa 5 klasse 5 year 5 gimnaziu gymnasialstufe admitere aufnahme',
+  'clasa-ix': 'clasa a ix-a clasa 9 klasse 9 year 9 liceu lyzeum admitere aufnahme admissions repartizare',
+  transfer: 'transfer transferuri mutare schulwechsel transfers',
+  'evaluare-nationala': 'evaluare nationala evaluarea națională en viii nationale evaluierung national assessment examen',
+  bacalaureat: 'bacalaureat bac examenul de bacalaureat bakkalaureat abitur baccalaureate examen prüfung',
+  dsd: 'dsd dsd i dsd ii deutsches sprachdiplom diploma de limba germana germană sprachdiplom kmk german language diploma',
+  olimpiade: 'olimpiade olimpiada concursuri olympiaden wettbewerbe olympiads competitions',
 };
 const SECRETARIAT = /secretar|sekretari|office|administrat/i;
 
@@ -32,18 +51,30 @@ export async function buildSearchIndex(locale: Locale): Promise<SearchRecord[]> 
   ]);
   const out: SearchRecord[] = [];
   const seen = new Set<string>();
+  /** The record's title in the other languages too, so a Romanian term finds the German page (and vice versa). */
+  const titles3 = (row: Parameters<typeof pick>[0]) =>
+    [...new Set((['ro', 'de', 'en'] as const).map((l) => pick(row, 'title', l).value).filter(Boolean))].join(' ');
   const push = (r: SearchRecord) => {
     if (seen.has(r.u + r.t)) return;
     seen.add(r.u + r.t);
     out.push(r);
   };
+  const SEARCH_URL = url('search', locale);
 
   // Sections from the navigation (always present even before content is edited)
+  const all3 = (o: Record<Locale, string>) => [o.ro, o.de, o.en].join(' ');
   for (const item of NAV) {
-    push({ k: 'page', t: item.label[locale], u: url(item.route, locale) });
+    push({ k: 'page', t: item.label[locale], u: url(item.route, locale), w: all3(item.label) });
     for (const col of item.columns ?? []) {
       for (const ln of col.links) {
-        push({ k: ln.route === 'guide' ? 'guide' : 'page', t: ln.label[locale], s: item.label[locale], u: url(ln.route, locale, ln.params) });
+        const kind = ln.route === 'guide' ? ln.params?.kind : undefined;
+        push({
+          k: ln.route === 'guide' ? 'guide' : 'page',
+          t: ln.label[locale],
+          s: item.label[locale],
+          u: url(ln.route, locale, ln.params),
+          w: [all3(ln.label), kind ? GUIDE_KEYWORDS[kind] : ''].filter(Boolean).join(' '),
+        });
       }
     }
   }
@@ -52,16 +83,23 @@ export async function buildSearchIndex(locale: Locale): Promise<SearchRecord[]> 
   // Editable pages, bound to routes by key
   for (const p of pages) {
     const route = p.key as RouteId;
+    if (route === 'search') continue; // the search page is never a result of itself
     let u: string;
     try {
       u = url(route, locale);
     } catch {
       continue;
     }
-    push({ k: 'page', t: pick(p, 'title', locale).value, s: pick(p, 'lead', locale).value.slice(0, 120), u });
+    push({ k: 'page', t: pick(p, 'title', locale).value, s: pick(p, 'lead', locale).value.slice(0, 120), u, w: titles3(p) });
   }
   for (const g of guides) {
-    push({ k: 'guide', t: pick(g, 'title', locale).value, s: g.academicYear ?? undefined, u: url('guide', locale, { kind: g.kind }) });
+    push({
+      k: 'guide',
+      t: pick(g, 'title', locale).value,
+      s: g.academicYear ?? undefined,
+      u: url('guide', locale, { kind: g.kind }),
+      w: [titles3(g), GUIDE_KEYWORDS[g.kind] ?? ''].join(' '),
+    });
   }
   for (const doc of docs) {
     const href = docUrl(doc);
@@ -96,6 +134,8 @@ export async function buildSearchIndex(locale: Locale): Promise<SearchRecord[]> 
   for (const l of life) {
     push({ k: 'page', t: pick(l, 'title', locale).value, u: l.kind === 'coetus' ? url('coetus', locale) : url('lifeEntry', locale, { slug: l.slug }) });
   }
+  // the search page is never a result of itself
+  for (let i = out.length - 1; i >= 0; i--) if (out[i]!.u === SEARCH_URL) out.splice(i, 1);
   // attach keywords to the canonical record of each keyed route
   for (const [route, words] of Object.entries(KEYWORDS) as [RouteId, string][]) {
     const u = url(route, locale);

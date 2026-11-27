@@ -18,6 +18,10 @@ export default defineConfig({
   },
   // Admin forms post same-origin; the API also checks a CSRF token.
   security: { checkOrigin: true },
-  prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
+  // Same-origin links prefetch on hover/focus (docs/04 §7.5); external links and downloads are never prefetched.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
+  // 'auto' inlines stylesheets below vite's assetsInlineLimit: the critical global.css (~12 KB raw, ~3.5 KB brotli)
+  // ships inside the HTML, so only the shared component bundle is a render-blocking request.
   build: { inlineStylesheets: 'auto' },
+  vite: { build: { assetsInlineLimit: 12288 } },
 });

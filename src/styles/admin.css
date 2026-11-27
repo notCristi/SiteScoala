@@ -1099,3 +1099,58 @@
     transition: none !important;
   }
 }
+
+/* ── 390 px: targets ≥ 44 px, long words never widen the page (red-team B minor 9) ── */
+@layer components {
+  .adm-content,
+  .adm-head h1,
+  .list-plain li,
+  .card,
+  .flash,
+  table.t td.title {
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+  .adm-head > div {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .adm-head .kicker a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .btn--sm {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .handle {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .md-tools button {
+    min-height: 44px;
+  }
+  .adm-util button.linklike {
+    min-width: 44px;
+    justify-content: center;
+  }
+  .tabs button .chip {
+    flex-shrink: 0;
+  }
+  @media (max-width: 40rem) {
+    .tabs {
+      gap: 0;
+    }
+    .tabs button {
+      padding: var(--s-2) var(--s-2);
+    }
+  }
+  @media (pointer: coarse) {
+    .btn--sm,
+    .handle,
+    .md-tools button {
+      min-height: 48px;
+    }
+  }
+}

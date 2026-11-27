@@ -11,7 +11,7 @@
  * (statue + tower + nave, x ≈ 560–1100) stays in view. Give it a height, e.g.
  * `height: clamp(120px, 16vw, 260px)` — the default style below does exactly that.
  *
- * animate  the frieze is "pulled" from the centre outwards (clip-path, 600 ms) and the
+ * animate  the frieze is set in (opacity + a 4 px rise, 600 ms) and the
  *          hatching inks in after it. CSS only; reduced motion → static.
  */
 interface Props {
@@ -70,10 +70,8 @@ const OCCLUDE = 'M684 248L684 66L723 30L721 22L730 0L739 22L738 34L776 66L776 24
 
   @keyframes courtyard-pull {
     from {
-      clip-path: inset(0 50% 0 50%);
-    }
-    to {
-      clip-path: inset(0 0 0 0);
+      opacity: 0;
+      transform: translateY(4px);
     }
   }
   @keyframes courtyard-ink {
@@ -86,7 +84,7 @@ const OCCLUDE = 'M684 248L684 66L723 30L721 22L730 0L739 22L738 34L776 66L776 24
   }
   .ink .hatch,
   .ink .ridge {
-    animation: courtyard-ink 400ms ease-out 450ms both;
+    animation: courtyard-ink 300ms ease-out 300ms both;
   }
   @media (prefers-reduced-motion: reduce) {
     .ink :is(.plate, .hatch, .ridge) {

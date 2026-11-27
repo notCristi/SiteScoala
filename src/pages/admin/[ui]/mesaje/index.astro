@@ -4,12 +4,14 @@ import { desc, eq, sql } from 'drizzle-orm';
 import Admin from '~/layouts/Admin.astro';
 import Flash from '~/components/admin/Flash.astro';
 import { db, schema as s } from '~/server/db';
+import { can } from '~/server/admin/audit';
 import { translator } from '~/server/admin/i18n';
 import { flashFrom } from '~/server/admin/view';
 import { fmtDate } from '~/server/admin/util';
 
 const user = Astro.locals.admin!;
 const t = translator(user.uiLocale);
+if (!can(user, 'content')) return Astro.redirect('/admin?err=errForbidden', 303);
 const st = Astro.url.searchParams.get('status');
 const status = st === 'read' || st === 'archived' || st === 'new' ? st : st === 'all' ? '' : 'inbox';
 const rows = await db()

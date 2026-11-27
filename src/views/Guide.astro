@@ -168,7 +168,7 @@ const stepNo = (st: GuideStep) => steps.indexOf(st) + 1;
                   {(doc || s.linkUrl) && (
                     <p class="step__links">
                       {doc && (
-                        <a class="btn btn--ghost" href={docUrl(doc)} target="_blank" rel="noopener">
+                        <a class="btn btn--ghost" href={docUrl(doc)} target="_blank" rel="noopener" data-astro-prefetch="false">
                           <Icon name="download" />
                           {pick(doc, 'title', locale).value}
                           <span class="muted">

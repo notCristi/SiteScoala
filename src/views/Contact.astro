@@ -7,9 +7,12 @@ import { pick } from '~/i18n/locales';
 import { ui } from '~/i18n/ui';
 import { getPage } from '~/server/content';
 import { turnstileSiteKey } from '~/server/security';
+import { url } from '~/i18n/routes';
+import { emptyValues, type ContactResult } from '~/server/contact';
 import type { ViewProps } from './types';
 
-const { locale, match, alternates, settings, banners } = Astro.props as ViewProps;
+/** `form` is set when the page answers its own POST with an error: the user's text comes back with the message. */
+const { locale, match, alternates, settings, banners, form } = Astro.props as ViewProps & { form?: ContactResult };
 const L = (k: string) => ui(locale, k);
 const page = await getPage('contact');
 const c = settings.contact;
@@ -23,7 +26,8 @@ const findTitle = lead2 ? lead2[1]!.replace(/<[^>]+>/g, '') : undefined;
 const findBody = lead2 && body?.value ? body.value.slice(lead2[0].length) : body?.value;
 const tel = (p: string) => `tel:+4${p.replace(/\s/g, '')}`;
 const sent = Astro.url.searchParams.get('trimis') === '1';
-const err = Astro.url.searchParams.get('eroare');
+const err = form && !form.ok ? form.error : Astro.url.searchParams.get('eroare');
+const v = form && !form.ok ? form.values : emptyValues();
 const T = {
   formTitle: { ro: 'Scrieți-ne', de: 'Schreiben Sie uns', en: 'Write to us' },
   name: { ro: 'Nume și prenume', de: 'Vor- und Nachname', en: 'Full name' },
@@ -39,7 +43,8 @@ const T = {
   send: { ro: 'Trimiteți mesajul', de: 'Nachricht senden', en: 'Send message' },
   sent: { ro: 'Mulțumim. Mesajul a fost înregistrat și va primi răspuns de la secretariat.', de: 'Vielen Dank. Ihre Nachricht ist eingegangen; das Sekretariat meldet sich bei Ihnen.', en: 'Thank you. Your message has been received and the school office will reply.' },
   errData: { ro: 'Completați numele, o adresă de e-mail validă și un mesaj de cel puțin 10 caractere.', de: 'Bitte geben Sie Ihren Namen, eine gültige E-Mail-Adresse und eine Nachricht mit mindestens 10 Zeichen an.', en: 'Please enter your name, a valid email address and a message of at least 10 characters.' },
-  errCheck: { ro: 'Verificarea anti-spam nu a reușit. Încercați din nou.', de: 'Die Spam-Prüfung ist fehlgeschlagen. Bitte versuchen Sie es erneut.', en: 'The spam check failed. Please try again.' },
+  errCheck: { ro: 'Verificarea anti-spam nu a reușit. Textul dumneavoastră este păstrat mai jos; încercați din nou.', de: 'Die Spam-Prüfung ist fehlgeschlagen. Ihr Text ist unten erhalten; bitte versuchen Sie es erneut.', en: 'The spam check failed. Your text is kept below; please try again.' },
+  errLimit: { ro: 'Din această rețea s-au trimis deja mai multe mesaje în ultima oră. Scrieți-ne direct prin e-mail sau sunați la secretariat.', de: 'Aus diesem Netz wurden in der letzten Stunde bereits mehrere Nachrichten gesendet. Bitte schreiben Sie uns direkt per E-Mail oder rufen Sie im Sekretariat an.', en: 'Several messages have already been sent from this network in the last hour. Please email us directly or call the school office.' },
   privacy: { ro: 'Datele sunt folosite doar pentru a vă răspunde.', de: 'Ihre Angaben werden nur zur Beantwortung verwendet.', en: 'Your details are used only to reply to you.' },
   find: { ro: 'Cum ajungeți', de: 'Anfahrt', en: 'Finding us' },
 } as const;
@@ -85,31 +90,76 @@ const T = {
     <section class="form-wrap" id="formular" aria-labelledby="c-form">
       <h2 id="c-form">{T.formTitle[locale]}</h2>
       {sent && <p class="msg msg--ok" role="status">{T.sent[locale]}</p>}
-      {err && <p class="msg msg--err" role="alert">{err === 'verificare' ? T.errCheck[locale] : T.errData[locale]}</p>}
-      <form method="post" action="/api/contact" class="form">
+      {
+        err && (
+          <p class="msg msg--err" role="alert">
+            {err === 'verificare' ? T.errCheck[locale] : err === 'limita' ? T.errLimit[locale] : T.errData[locale]}
+            {err === 'limita' && (
+              <>
+                {' '}
+                <a href={`mailto:${c.email}`}>{c.email}</a> · <a href={tel(c.phones[0] ?? '')}>{c.phones[0]}</a>
+              </>
+            )}
+          </p>
+        )
+      }
+      {/* Posts to this page, which answers errors by re-rendering the form with the user's text (works without JS). */}
+      <form method="post" action={`${url('contact', locale)}#formular`} class="form" data-contact-form>
         <input type="hidden" name="locale" value={locale} />
         <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
         <div class="row">
-          <label>{T.name[locale]}<input name="name" required minlength="2" maxlength="120" autocomplete="name" /></label>
-          <label>{L('email')}<input name="email" type="email" required maxlength="200" autocomplete="email" /></label>
+          <label>{T.name[locale]}<input name="name" required minlength="2" maxlength="120" autocomplete="name" value={v.name} /></label>
+          <label>{L('email')}<input name="email" type="email" required maxlength="200" autocomplete="email" value={v.email} /></label>
         </div>
         <div class="row">
-          <label>{T.phoneOpt[locale]}<input name="phone" type="tel" maxlength="40" autocomplete="tel" /></label>
+          <label>{T.phoneOpt[locale]}<input name="phone" type="tel" maxlength="40" autocomplete="tel" value={v.phone} /></label>
           <label>{T.topic[locale]}
             <select name="topic">
-              {(Object.keys(T.topics) as (keyof typeof T.topics)[]).map((k) => <option value={k}>{T.topics[k][locale]}</option>)}
+              {(Object.keys(T.topics) as (keyof typeof T.topics)[]).map((k) => <option value={k} selected={k === v.topic}>{T.topics[k][locale]}</option>)}
             </select>
           </label>
         </div>
-        <label>{T.message[locale]}<textarea name="message" required minlength="10" maxlength="5000" rows="6"></textarea></label>
+        <label>{T.message[locale]}<textarea name="message" required minlength="10" maxlength="5000" rows="6">{v.message}</textarea></label>
         <div class="cf-turnstile" data-sitekey={turnstileSiteKey()} data-action="contact" data-language={locale}></div>
         <p class="muted small">{T.privacy[locale]}</p>
         <button class="btn" type="submit">{T.send[locale]}<Icon name="arrow-right" /></button>
       </form>
     </section>
   </div>
-  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </Base>
+
+<script>
+  // Turnstile (27 KB) loads only when someone starts using the form, not with the page.
+  // Without it (no JS, or blocked) the server still accepts the message, rate-limited and marked for the office.
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const box = form?.querySelector<HTMLElement>('.cf-turnstile');
+  let state: 'idle' | 'loading' | 'ready' = 'idle';
+  const w = window as unknown as { turnstile?: { render: (el: HTMLElement) => void }; honterusTurnstile?: () => void };
+  const start = () => {
+    if (state !== 'idle' || !box) return;
+    state = 'loading';
+    w.honterusTurnstile = () => {
+      w.turnstile?.render(box);
+      state = 'ready';
+    };
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=honterusTurnstile';
+    s.async = true;
+    document.head.appendChild(s);
+  };
+  form?.addEventListener('focusin', start, { once: true });
+  form?.addEventListener('pointerdown', start, { once: true });
+  // A fast submit waits (up to 5 s) for the widget's token instead of going out unverified.
+  form?.addEventListener('submit', (e) => {
+    const token = () => form.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]')?.value;
+    if (state === 'idle' || token() || form.dataset.waited) return;
+    e.preventDefault();
+    form.dataset.waited = '1';
+    const t0 = Date.now();
+    const tick = () => (token() || Date.now() - t0 > 5000 ? form.requestSubmit() : setTimeout(tick, 150));
+    tick();
+  });
+</script>
 
 <style>
   .contact {
@@ -269,6 +319,13 @@ const T = {
   }
   .form .btn {
     justify-self: start;
+  }
+  /* the widget renders after the first interaction: its box is reserved so nothing below moves */
+  .cf-turnstile {
+    min-height: 65px;
+  }
+  :global(.no-js) .cf-turnstile {
+    display: none;
   }
   .hp {
     position: absolute;

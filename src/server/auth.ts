@@ -233,8 +233,15 @@ export async function adminGate(ctx: APIContext): Promise<Response | undefined> 
     return new Response(null, { status: 302, headers: { Location: `/admin/login?next=${encodeURIComponent(next)}` } });
   }
   if (unsafe && !trusted && !safeEqual(await csrfFrom(ctx.request), user.csrf)) return deny(isApi, 403, 'Invalid CSRF token');
+
+  // Bootstrap password (manual §2.3): nothing but „Contul meu” (and its password POST) until it is changed.
+  if (user.mustChangePassword && !MUST_CHANGE_ALLOWED.has(path)) {
+    if (isApi) return deny(true, 403, 'Password change required');
+    return new Response(null, { status: 303, headers: { Location: '/admin/cont' } });
+  }
   return pass();
 }
+const MUST_CHANGE_ALLOWED = new Set(['/admin/cont', '/admin/logout', '/admin/ui']);
 
 // ───────────────────────────── login ─────────────────────────────
 export type LoginResult = { ok: true; userId: string; bootstrap: boolean } | { ok: false; error: 'invalid' | 'locked' | 'turnstile' | 'config' };
@@ -242,11 +249,18 @@ export type LoginResult = { ok: true; userId: string; bootstrap: boolean } | { o
 const turnstileBypass = (url: URL) =>
   cfg('TURNSTILE_DEV_BYPASS') === '1' && (url.hostname === 'localhost' || url.hostname === '127.0.0.1') && url.protocol === 'http:';
 
+/**
+ * Wrong passwords for this e-mail from this network in the current window. The window starts 15 minutes ago,
+ * or at the last successful login / end of the last lock if that is later — so the counter resets on success
+ * and attempts made while locked (summary 'locked') never extend a lock.
+ */
 async function recentFailures(email: string, ip: string): Promise<number> {
+  const [u] = await db().select({ last: s.adminUsers.lastLoginAt, lockedUntil: s.adminUsers.lockedUntil }).from(s.adminUsers).where(eq(s.adminUsers.email, email)).limit(1);
+  const since = Math.max(Date.now() - LOCK_MS, u?.last ?? 0, u?.lockedUntil && u.lockedUntil <= Date.now() ? u.lockedUntil : 0);
   const [r] = await db()
     .select({ n: count() })
     .from(s.auditLog)
-    .where(and(eq(s.auditLog.action, 'login_fail'), eq(s.auditLog.entityId, email), eq(s.auditLog.ipPrefix, ip), gt(s.auditLog.at, Date.now() - LOCK_MS)));
+    .where(and(eq(s.auditLog.action, 'login_fail'), eq(s.auditLog.summary, 'invalid'), eq(s.auditLog.entityId, email), eq(s.auditLog.ipPrefix, ip), gt(s.auditLog.at, since)));
   return r?.n ?? 0;
 }
 
@@ -287,12 +301,20 @@ export async function login(ctx: APIContext, emailRaw: string, password: string,
   const [user] = await db().select().from(s.adminUsers).where(eq(s.adminUsers.email, email)).limit(1);
   const { ok, rehash } = await verifyPassword(password, user?.passwordHash);
   if (!user || user.status !== 'active') return fail('invalid');
-  if (user.lockedUntil && user.lockedUntil > Date.now()) return fail('locked', user.id);
+  const now = Date.now();
+  if (user.lockedUntil && user.lockedUntil > now) return fail('locked', user.id);
   if (!ok) {
-    const n = user.failedLogins + 1;
+    // Failures count only inside a 15-minute window that starts after the last lock ended: old typos and
+    // an expired lock never carry over, so the account is not locked again by a single mistake.
+    const since = Math.max(now - LOCK_MS, user.lockedUntil ?? 0, user.lastLoginAt ?? 0);
+    const [r] = await db()
+      .select({ n: count() })
+      .from(s.auditLog)
+      .where(and(eq(s.auditLog.action, 'login_fail'), eq(s.auditLog.summary, 'invalid'), eq(s.auditLog.userId, user.id), gt(s.auditLog.at, since)));
+    const n = (r?.n ?? 0) + 1;
     await db()
       .update(s.adminUsers)
-      .set({ failedLogins: n, lockedUntil: n >= LOCK_AFTER ? Date.now() + LOCK_MS : null })
+      .set({ failedLogins: n, lockedUntil: n >= LOCK_AFTER ? now + LOCK_MS : user.lockedUntil })
       .where(eq(s.adminUsers.id, user.id));
     return fail(n >= LOCK_AFTER ? 'locked' : 'invalid', user.id);
   }
@@ -367,7 +389,16 @@ export async function acceptInvite(ctx: APIContext, token: string, name: string,
 export async function changePassword(ctx: APIContext, user: AdminUser, current: string, next: string) {
   const [row] = await db().select().from(s.adminUsers).where(eq(s.adminUsers.id, user.id)).limit(1);
   if (!row) return 'invalid';
-  if (!(await verifyPassword(current, row.passwordHash)).ok) return 'pwCurrentWrong';
+  // the current-password check is rate-limited like the login (5 wrong answers per 15 minutes)
+  const [fails] = await db()
+    .select({ n: count() })
+    .from(s.auditLog)
+    .where(and(eq(s.auditLog.action, 'password_change_fail'), eq(s.auditLog.userId, user.id), gt(s.auditLog.at, Date.now() - LOCK_MS)));
+  if ((fails?.n ?? 0) >= LOCK_AFTER) return 'errPwAttempts';
+  if (!(await verifyPassword(current, row.passwordHash)).ok) {
+    await db().insert(s.auditLog).values({ action: 'password_change_fail', entityType: 'user', entityId: user.id, userId: user.id, ipPrefix: ipPrefix(ctx.request) });
+    return 'pwCurrentWrong';
+  }
   const problem = passwordProblem(next, row.email);
   if (problem) return problem;
   const now = Date.now();

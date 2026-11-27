@@ -6,7 +6,7 @@
 import { Marked, type Tokens } from 'marked';
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const SAFE_HREF = /^(https?:\/\/|mailto:|tel:|\/(?!\/)|#)/i;
+const SAFE_HREF = /^(https?:\/\/[^/\\]|mailto:|tel:|\/(?![/\\])|#)/i;
 
 const md = new Marked({
   gfm: true,
@@ -21,7 +21,9 @@ const md = new Marked({
       const text = this.parser.parseInline(token.tokens);
       if (!SAFE_HREF.test(href)) return text;
       const external = /^https?:\/\//i.test(href);
-      return `<a href="${esc(href)}"${external ? ' rel="noopener" target="_blank"' : ''}>${text}</a>`;
+      // file downloads are never hover-prefetched (Astro prefetchAll)
+      const file = /^\/files\//.test(href);
+      return `<a href="${esc(href)}"${external ? ' rel="noopener" target="_blank"' : ''}${file ? ' data-astro-prefetch="false"' : ''}>${text}</a>`;
     },
     image(token: Tokens.Image) {
       const src = token.href.trim();

@@ -22,11 +22,15 @@ interface Props {
   /** true when the page shows Romanian fallback text in DE/EN */
   fallback?: boolean;
   jsonLd?: Record<string, unknown>;
+  /** error pages (404): no canonical, no hreflang alternates */
+  error?: boolean;
 }
-const { locale, title, description, route, alternates, settings, banners = [], image = '/og-default.png', noindex, fallback, jsonLd } = Astro.props;
+const { locale, title, description, route, alternates, settings, banners = [], image = '/og-default.png', noindex, fallback, jsonLd, error } = Astro.props;
 const site = Astro.site ?? new URL(Astro.url.origin);
 const canonical = new URL(alternates[locale], site).href;
-const fullTitle = route === 'home' ? ui(locale, 'schoolFull') : `${title} · ${ui(locale, 'schoolShort')}`;
+// ≤ ~70 characters where possible: long page titles get the short suffix „· Honterus”.
+const longTitle = `${title} · ${ui(locale, 'schoolShort')}`;
+const fullTitle = route === 'home' ? ui(locale, 'schoolFull') : longTitle.length > 70 ? `${title} · Honterus` : longTitle;
 const org = {
   '@context': 'https://schema.org',
   '@type': 'HighSchool',
@@ -57,22 +61,28 @@ const safeJson = (v: unknown) =>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
-    <link rel="canonical" href={canonical} />
-    {LOCALES.map((l) => <link rel="alternate" hreflang={LOCALE_META[l].htmlLang} href={new URL(alternates[l], site).href} />)}
-    <link rel="alternate" hreflang="x-default" href={new URL(alternates.ro, site).href} />
+    {
+      !error && (
+        <>
+          <link rel="canonical" href={canonical} />
+          {LOCALES.map((l) => <link rel="alternate" hreflang={LOCALE_META[l].htmlLang} href={new URL(alternates[l], site).href} />)}
+          <link rel="alternate" hreflang="x-default" href={new URL(alternates.ro, site).href} />
+        </>
+      )
+    }
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#0b1b4d" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <!-- only the display face set above the fold (headings, title page) is preloaded -->
     <link rel="preload" href="/fonts/eb-garamond.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={ui(locale, 'schoolFull')} />
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
-    <meta property="og:url" content={canonical} />
+    {!error && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={new URL(image, site).href} />
     <meta property="og:locale" content={LOCALE_META[locale].ogLocale} />
     <meta name="twitter:card" content="summary_large_image" />

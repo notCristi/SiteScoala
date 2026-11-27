@@ -5,7 +5,8 @@ import { LOCALES, LOCALE_META } from '~/i18n/locales';
 import { ROUTES, url, GUIDE_SLUGS, type RouteId } from '~/i18n/routes';
 import { db, schema as s } from '~/server/db';
 
-const STATIC: RouteId[] = (Object.keys(ROUTES) as RouteId[]).filter((id) => !Object.values(ROUTES[id]).some((p) => p.includes(':')));
+// the search page is noindex: not listed
+const STATIC: RouteId[] = (Object.keys(ROUTES) as RouteId[]).filter((id) => id !== 'search' && !Object.values(ROUTES[id]).some((p) => p.includes(':')));
 const esc = (x: string) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 export const GET: APIRoute = async ({ site, cache }) => {
@@ -27,7 +28,15 @@ export const GET: APIRoute = async ({ site, cache }) => {
     ...life.map((n) => ({ id: 'lifeEntry' as RouteId, params: { slug: n.slug }, at: n.at })),
     ...galleries.map((n) => ({ id: 'galleryItem' as RouteId, params: { slug: n.slug } })),
   ];
-  const body = entries
+  // one <url> per location (a student-life entry with the slug "coetus" is the static Coetus page)
+  const seenLoc = new Set<string>();
+  const unique = entries.filter((e) => {
+    const k = url(e.id, 'ro', e.params);
+    if (seenLoc.has(k)) return false;
+    seenLoc.add(k);
+    return true;
+  });
+  const body = unique
     .flatMap((e) =>
       LOCALES.map((l) => {
         const alts = LOCALES.map((a) => `<xhtml:link rel="alternate" hreflang="${LOCALE_META[a].htmlLang}" href="${esc(origin + url(e.id, a, e.params))}"/>`).join('');

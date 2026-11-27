@@ -4,7 +4,6 @@ import { url } from '~/i18n/routes';
 import { ui } from '~/i18n/ui';
 import { AUDIENCES } from '~/i18n/nav';
 import type { SiteSettings } from '~/server/content';
-import CourtyardElevation from '~/components/svg/CourtyardElevation.astro';
 import Icon from '~/components/svg/Icon.astro';
 
 interface Props {
@@ -20,7 +19,8 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
 
 <footer class="site-footer">
   <div class="frieze" aria-hidden="true">
-    <CourtyardElevation />
+    <!-- cached file, not inline: identical on every page (scripts/brand/build-frieze.mjs) -->
+    <img src="/brand/courtyard-frieze.svg" width="1600" height="260" alt="" loading="lazy" decoding="async" />
   </div>
   <div class="wrap footer__grid">
     <section class="footer__contact" aria-labelledby="f-contact">
@@ -52,6 +52,7 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
         <li><a href={url('documents', locale)}>{L('documents')}</a></li>
         <li><a href={url('news', locale)}>{locale === 'ro' ? 'Noutăți' : locale === 'de' ? 'Aktuelles' : 'News'}</a></li>
         <li><a href={url('staff', locale)}>{locale === 'ro' ? 'Conducere și personal' : locale === 'de' ? 'Schulleitung und Kollegium' : 'Leadership and staff'}</a></li>
+        <li><a href={url('contact', locale)}>{locale === 'ro' ? 'Contact și program' : locale === 'de' ? 'Kontakt und Sprechzeiten' : 'Contact and office hours'}</a></li>
         <li><a href={settings.links.noteInCatalog} rel="noopener" target="_blank">NoteInCatalog <span class="vh">{L('external')}</span></a></li>
         <li><a href={settings.links.classroom} rel="noopener" target="_blank">Google Classroom <span class="vh">{L('external')}</span></a></li>
       </ul>
@@ -73,6 +74,9 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
       <h2 id="f-inst" class="footer__title">{L('institution')}</h2>
       <ul role="list">
         <li><a href={url('documents', locale)}>{L('publicInfo')}</a></li>
+        <li><a href={url('school', locale)}>{locale === 'ro' ? 'Școala' : locale === 'de' ? 'Schule' : 'Our school'}</a></li>
+        <li><a href={url('education', locale)}>{locale === 'ro' ? 'Educație' : locale === 'de' ? 'Bildung' : 'Education'}</a></li>
+        <li><a href={url('life', locale)}>{locale === 'ro' ? 'Viața școlară' : locale === 'de' ? 'Schulleben' : 'School life'}</a></li>
         <li><a href={url('history', locale)}>{locale === 'ro' ? 'Istoric' : locale === 'de' ? 'Geschichte' : 'History'}</a></li>
         <li><a href={url('privacy', locale)}>{L('privacy')}</a></li>
         <li><a href={url('accessibility', locale)}>{L('accessibility')}</a></li>
@@ -81,7 +85,7 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
   </div>
 
   <div class="wrap footer__colophon">
-    <img src="/brand/honterus-seal-mono-light.svg" width="72" height="72" alt="" loading="lazy" decoding="async" />
+    <img src="/brand/honterus-seal-mono-light-small.svg" width="72" height="72" alt="" loading="lazy" decoding="async" />
     <div>
       <p class="footer__founded">{L('founded')}</p>
       <p class="footer__small">© {year} {L('schoolFull')} · <span class="colophon">{L('colophon')}</span></p>
@@ -102,10 +106,13 @@ const hours = c.hours?.[locale] ?? c.hours?.ro;
     line-height: 0;
     overflow: hidden;
   }
-  .frieze :global(svg) {
+  .frieze img {
     width: 100%;
     height: clamp(110px, 16vw, 230px);
     display: block;
+    /* = preserveAspectRatio xMidYMax slice: the ground line stays on the edge, the sides crop away */
+    object-fit: cover;
+    object-position: 50% 100%;
   }
   .footer__grid {
     display: grid;

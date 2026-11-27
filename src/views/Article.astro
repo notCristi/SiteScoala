@@ -8,7 +8,7 @@ import Icon from '~/components/svg/Icon.astro';
 import { pick, formatDate } from '~/i18n/locales';
 import { url } from '~/i18n/routes';
 import { ui } from '~/i18n/ui';
-import { caption, creditLine } from '~/lib/media';
+import { caption, creditLine, imageSources } from '~/lib/media';
 import { getMedia, listNews, type Announcement } from '~/server/content';
 import type { ViewProps } from './types';
 
@@ -20,6 +20,28 @@ const s = pick(a, 'summary', locale);
 const body = pick(a, 'bodyHtml', locale);
 const newsLabel = ({ ro: 'Noutăți', de: 'Aktuelles', en: 'News' } as const)[locale];
 const others = recent.rows.filter((r) => r.id !== a.id).slice(0, 4);
+const site = Astro.site ?? new URL(Astro.url.origin);
+const abs = (p: string) => new URL(p, site).href;
+const iso = (ms: number | null | undefined) => (ms ? new Date(ms).toISOString() : undefined);
+const school = {
+  '@type': 'HighSchool',
+  name: 'Colegiul Național „Johannes Honterus” Brașov',
+  url: abs('/'),
+  logo: { '@type': 'ImageObject', url: abs('/brand/honterus-seal.svg') },
+};
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: t.value.slice(0, 110),
+  description: s.value || undefined,
+  image: [abs(cover ? imageSources(cover).src : '/og-default.png')],
+  datePublished: iso(a.publishedAt),
+  dateModified: iso(a.updatedAt ?? a.publishedAt),
+  inLanguage: t.lang,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': abs(alternates[locale]) },
+  author: school,
+  publisher: school,
+};
 ---
 
 <Base
@@ -31,7 +53,8 @@ const others = recent.rows.filter((r) => r.id !== a.id).slice(0, 4);
   settings={settings}
   banners={banners}
   fallback={body.fallback || t.fallback}
-  jsonLd={{ '@context': 'https://schema.org', '@type': 'NewsArticle', headline: t.value, datePublished: a.publishedAt ? new Date(a.publishedAt).toISOString() : undefined, inLanguage: t.lang }}
+  image={cover ? imageSources(cover).src : undefined}
+  jsonLd={jsonLd}
 >
   <PageHead locale={locale} title={t.value} titleLang={t.lang} lead={s.value} leadLang={s.lang} crumbs={[{ label: newsLabel, route: 'news' }, { label: t.value }]}>
     {a.publishedAt && <p class="byline"><time datetime={new Date(a.publishedAt).toISOString()}>{formatDate(a.publishedAt, locale)}</time></p>}
@@ -43,7 +66,7 @@ const others = recent.rows.filter((r) => r.id !== a.id).slice(0, 4);
         cover && (
           <figure class="cover">
             <div class="plate">
-              <Picture media={cover} locale={locale} priority sizes="(min-width: 60rem) 42rem, 100vw" />
+              <Picture media={cover} locale={locale} priority sizes="(min-width: 60rem) 42rem, calc(100vw - 3rem)" />
             </div>
             {caption(cover, locale) && <figcaption>{caption(cover, locale)}{cover.credit && <span class="credit">{creditLine(cover, locale)}</span>}</figcaption>}
           </figure>

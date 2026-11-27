@@ -88,7 +88,7 @@ const noteOf = new Map(events.filter((e) => e.sourceUrl).map((e) => [e.id, ++not
                       {m && (
                         <figure class="ev__fig">
                           <div class="plate" style={m.width && m.width < 544 ? `max-width:${m.width + 14}px` : undefined}>
-                            <Picture media={m} locale={locale} sizes="(min-width: 60rem) 34rem, 100vw" />
+                            <Picture media={m} locale={locale} sizes="(min-width: 48rem) 34rem, calc(100vw - 8rem)" />
                           </div>
                           <figcaption>
                             {caption(m, locale)}
@@ -167,8 +167,12 @@ const noteOf = new Map(events.filter((e) => e.sourceUrl).map((e) => [e.id, ++not
       gap: var(--s-2);
       border: 0;
     }
+    /* fixed-width chips: the row does not shift when the web fonts replace the fallback (CLS 0) */
     .eras li {
-      flex: none;
+      flex: 0 0 10.5rem;
+    }
+    .eras a {
+      height: 100%;
     }
     .eras a {
       border: 1px solid var(--rule-strong) !important;

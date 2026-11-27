@@ -20,7 +20,7 @@ const { id, title, locale, poster } = Astro.props;
     <button type="button" class="yt__btn" data-yt={id} data-title={title}>
       {
         poster ? (
-          <img src={poster.src} srcset={poster.srcset} sizes="(min-width: 64rem) 50rem, 100vw" width={poster.width} height={poster.height} alt="" loading="lazy" decoding="async" />
+          <img src={poster.src} srcset={poster.srcset} sizes="(min-width: 64rem) 50rem, calc(100vw - 3rem)" width={poster.width} height={poster.height} alt="" loading="lazy" decoding="async" />
         ) : (
           <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} width="480" height="360" alt="" loading="lazy" decoding="async" />
         )
@@ -79,7 +79,6 @@ const { id, title, locale, poster } = Astro.props;
     place-items: center;
     color: var(--paper);
     background: rgb(11 27 77 / 0.25);
-    transition: background 200ms;
   }
   .yt__play svg {
     width: 4.5rem;

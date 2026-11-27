@@ -77,17 +77,17 @@ const L = (k: string) => ui(locale, k);
                 <li class="primary__item">
                   {item.columns ? (
                     <>
-                      <button
+                      {/* A link to the section overview without JS; the script upgrades it to the mega-menu toggle. */}
+                      <a
                         class="primary__link"
-                        type="button"
-                        aria-expanded="false"
+                        href={url(item.route, locale)}
                         aria-controls={`mega-${item.id}`}
                         data-mega-toggle
                         data-current={isCurrent ? 'true' : undefined}
                       >
                         {item.label[locale]}
                         <Icon name="chevron-down" />
-                      </button>
+                      </a>
                       <div class="mega" id={`mega-${item.id}`} hidden>
                         <div class="wrap mega__grid">
                           <div class="mega__intro">
@@ -134,15 +134,16 @@ const L = (k: string) => ui(locale, k);
       </nav>
 
       <div class="masthead__actions">
-        <button class="search-trigger" type="button" data-search-open aria-haspopup="dialog">
+        {/* Without JS these are links (search page; the menu panel via :target); the script upgrades them to buttons. */}
+        <a class="search-trigger" href={url('search', locale)} data-search-open>
           <Icon name="search" />
           <span class="search-trigger__label">{L('search')}</span>
           <kbd class="search-trigger__kbd" data-kbd>Ctrl K</kbd>
-        </button>
-        <button class="menu-trigger" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+        </a>
+        <a class="menu-trigger" href="#mobile-menu" aria-controls="mobile-menu" data-menu-open>
           <Icon name="menu" />
           <span class="menu-trigger__label">{L('menu')}</span>
-        </button>
+        </a>
       </div>
     </div>
   </div>
@@ -162,9 +163,9 @@ const L = (k: string) => ui(locale, k);
           }
         </ul>
       </nav>
-      <button class="icon-btn" type="button" data-menu-close autofocus>
+      <a class="icon-btn" href="#top" data-menu-close autofocus>
         <Icon name="close" /><span class="vh">{L('close')}</span>
-      </button>
+      </a>
     </div>
     <ul role="list" class="mobile-menu__list">
       {
@@ -206,8 +207,23 @@ const L = (k: string) => ui(locale, k);
 </header>
 
 <script>
-  // Mega-menus: click to open (not hover-only), Esc / outside click closes, one open at a time.
-  const toggles = [...document.querySelectorAll<HTMLButtonElement>('[data-mega-toggle]')];
+  /** No-JS links → buttons (same attributes incl. Astro's scoped-style marker, minus href). */
+  const upgrade = (a: Element, extra: Record<string, string> = {}) => {
+    const b = document.createElement('button');
+    for (const { name, value } of [...a.attributes]) if (name !== 'href') b.setAttribute(name, value);
+    for (const [k, v] of Object.entries(extra)) b.setAttribute(k, v);
+    b.type = 'button';
+    while (a.firstChild) b.appendChild(a.firstChild);
+    a.replaceWith(b);
+    return b;
+  };
+  for (const a of document.querySelectorAll('a[data-mega-toggle]')) upgrade(a, { 'aria-expanded': 'false' });
+  for (const a of document.querySelectorAll('a[data-search-open]')) upgrade(a, { 'aria-haspopup': 'dialog' });
+  for (const a of document.querySelectorAll('a[data-menu-open]')) upgrade(a, { 'aria-expanded': 'false' });
+  for (const a of document.querySelectorAll('a[data-menu-close]')) upgrade(a);
+
+  // Mega-menus: click to open (not hover-only), Esc / outside click / focus leaving closes, one open at a time.
+  const toggles = [...document.querySelectorAll<HTMLButtonElement>('button[data-mega-toggle]')];
   const closeAll = (except?: HTMLButtonElement) => {
     for (const b of toggles) {
       if (b === except) continue;
@@ -233,10 +249,16 @@ const L = (k: string) => ui(locale, k);
   document.addEventListener('click', (e) => {
     if (!(e.target as Element).closest('.primary')) closeAll();
   });
+  for (const li of document.querySelectorAll<HTMLElement>('.primary__item')) {
+    li.addEventListener('focusout', (e) => {
+      const to = e.relatedTarget as Node | null;
+      if (to && !li.contains(to)) closeAll();
+    });
+  }
 
   // Mobile menu as a modal <dialog> (focus trap + Esc for free).
   const dlg = document.querySelector<HTMLDialogElement>('[data-mobile-menu]');
-  const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  const openBtn = document.querySelector<HTMLButtonElement>('button[data-menu-open]');
   openBtn?.addEventListener('click', () => {
     dlg?.showModal();
     openBtn.setAttribute('aria-expanded', 'true');
@@ -386,7 +408,6 @@ const L = (k: string) => ui(locale, k);
     align-items: center;
     gap: var(--s-5);
     min-height: var(--header-h);
-    transition: min-height 200ms var(--ease-out);
   }
   .is-condensed .masthead__row {
     min-height: 3.5rem;
@@ -404,10 +425,11 @@ const L = (k: string) => ui(locale, k);
     width: 2.4rem;
     height: auto;
     flex: none;
-    transition: width 200ms var(--ease-out);
+    transform-origin: 0 50%;
+    transition: transform 200ms var(--ease-out);
   }
   .is-condensed .brand :global(.brand__crest) {
-    width: 1.9rem;
+    transform: scale(0.8);
   }
   .brand__text {
     display: flex;
@@ -599,6 +621,10 @@ const L = (k: string) => ui(locale, k);
   .menu-trigger {
     display: none;
   }
+  .search-trigger,
+  .menu-trigger {
+    text-decoration: none;
+  }
 
   @media (max-width: 75rem) {
     .search-trigger__kbd {
@@ -670,6 +696,15 @@ const L = (k: string) => ui(locale, k);
     background: var(--paper);
     padding: 0;
     color: var(--ink);
+  }
+  /* No JS: the menu link targets the panel (#mobile-menu) and :target shows it as a full-height sheet. */
+  :global(.no-js) .mobile-menu:target {
+    display: block;
+    position: fixed;
+    inset: 0 0 0 auto;
+    z-index: 100;
+    overflow-y: auto;
+    box-shadow: 0 0 0 100vmax rgb(11 27 77 / 0.45);
   }
   .mobile-menu::backdrop {
     background: rgb(11 27 77 / 0.45);

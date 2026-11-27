@@ -108,3 +108,30 @@ export const timingSafeEqual = (a: Uint8Array, b: Uint8Array): boolean =>
 export const str = (v: FormDataEntryValue | null | undefined, max = 2000) => (typeof v === 'string' ? v.replace(/\r\n/g, '\n').trim().slice(0, max) : '');
 export const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'private, no-store' } });
+
+// ───────────── links entered in the admin ─────────────
+/**
+ * Links an editor may type: https:// / http:// with a host, mailto:, tel:, or a site path with exactly one
+ * leading slash. Rejects protocol-relative `//host`, `/\host`, `\\host`, backslashes anywhere (browsers treat
+ * them as slashes), javascript:/data:/vbscript: and anything with whitespace or markup characters.
+ */
+const HTTP_LINK = /^https?:\/\/[a-z0-9.-]+\.[a-z]{2,}(:\d{1,5})?([/?#][^\s<>"'\\`]*)?$/i;
+const SITE_PATH = /^\/(?![/\\])[^\s<>"'\\`]*$/;
+const MAILTO = /^mailto:[^\s<>"'\\`@]+@[^\s<>"'\\`@]+\.[^\s<>"'\\`]+$/i;
+const TEL = /^tel:\+?[0-9 ()./-]{3,30}$/i;
+export const isSafeLink = (v: string) => HTTP_LINK.test(v) || SITE_PATH.test(v) || MAILTO.test(v) || TEL.test(v);
+/** Redirect targets: a site path or an http(s) address only. */
+export const isSafeRedirectTarget = (v: string) => HTTP_LINK.test(v) || SITE_PATH.test(v);
+export const isHttpLink = (v: string) => HTTP_LINK.test(v);
+
+/** Parse a form body; null (→ 400) for a wrong Content-Type or a malformed body instead of a 500. */
+export async function readForm(req: Request): Promise<FormData | null> {
+  const ct = req.headers.get('content-type') ?? '';
+  if (!ct.includes('application/x-www-form-urlencoded') && !ct.includes('multipart/form-data')) return null;
+  try {
+    return await req.formData();
+  } catch {
+    return null;
+  }
+}
+export const badRequest = () => new Response('Bad request', { status: 400, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

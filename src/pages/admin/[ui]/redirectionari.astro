@@ -1,6 +1,6 @@
 ---
 /** Redirects (admin only): legacy URLs → new pages; hits are counted by the middleware. */
-import { desc, eq, like, or } from 'drizzle-orm';
+import { and, desc, eq, inArray, like, ne, or } from 'drizzle-orm';
 import Admin from '~/layouts/Admin.astro';
 import Flash from '~/components/admin/Flash.astro';
 import { db, schema as s } from '~/server/db';
@@ -9,20 +9,24 @@ import { audit, can } from '~/server/admin/audit';
 import { purge } from '~/server/admin/purge';
 import { translator } from '~/server/admin/i18n';
 import { flashFrom } from '~/server/admin/view';
-import { fmtDate, str } from '~/server/admin/util';
+import { badRequest, fmtDate, isSafeRedirectTarget, readForm, str } from '~/server/admin/util';
+import { redirectSourceKind } from '~/server/admin/links';
 
 const user = Astro.locals.admin!;
 const t = translator(user.uiLocale);
 if (!can(user, 'admin')) return Astro.redirect('/admin?err=errForbidden', 303);
 let error = '';
+let errorDetail = '';
 let draft = { from: '', to: '', code: 301, note: '' };
 if (Astro.request.method === 'POST') {
-  const fd = await Astro.request.formData();
+  const fd = await readForm(Astro.request);
+  if (!fd) return badRequest();
   const act = str(fd.get('_action'), 20);
   const id = Number(fd.get('id')) || null;
   if (act === 'delete' && id) {
     await db().delete(s.redirects).where(eq(s.redirects.id, id));
     await audit(Astro, 'delete', 'redirects', id);
+    await purge(Astro, [], ['notfound']);
     return Astro.redirect('/admin/redirectionari?ok=okDeleted', 303);
   }
   const rawFrom = str(fd.get('from'), 500);
@@ -31,26 +35,52 @@ if (Astro.request.method === 'POST') {
   const note = str(fd.get('note'), 200) || null;
   draft = { from: rawFrom, to, code, note: note ?? '' };
   let from = '';
-  try {
-    const u = new URL(rawFrom, 'https://x.invalid');
-    from = normalizePath(u.pathname, u.search);
-  } catch {
-    from = '';
+  // the old address is a path on this site (a full https://… URL of the old site is reduced to its path)
+  if (/^\/(?![/\\])/.test(rawFrom) || /^https?:\/\/[^/\\\s]+(\/|$)/i.test(rawFrom)) {
+    try {
+      const u = new URL(rawFrom, 'https://x.invalid');
+      from = normalizePath(u.pathname, u.search);
+    } catch {
+      from = '';
+    }
   }
-  if (!from.startsWith('/') || !/^(\/[^\s]*|https?:\/\/[^\s]+)$/.test(to)) error = 'errUrl';
+  if (!from.startsWith('/') || from.startsWith('//') || !isSafeRedirectTarget(to)) error = 'errUrl';
   else if (normalizePath(to) === from) error = 'r_loop';
   else {
+    const kind = await redirectSourceKind(from);
+    if (kind === 'live') error = 'r_fromLive';
+    else if (kind === 'reserved') error = 'r_reserved';
+  }
+  if (!error) {
     const [clash] = await db().select().from(s.redirects).where(eq(s.redirects.fromPath, from)).limit(1);
     if (clash && clash.id !== id) error = 'errSlugTaken';
-    else {
-      if (id) await db().update(s.redirects).set({ fromPath: from, toPath: to, code, note }).where(eq(s.redirects.id, id));
-      else await db().insert(s.redirects).values({ fromPath: from, toPath: to, code, note });
-      // no chains: anything pointing at the old address now points at the final target
-      await db().update(s.redirects).set({ toPath: to }).where(eq(s.redirects.toPath, from));
-      await audit(Astro, id ? 'update' : 'create', 'redirects', id ?? from, `${from} → ${to}`);
-      await purge(Astro, [], ['notfound']);
-      return Astro.redirect('/admin/redirectionari?ok=okSaved', 303);
+  }
+  if (!error && to.startsWith('/')) {
+    // no chains: the target must be final. Point the rule at the final address instead.
+    const u = new URL(to, 'https://x.invalid');
+    const [next] = await db().select().from(s.redirects).where(eq(s.redirects.fromPath, normalizePath(u.pathname, u.search))).limit(1);
+    if (next && next.id !== id) {
+      error = 'r_toRedirected';
+      errorDetail = next.toPath;
     }
+  }
+  if (!error) {
+    if (id) await db().update(s.redirects).set({ fromPath: from, toPath: to, code, note }).where(eq(s.redirects.id, id));
+    else await db().insert(s.redirects).values({ fromPath: from, toPath: to, code, note });
+    // no chains: rules that pointed at the old address (which is not a live page — checked above) now point
+    // straight at the new target. This is reported to the editor, never done silently.
+    const chained = await db()
+      .select({ id: s.redirects.id, fromPath: s.redirects.fromPath })
+      .from(s.redirects)
+      .where(and(or(eq(s.redirects.toPath, from), eq(s.redirects.toPath, rawFrom)), ne(s.redirects.fromPath, from)));
+    if (chained.length) await db().update(s.redirects).set({ toPath: to }).where(inArray(s.redirects.id, chained.map((c) => c.id)));
+    await audit(Astro, id ? 'update' : 'create', 'redirects', id ?? from, `${from} → ${to}${chained.length ? ` (+${chained.length} re-pointed)` : ''}`);
+    await purge(Astro, [], ['notfound']);
+    if (chained.length) {
+      const list = encodeURIComponent(chained.map((c) => c.fromPath).slice(0, 20).join('\n'));
+      return Astro.redirect(`/admin/redirectionari?ok=r_repointed&list=${list}`, 303);
+    }
+    return Astro.redirect('/admin/redirectionari?ok=okSaved', 303);
   }
 }
 const q = (Astro.url.searchParams.get('q') ?? '').slice(0, 100).replace(/[%_]/g, '');
@@ -64,22 +94,29 @@ const rows = await db()
 const editing = edit ? rows.find((r) => r.id === edit) ?? (await db().select().from(s.redirects).where(eq(s.redirects.id, edit)))[0] : undefined;
 if (editing && !draft.from) draft = { from: editing.fromPath, to: editing.toPath, code: editing.code, note: editing.note ?? '' };
 const flash = flashFrom(Astro.url);
+const repointed = flash.ok === 'r_repointed' ? (Astro.url.searchParams.get('list') ?? '').slice(0, 4000).split('\n').filter(Boolean) : [];
 ---
 
 <Admin title={t('redirects')} active="redirectionari">
   <header class="adm-head"><h1>{t('redirects')}</h1></header>
   <Flash t={t} ok={flash.ok} err={error || flash.err} />
+  {errorDetail && <p class="flash flash--error"><code>{errorDetail}</code></p>}
+  {repointed.length > 0 && (
+    <ul class="flash list-plain">
+      {repointed.map((p) => <li><code>{p}</code></li>)}
+    </ul>
+  )}
   <form method="post" class="card" style="margin-bottom: var(--s-5)">
     <h2>{editing ? t('edit') : t('r_add')}</h2>
     <input type="hidden" name="_csrf" value={user.csrf} />
     {editing && <input type="hidden" name="id" value={editing.id} />}
     <div class="grid-2">
       <div class="f"><label for="from">{t('r_from')}</label><input type="text" id="from" name="from" value={draft.from} placeholder="/lic/..." required /></div>
-      <div class="f"><label for="to">{t('r_to')}</label><input type="text" id="to" name="to" value={draft.to} placeholder="/ro/..." required /></div>
+      <div class="f"><label for="to">{t('r_to')}</label><input type="text" id="to" name="to" value={draft.to} placeholder="/ro/..." required aria-describedby="to-help" /><p class="help" id="to-help">{t('r_targetHelp')}</p></div>
       <div class="f">
         <label for="code">{t('r_code')}</label>
         <select id="code" name="code">
-          {[301, 302, 307, 308].map((c) => <option value={c} selected={c === draft.code}>{c}{c === 301 ? ' (permanent)' : c === 302 ? ' (temporar)' : ''}</option>)}
+          {[301, 302, 307, 308].map((c) => <option value={c} selected={c === draft.code}>{c}{c === 301 || c === 308 ? ` (${t('r_permanent')})` : ` (${t('r_temporary')})`}</option>)}
         </select>
       </div>
       <div class="f"><label for="note">{t('r_note')}</label><input type="text" id="note" name="note" value={draft.note} /></div>

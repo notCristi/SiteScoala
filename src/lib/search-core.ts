@@ -16,6 +16,21 @@ export const fold = (s: string) =>
     .replace(/ß/g, 'ss')
     .toLowerCase();
 
+const isWordChar = (c: string | undefined) => !!c && /[a-z0-9]/.test(c);
+
+/**
+ * Position of `term` in `hay` at the start of a word ("emp" must not find "temporar"); terms of 6+
+ * letters may also match inside a word (German compounds: "prufung" in "aufnahmeprufung"). -1 if absent.
+ */
+function findTerm(hay: string, term: string): { i: number; start: boolean } {
+  let inner = -1;
+  for (let i = hay.indexOf(term); i >= 0; i = hay.indexOf(term, i + 1)) {
+    if (!isWordChar(hay[i - 1])) return { i, start: true };
+    if (inner < 0) inner = i;
+  }
+  return term.length >= 6 && inner >= 0 ? { i: inner, start: false } : { i: -1, start: false };
+}
+
 export function searchRecords(records: SearchRecord[], query: string, limit = 40) {
   const fq = fold(query).trim().replace(/\s+/g, ' ');
   const terms = fq.split(' ').filter((x) => x.length > 0);
@@ -27,13 +42,13 @@ export function searchRecords(records: SearchRecord[], query: string, limit = 40
     let score = 0;
     let ok = true;
     for (const term of terms) {
-      const i = hay.indexOf(term);
-      if (i < 0) {
+      const h = findTerm(hay, term);
+      if (h.i < 0) {
         ok = false;
         break;
       }
-      const ti = title.indexOf(term);
-      score += ti === 0 ? 12 : ti > 0 && /\W/.test(title[ti - 1] ?? ' ') ? 8 : ti > 0 ? 5 : /\W/.test(hay[i - 1] ?? ' ') ? 3 : 1;
+      const ti = findTerm(title, term);
+      score += ti.i === 0 ? 12 : ti.i > 0 && ti.start ? 8 : ti.i > 0 ? 5 : h.start ? 3 : 1;
     }
     if (!ok) continue;
     // the title is the query (or starts with it): that record wins over pages that merely mention it

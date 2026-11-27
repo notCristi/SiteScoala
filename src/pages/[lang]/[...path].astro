@@ -7,7 +7,9 @@
 import { isLocale, type Locale } from '~/i18n/locales';
 import { alternates as altsFor, match, type Match } from '~/i18n/routes';
 import { getArticle, getGallery, getGuide, getLayoutData, getLife, getProject } from '~/server/content';
-import { cacheTagsFor } from '~/server/cache';
+import { cacheTagsFor, edgeTtlFor } from '~/server/cache';
+import { handleContact, isFormRequest, type ContactResult } from '~/server/contact';
+import { url } from '~/i18n/routes';
 import Home from '~/views/Home.astro';
 import Editorial from '~/views/Editorial.astro';
 import History from '~/views/History.astro';
@@ -43,14 +45,26 @@ if (m) {
   if (['article', 'project', 'lifeEntry', 'galleryItem', 'guide'].includes(m.id) && !entity) m = undefined;
 }
 
-if (!m) {
+// The contact form posts to its own page: errors come back as this page with the user's text (no JS needed).
+let contactForm: ContactResult | undefined;
+if (Astro.request.method === 'POST') {
+  if (m?.id !== 'contact') return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD', 'Cache-Control': 'no-store' } });
+  if (!isFormRequest(Astro.request)) return new Response('Unsupported Media Type', { status: 415, headers: { 'Cache-Control': 'no-store' } });
+  contactForm = await handleContact(Astro.request, locale);
+  if (contactForm.ok) return Astro.redirect(`${url('contact', locale)}?trimis=1#formular`, 303);
+  Astro.response.status = 400;
+  Astro.response.headers.set('Cache-Control', 'private, no-store');
+} else if (!m) {
   Astro.response.status = 404;
   Astro.cache.set({ maxAge: 300, tags: ['site', 'notfound'] });
+  Astro.response.headers.set('Cache-Control', 'public, max-age=60');
 } else {
-  Astro.cache.set({ maxAge: 86400, swr: 604800, tags: cacheTagsFor(m) });
+  // Date-dependent pages (open/closed steps, upcoming events, expiring documents) use a short edge TTL;
+  // the cron also purges them when a date boundary passes (src/server/scheduled.ts).
+  Astro.cache.set({ ...edgeTtlFor(m), tags: cacheTagsFor(m) });
+  // Browsers revalidate HTML on every visit (cheap 304 at the edge); the edge keeps it until purge / TTL.
+  Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
 }
-// Browsers revalidate HTML on every visit (cheap 304 at the edge); the edge keeps it for a day + purge.
-Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
 
 const alternates = m ? altsFor(m) : { ro: '/ro/', de: '/de/', en: '/en/' };
 const common = { locale, match: m!, alternates, settings: layout.settings, banners: layout.banners, entity };
@@ -73,5 +87,5 @@ const id = m?.id;
 {id === 'projects' && <Projects {...common} />}
 {id === 'gallery' && <GalleryList {...common} />}
 {id === 'galleryItem' && <GalleryView {...common} />}
-{id === 'contact' && <Contact {...common} />}
+{id === 'contact' && <Contact {...common} form={contactForm} />}
 {id === 'search' && <Search {...common} />}

@@ -20,7 +20,7 @@ const EMPTY = {
 } as const;
 ---
 
-<Base locale={locale} title={q ? `${title}: ${q}` : title} route={match.id} alternates={alternates} settings={settings} banners={banners} noindex>
+<Base locale={locale} title={q ? `${title}: ${q}` : title} description={({ ro: 'Căutați pe site-ul colegiului: pagini, ghiduri de admitere și examene, documente, personal și noutăți.', de: 'Suche auf der Website des Kollegs: Seiten, Aufnahme- und Prüfungsleitfäden, Dokumente, Kollegium und Aktuelles.', en: 'Search the college website: pages, admissions and exam guides, documents, staff and news.' } as const)[locale]} route={match.id} alternates={alternates} settings={settings} banners={banners} noindex>
   <PageHead locale={locale} title={title} crumbs={[{ label: title }]}>
     <form class="sform" method="get" action={url('search', locale)} role="search">
       <label class="vh" for="sq">{title}</label>

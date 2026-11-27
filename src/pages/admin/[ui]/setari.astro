@@ -10,7 +10,7 @@ import { audit, can } from '~/server/admin/audit';
 import { purge, purgeEverything } from '~/server/admin/purge';
 import { translator } from '~/server/admin/i18n';
 import { flashFrom, mediaLite } from '~/server/admin/view';
-import { str } from '~/server/admin/util';
+import { badRequest, readForm, str } from '~/server/admin/util';
 
 const user = Astro.locals.admin!;
 const t = translator(user.uiLocale);
@@ -19,7 +19,8 @@ const URL_RE = /^https?:\/\/[^\s<>"]+$/i;
 const errors: Record<string, string> = {};
 
 if (Astro.request.method === 'POST') {
-  const fd = await Astro.request.formData();
+  const fd = await readForm(Astro.request);
+  if (!fd) return badRequest();
   if (fd.get('_action') === 'purge') {
     const ok = await purgeEverything(Astro);
     await audit(Astro, 'purge_all', 'settings', null);

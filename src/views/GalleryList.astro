@@ -16,7 +16,7 @@ const media = await getMediaMap(galleries.map((g) => g.coverMediaId));
 const title = ({ ro: 'Galerie', de: 'Galerie', en: 'Gallery' } as const)[locale];
 ---
 
-<Base locale={locale} title={title} route={match.id} alternates={alternates} settings={settings} banners={banners}>
+<Base locale={locale} title={title} description={({ ro: 'Fotografii din viața Colegiului Național „Johannes Honterus” Brașov: festivități, proiecte, concursuri și Curtea Honterus.', de: 'Fotos aus dem Leben des Honterus-Nationalkollegs Kronstadt: Feiern, Projekte, Wettbewerbe und der Honterushof.', en: 'Photographs from the life of the “Johannes Honterus” National College: ceremonies, projects, competitions and the Honterus Courtyard.' } as const)[locale]} route={match.id} alternates={alternates} settings={settings} banners={banners}>
   <PageHead locale={locale} title={title} crumbs={[{ label: ({ ro: 'Viața școlară', de: 'Schulleben', en: 'School life' } as const)[locale], route: 'life' }, { label: title }]} />
   {
     galleries.length === 0 && (
@@ -49,7 +49,7 @@ const title = ({ ro: 'Galerie', de: 'Galerie', en: 'Gallery' } as const)[locale]
         return (
           <li>
             <a href={url('galleryItem', locale, { slug: g.slug })} class="g">
-              {m && <span class="plate"><Picture media={m} locale={locale} sizes="(min-width: 60rem) 24rem, 100vw" ratio="4 / 3" alt="" /></span>}
+              {m && <span class="plate"><Picture media={m} locale={locale} sizes="(min-width: 60rem) 24rem, (min-width: 40rem) 45vw, calc(100vw - 3rem)" ratio="4 / 3" alt="" /></span>}
               <span class="g__t" lang={pick(g, 'title', locale).lang}>{pick(g, 'title', locale).value}</span>
               {g.eventDate && <span class="g__d">{formatDate(g.eventDate, locale, 'month-year')}</span>}
             </a>

@@ -487,3 +487,26 @@ if (guarded) {
     if (dirty) e.preventDefault();
   });
 }
+
+// ── one submit at a time: a double click must not send the form twice (the second would hit the
+//    concurrent-edit check and look like someone else's change) ──
+document.querySelectorAll<HTMLFormElement>('form[data-entity-form]').forEach((f) => {
+  let busy = false;
+  f.addEventListener('submit', (e) => {
+    if (e.defaultPrevented) return;
+    if (busy) {
+      e.preventDefault();
+      return;
+    }
+    // documents: say "too large" before sending 25 MB+ over a school connection
+    const file = f.querySelector<HTMLInputElement>('input[type="file"][name="file"]')?.files?.[0];
+    if (file && file.size > 25 * 1024 * 1024) {
+      e.preventDefault();
+      toast(L('Fișierul este prea mare. Documentele pot avea cel mult 25 MB; micșorați PDF-ul sau împărțiți-l.', 'Die Datei ist zu groß. Dokumente dürfen höchstens 25 MB haben; bitte PDF verkleinern oder aufteilen.'));
+      return;
+    }
+    busy = true;
+    window.setTimeout(() => (busy = false), 10_000);
+  });
+  window.addEventListener('pageshow', () => (busy = false));
+});

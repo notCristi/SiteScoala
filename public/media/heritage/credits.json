@@ -17,8 +17,16 @@
         "key": "/media/heritage/curtea-honterus-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/curtea-honterus-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/curtea-honterus-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/curtea-honterus-1200.webp"
       },
       {
         "w": 1600,
@@ -49,6 +57,10 @@
         "key": "/media/heritage/curtea-honterus-2-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/curtea-honterus-2-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/curtea-honterus-2-1024.webp"
       }
@@ -77,8 +89,16 @@
         "key": "/media/heritage/scoala-a-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/scoala-a-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/scoala-a-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/scoala-a-1200.webp"
       },
       {
         "w": 1600,
@@ -109,8 +129,16 @@
         "key": "/media/heritage/scoala-b-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/scoala-b-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/scoala-b-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/scoala-b-1200.webp"
       },
       {
         "w": 1600,
@@ -141,8 +169,16 @@
         "key": "/media/heritage/scoala-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/scoala-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/scoala-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/scoala-1200.webp"
       },
       {
         "w": 1600,
@@ -173,8 +209,16 @@
         "key": "/media/heritage/statuie-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/statuie-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/statuie-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/statuie-1200.webp"
       },
       {
         "w": 1600,
@@ -229,8 +273,16 @@
         "key": "/media/heritage/portret-septemcastrensis-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/portret-septemcastrensis-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/portret-septemcastrensis-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/portret-septemcastrensis-1200.webp"
       },
       {
         "w": 1600,
@@ -285,8 +337,16 @@
         "key": "/media/heritage/harta-transilvaniei-1532-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/harta-transilvaniei-1532-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/harta-transilvaniei-1532-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/harta-transilvaniei-1532-1200.webp"
       },
       {
         "w": 1600,
@@ -317,6 +377,10 @@
         "key": "/media/heritage/rudimenta-1542-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/rudimenta-1542-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/rudimenta-1542-1024.webp"
       }
@@ -343,6 +407,10 @@
       {
         "w": 640,
         "key": "/media/heritage/cosmographia-1546-640.webp"
+      },
+      {
+        "w": 800,
+        "key": "/media/heritage/cosmographia-1546-800.webp"
       },
       {
         "w": 1024,
@@ -397,8 +465,16 @@
         "key": "/media/heritage/biserica-neagra-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/biserica-neagra-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/biserica-neagra-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/biserica-neagra-1200.webp"
       },
       {
         "w": 1600,
@@ -429,8 +505,16 @@
         "key": "/media/heritage/biserica-neagra-statuie-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/biserica-neagra-statuie-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/biserica-neagra-statuie-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/biserica-neagra-statuie-1200.webp"
       },
       {
         "w": 1600,
@@ -461,8 +545,16 @@
         "key": "/media/heritage/panorama-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/panorama-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/panorama-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/panorama-1200.webp"
       },
       {
         "w": 1600,
@@ -493,8 +585,16 @@
         "key": "/media/heritage/biserica-neagra-interior-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/biserica-neagra-interior-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/biserica-neagra-interior-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/biserica-neagra-interior-1200.webp"
       },
       {
         "w": 1600,
@@ -525,8 +625,16 @@
         "key": "/media/heritage/burzenland-1532-640.webp"
       },
       {
+        "w": 800,
+        "key": "/media/heritage/burzenland-1532-800.webp"
+      },
+      {
         "w": 1024,
         "key": "/media/heritage/burzenland-1532-1024.webp"
+      },
+      {
+        "w": 1200,
+        "key": "/media/heritage/burzenland-1532-1200.webp"
       },
       {
         "w": 1600,

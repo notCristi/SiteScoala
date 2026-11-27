@@ -9,14 +9,15 @@ import { audit, can } from '~/server/admin/audit';
 import { purge } from '~/server/admin/purge';
 import { translator } from '~/server/admin/i18n';
 import { flashFrom } from '~/server/admin/view';
-import { fmtDate, str } from '~/server/admin/util';
+import { badRequest, fmtDate, readForm, str } from '~/server/admin/util';
 
 const user = Astro.locals.admin!;
 const t = translator(user.uiLocale);
 const now = Date.now();
 
 if (Astro.request.method === 'POST') {
-  const fd = await Astro.request.formData();
+  const fd = await readForm(Astro.request);
+  if (!fd) return badRequest();
   const id = Number(fd.get('id'));
   const act = str(fd.get('_action'), 20);
   if (!can(user, 'banner') || !id) return Astro.redirect('/admin?err=errForbidden', 303);
@@ -40,7 +41,9 @@ const [banners, messages, activity, ...counts] = await Promise.all([
     .from(s.announcements)
     .where(and(eq(s.announcements.status, 'published'), eq(s.announcements.pinnedBanner, true), gt(s.announcements.bannerUntil, now)))
     .orderBy(desc(s.announcements.publishedAt)),
-  d.select().from(s.contactMessages).where(eq(s.contactMessages.status, 'new')).orderBy(desc(s.contactMessages.createdAt)).limit(5),
+  can(user, 'content')
+    ? d.select().from(s.contactMessages).where(eq(s.contactMessages.status, 'new')).orderBy(desc(s.contactMessages.createdAt)).limit(5)
+    : Promise.resolve([] as (typeof s.contactMessages.$inferSelect)[]),
   d
     .select({ at: s.auditLog.at, action: s.auditLog.action, entityType: s.auditLog.entityType, entityId: s.auditLog.entityId, summary: s.auditLog.summary, who: s.adminUsers.displayName })
     .from(s.auditLog)
@@ -137,6 +140,7 @@ const ENTITY_KEY: Record<string, string> = Object.fromEntries(ENTITIES.filter((e
       }
     </section>
 
+    {can(user, 'content') && (
     <section class="card">
       <h2>{t('latestMessages')}</h2>
       {
@@ -157,6 +161,7 @@ const ENTITY_KEY: Record<string, string> = Object.fromEntries(ENTITIES.filter((e
         )
       }
     </section>
+    )}
   </div>
 
   <h2 class="sec">{t('overview')}</h2>

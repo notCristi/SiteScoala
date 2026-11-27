@@ -61,7 +61,7 @@ const entries = life.filter((l) => l.kind !== 'coetus');
               <a class="item" href={url('lifeEntry', locale, { slug: e.slug })}>
                 {m && (
                   <span class="plate item__img">
-                    <Picture media={m} locale={locale} sizes="(min-width: 60rem) 24rem, 100vw" ratio="3 / 2" alt="" />
+                    <Picture media={m} locale={locale} sizes="(min-width: 60rem) 24rem, (min-width: 40rem) 45vw, calc(100vw - 3rem)" ratio="3 / 2" alt="" />
                   </span>
                 )}
                 <span class="kicker">{KIND[e.kind][locale]}</span>

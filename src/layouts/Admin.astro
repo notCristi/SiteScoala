@@ -18,10 +18,12 @@ interface Props {
 const { title, active } = Astro.props;
 const user = Astro.locals.admin!;
 const t = translator(user.uiLocale);
-const [msg] = await db()
-  .select({ n: sql<number>`count(*)` })
-  .from(s.contactMessages)
-  .where(eq(s.contactMessages.status, 'new'));
+const [msg] = can(user, 'content')
+  ? await db()
+      .select({ n: sql<number>`count(*)` })
+      .from(s.contactMessages)
+      .where(eq(s.contactMessages.status, 'new'))
+  : [];
 const newMessages = Number(msg?.n ?? 0);
 
 type Item = { key: string; href: string; label: string; count?: number };
@@ -44,7 +46,7 @@ const groups: { label: string; items: Item[] }[] = [
       { key: 'personal', href: '/admin/personal', label: t('staff') },
       { key: 'catedre', href: '/admin/catedre', label: t('departments') },
       { key: 'istorie', href: '/admin/istorie', label: t('timeline') },
-      { key: 'mesaje', href: '/admin/mesaje', label: t('messages'), count: newMessages },
+      ...(can(user, 'content') ? [{ key: 'mesaje', href: '/admin/mesaje', label: t('messages'), count: newMessages }] : []),
     ],
   },
   {

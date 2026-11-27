@@ -17,17 +17,32 @@
  *   public/brand/honterus-crest-light.svg     crest only on a paper-tone backing (for dark surfaces)
  *   src/brand/seal-geometry.json              path data for the inline/animated component
  *
- * Usage: node scripts/brand/build-logo.mjs   (needs devDeps: potrace, opentype.js)
+ *   public/brand/honterus-seal-small.svg      full colour, ≤ 160 CSS px (home title page): re-gridded to 500 units
+ *   public/brand/honterus-seal-mono-light-small.svg  footer mark (≤ 96 px): same, single ink for dark surfaces
+ *
+ * Path data is compacted with scripts/brand/path-min.mjs (relative commands, 0.1-unit grid — visually
+ * lossless at any size; the small variant uses a 2-unit grid).
+ *
+ * Usage: node scripts/brand/build-logo.mjs              full rebuild (needs devDeps: potrace, opentype.js)
+ *        node scripts/brand/build-logo.mjs --emit-only  re-emit the SVGs from src/brand/seal-geometry.json
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import opentype from 'opentype.js';
-import potrace from 'potrace';
+import { minPath } from './path-min.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../..');
 const P = JSON.parse(fs.readFileSync(path.join(here, 'logo-params.json'), 'utf8'));
+const f = (n) => Math.round(n * 10) / 10;
+export const INK = '#14171F';
+export const PAPER = '#FBF8F1';
+export const RED = '#C40817'; // sampled from the original: rgb(196, 8, 23)
+export const BLUE = '#001F77'; // sampled from the original: rgb(0, 31, 119)
+
+async function buildGeometry() {
+const opentype = (await import('opentype.js')).default;
+const potrace = (await import('potrace')).default;
 const load = (f) => {
   const b = fs.readFileSync(path.join(here, 'fonts', f));
   return opentype.parse(b.buffer.slice(b.byteOffset, b.byteOffset + b.length));
@@ -38,10 +53,6 @@ const serif = load('LiberationSerif-Regular.ttf');
 const C = 500;
 const f = (n) => Math.round(n * 10) / 10;
 
-export const INK = '#14171F';
-export const PAPER = '#FBF8F1';
-export const RED = '#C40817'; // sampled from the original: rgb(196, 8, 23)
-export const BLUE = '#001F77'; // sampled from the original: rgb(0, 31, 119)
 
 /** Six-spoke asterisk used between „Brașov” and „Kronstadt”. */
 function asterisk(cx, cy, r, w) {
@@ -145,12 +156,19 @@ const crest = toViewBox(crestSvg);
 const crestBack = toViewBox(silSvg);
 
 const R = P.ringR, t = P.ringT, hair = P.hair;
-const geometry = {
+return {
   viewBox: '0 0 1000 1000',
   ring: { r: R, t, hair, red: RED, blue: BLUE },
   legendTop, legendBottom, crest, crestBack,
   crestBox: [276, 224, 458, 570],
 };
+}
+
+const EMIT_ONLY = process.argv.includes('--emit-only');
+const geometry = EMIT_ONLY ? JSON.parse(fs.readFileSync(path.join(root, 'src/brand/seal-geometry.json'), 'utf8')) : await buildGeometry();
+const R = geometry.ring.r, t = geometry.ring.t, hair = geometry.ring.hair;
+for (const k of ['legendTop', 'legendBottom', 'crest', 'crestBack']) geometry[k] = minPath(geometry[k], 1);
+const { legendTop, legendBottom, crest, crestBack } = geometry;
 
 const rings = (ink, red, blue, paper) => `${paper ? `<circle cx="500" cy="500" r="${R}" fill="${paper}"/>` : ''}
 <circle cx="500" cy="500" r="${f(R - t / 2)}" fill="none" stroke="${red}" stroke-width="${t}"/>
@@ -179,4 +197,15 @@ out('public/brand/honterus-seal-mono.svg', seal(name, INK, INK, INK, null));
 out('public/brand/honterus-seal-mono-light.svg', seal(name, PAPER, PAPER, PAPER, null, PAPER, INK));
 out('public/brand/honterus-crest.svg', crestOnly(INK, '#FFFFFF'));
 out('public/brand/honterus-crest-light.svg', crestOnly(INK, PAPER));
+// Footer-size mark (≤ 96 px): the same drawing on a 500-unit grid — a third of the bytes, no visible change.
+const q = (d) => minPath(d, 0, 0.5);
+const sm = (v) => Math.round(v * 50) / 100;
+out(
+  'public/brand/honterus-seal-mono-light-small.svg',
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><g fill="none" stroke="${PAPER}"><circle cx="250" cy="250" r="${sm(R - t / 2 - 1)}" stroke-width="${sm(t - 2)}"/><circle cx="250" cy="250" r="${sm(R - t * 1.5 + 1)}" stroke-width="${sm(t - 2)}"/></g><path fill="${PAPER}" d="${q(legendTop + legendBottom)}"/><path fill="${PAPER}" d="${q(crestBack)}"/><path fill="${INK}" fill-rule="evenodd" d="${q(crest)}"/></svg>\n`,
+);
+out(
+  'public/brand/honterus-seal-small.svg',
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><circle cx="250" cy="250" r="${sm(R)}" fill="#FFFFFF"/><g fill="none"><circle cx="250" cy="250" r="${sm(R - t / 2)}" stroke="${RED}" stroke-width="${sm(t)}"/><circle cx="250" cy="250" r="${sm(R - t * 1.5)}" stroke="${BLUE}" stroke-width="${sm(t)}"/><circle cx="250" cy="250" r="${sm(R)}" stroke="#111111" stroke-width="${sm(hair)}"/><circle cx="250" cy="250" r="${sm(R - 2 * t)}" stroke="#111111" stroke-width="${sm(hair)}"/></g><path fill="#111111" d="${q(legendTop + legendBottom)}"/><path fill="#111111" fill-rule="evenodd" d="${q(crest)}"/></svg>\n`,
+);
 out('src/brand/seal-geometry.json', JSON.stringify(geometry));

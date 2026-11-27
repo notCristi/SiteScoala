@@ -23,7 +23,7 @@ const q = Astro.url.searchParams;
 const fCat = q.get('cat') ?? '';
 const fYear = q.get('an') ?? '';
 const fCycle = q.get('ciclu') ?? '';
-const fText = q.get('q') ?? '';
+const fText = (q.get('q') ?? '').slice(0, 200);
 
 const cats = DOCUMENT_CATEGORIES.filter((c) => docs.some((d) => d.category === c));
 const years = [...new Set(docs.map((d) => d.academicYear).filter((y): y is string => !!y))].sort().reverse();
@@ -50,7 +50,7 @@ const shown = rows.filter(visible).length;
 const title = page ? pick(page, 'title', locale).value : L('documents');
 const lead = page ? pick(page, 'lead', locale) : undefined;
 const ext = (d: (typeof docs)[number]) => (d.fileExt ?? 'pdf').toLowerCase();
-const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].includes(e) ? 'file-sheet' : 'file-doc');
+const icon = (e: string) => (e === 'pdf' ? 'pdf' : ['xls', 'xlsx', 'ods'].includes(e) ? 'sheet' : 'doc');
 ---
 
 <Base locale={locale} title={title} description={lead?.value} route={match.id} alternates={alternates} settings={settings} banners={banners} noindex={!!(fCat || fYear || fCycle || fText)}>
@@ -141,8 +141,8 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
           g.rows.map((r) => (
             <tr hidden={!visible(r)} data-row data-cat={r.d.category} data-year={r.d.academicYear ?? ''} data-cycles={r.cyc.join(',')} data-hay={r.hay}>
               <td class="register__title">
-                <a href={docUrl(r.d)} target="_blank" rel="noopener" lang={r.t.lang}>
-                  <Icon name={icon(ext(r.d))} />
+                <a href={docUrl(r.d)} target="_blank" rel="noopener" lang={r.t.lang} data-astro-prefetch="false">
+                  <i class={`ficon ficon--${icon(ext(r.d))}`} aria-hidden="true" />
                   <span>{r.t.value}</span>
                 </a>
                 {r.d.issuedAt && (
@@ -225,11 +225,12 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
   }
 </script>
 
-<style>
+<style is:global>
+  /* global (prefixed by .docs) rather than scoped: 300+ rows would otherwise each carry data-astro-cid attributes */
   .docs {
     padding-bottom: var(--s-8);
   }
-  .filters {
+  .docs .filters {
     display: grid;
     grid-template-columns: 2fr repeat(3, 1fr) auto;
     gap: var(--s-4);
@@ -239,20 +240,20 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     border-top: 1px solid var(--ink);
   }
   @media (max-width: 64rem) {
-    .filters {
+    .docs .filters {
       grid-template-columns: 1fr 1fr;
     }
-    .filters__text,
-    .filters__actions {
+    .docs .filters__text,
+    .docs .filters__actions {
       grid-column: 1 / -1;
     }
   }
   @media (max-width: 36rem) {
-    .filters {
+    .docs .filters {
       grid-template-columns: 1fr;
     }
   }
-  .filters label {
+  .docs .filters label {
     display: block;
     font-size: var(--t-label);
     font-weight: 700;
@@ -261,8 +262,8 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     color: var(--ink-2);
     margin-bottom: 0.35rem;
   }
-  .filters select,
-  .filters input {
+  .docs .filters select,
+  .docs .filters input {
     width: 100%;
     min-height: 3rem;
     padding: 0 0.75rem;
@@ -270,10 +271,10 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     border-radius: var(--radius);
     background: var(--paper-raised);
   }
-  .input-icon {
+  .docs .input-icon {
     position: relative;
   }
-  .input-icon :global(svg) {
+  .docs .input-icon svg {
     position: absolute;
     left: 0.75rem;
     top: 50%;
@@ -281,28 +282,28 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     width: 1.2rem;
     color: var(--ink-2);
   }
-  .input-icon input {
+  .docs .input-icon input {
     padding-left: 2.5rem;
   }
   /* the submit button is only for visitors without JS; hide it before first paint (no layout shift) */
-  :global(.js) [data-nojs] {
+  .js .docs [data-nojs] {
     display: none;
   }
-  .filters__actions {
+  .docs .filters__actions {
     display: flex;
     gap: var(--s-2);
   }
-  .count {
+  .docs .count {
     margin-top: var(--s-5);
     font-size: var(--t-small);
     color: var(--ink-2);
   }
-  .cats {
+  .docs .cats {
     padding: var(--s-4) var(--s-5) var(--s-5);
     background: var(--paper-sunk);
     border-top: 1px solid var(--rule);
   }
-  .cats__label {
+  .docs .cats__label {
     font-size: var(--t-label);
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -310,21 +311,21 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     color: var(--ink-2);
     margin-bottom: 0.35rem;
   }
-  .cats ul {
+  .docs .cats ul {
     display: flex;
     flex-wrap: wrap;
     gap: var(--s-2);
     margin: 0;
   }
-  .filters-box > summary {
+  .docs .filters-box > summary {
     display: none;
   }
   @media (max-width: 40rem) {
-    .filters-box {
+    .docs .filters-box {
       border-top: 1px solid var(--ink);
       background: var(--paper-sunk);
     }
-    .filters-box > summary {
+    .docs .filters-box > summary {
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -334,31 +335,31 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
       cursor: pointer;
       list-style: none;
     }
-    .filters-box > summary::-webkit-details-marker {
+    .docs .filters-box > summary::-webkit-details-marker {
       display: none;
     }
-    .filters-box > summary :global(svg) {
+    .docs .filters-box > summary svg {
       width: 1.15rem;
       height: 1.15rem;
     }
-    .filters-box > summary :global(svg:last-child) {
+    .docs .filters-box > summary svg:last-child {
       margin-left: auto;
       transition: transform 200ms;
     }
-    .filters-box[open] > summary :global(svg:last-child) {
+    .docs .filters-box[open] > summary svg:last-child {
       transform: rotate(180deg);
     }
-    .filters,
-    .cats {
+    .docs .filters,
+    .docs .cats {
       padding-inline: var(--s-4);
       border-top-color: var(--rule);
     }
   }
-  .register {
+  .docs .register {
     width: 100%;
     font-variant-numeric: tabular-nums;
   }
-  .register th {
+  .docs .register th {
     text-align: left;
     font-size: var(--t-label);
     font-weight: 700;
@@ -368,13 +369,13 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     padding: 0.6rem 1rem 0.6rem 0;
     border-bottom: 1px solid var(--ink);
   }
-  .register td {
+  .docs .register td {
     padding: 0.85rem 1rem 0.85rem 0;
     border-bottom: 1px solid var(--rule);
     vertical-align: top;
     font-size: var(--t-small);
   }
-  .register__title a {
+  .docs .register__title a {
     display: inline-flex;
     gap: 0.6rem;
     align-items: flex-start;
@@ -385,15 +386,15 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     color: var(--ink);
     text-decoration: none;
   }
-  .register__yr {
+  .docs .register__yr {
     white-space: nowrap;
     min-width: 10ch;
   }
-  .register th:nth-child(3) {
+  .docs .register th:nth-child(3) {
     white-space: nowrap;
   }
   /* school-year heading rows: the register's running heads */
-  .register__year th {
+  .docs .register__year th {
     padding: var(--s-6) 0 var(--s-2);
     font-family: var(--font-serif);
     font-size: var(--t-h3);
@@ -404,59 +405,71 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
     color: var(--ink);
     border-bottom: 1px solid var(--ink);
   }
-  tbody:first-of-type .register__year th {
+  .docs tbody:first-of-type .register__year th {
     padding-top: var(--s-4);
   }
-  .register__title a:hover span {
+  .docs .register__title a:hover span {
     text-decoration: underline;
     text-decoration-color: var(--rubric);
   }
-  .register__title :global(svg) {
+  /* file glyphs (the Icon set's file-pdf / file-doc / file-sheet) as CSS masks: one definition instead of an inline SVG per row */
+  .docs .ficon {
     width: 1.35rem;
     height: 1.35rem;
     flex: none;
-    color: var(--ink-3);
     margin-top: 0.05rem;
+    background: var(--ink-3);
+    -webkit-mask: var(--glyph) center / contain no-repeat;
+    mask: var(--glyph) center / contain no-repeat;
   }
-  .register__title a:hover :global(svg) {
-    color: var(--lapis);
+  .docs .register__title a:hover .ficon {
+    background: var(--lapis);
   }
-  .register__meta {
+  .docs .ficon--pdf {
+    --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='M6 3H14L19 8V21H6ZM14 3V8H19M9.5 18.5V11H12.4A2.2 2.2 0 0 1 12.4 15.4H9.5'/%3E%3C/svg%3E");
+  }
+  .docs .ficon--doc {
+    --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='M6 3H14L19 8V21H6ZM14 3V8H19M9 12H16M9 15H16M9 18H13.5'/%3E%3C/svg%3E");
+  }
+  .docs .ficon--sheet {
+    --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='M6 3H14L19 8V21H6ZM14 3V8H19M9 11H16V19H9ZM9 15H16M12.5 11V19'/%3E%3C/svg%3E");
+  }
+  .docs .register__meta {
     display: block;
     margin: 0 0 0 1.95rem;
     color: var(--ink-2);
     font-size: 0.85rem;
   }
-  .lang-tag {
+  .docs .lang-tag {
     margin-left: 0.4rem;
   }
-  .empty {
+  .docs .empty {
     padding: var(--s-6) 0;
     color: var(--ink-2);
   }
   @media (max-width: 48rem) {
-    .register thead {
+    .docs .register thead {
       position: absolute;
       clip: rect(0 0 0 0);
     }
-    .register tr {
+    .docs .register tr {
       display: grid;
       grid-template-columns: 1fr 1fr;
       border-bottom: 1px solid var(--rule);
       padding: var(--s-3) 0;
     }
-    .register tr[hidden] {
+    .docs .register tr[hidden] {
       display: none;
     }
-    .register td {
+    .docs .register td {
       border: 0;
       padding: 0.15rem 0;
     }
-    .register td.register__title {
+    .docs .register td.register__title {
       grid-column: 1 / -1;
       padding-bottom: 0.4rem;
     }
-    .register td[data-label]::before {
+    .docs .register td[data-label]::before {
       content: attr(data-label);
       display: block;
       font-size: 0.7rem;
@@ -465,22 +478,22 @@ const icon = (e: string) => (e === 'pdf' ? 'file-pdf' : ['xls', 'xlsx', 'ods'].i
       text-transform: uppercase;
       color: var(--ink-3);
     }
-    .register td[data-label]:nth-child(2) {
+    .docs .register td[data-label]:nth-child(2) {
       grid-column: 1 / -1;
     }
     /* the school year is already the group heading */
-    .register td.register__yr {
+    .docs .register td.register__yr {
       display: none;
     }
-    .register tr.register__year {
+    .docs .register tr.register__year {
       display: block;
       padding: 0;
       border: 0;
     }
-    .register tr.register__year[hidden] {
+    .docs .register tr.register__year[hidden] {
       display: none;
     }
-    .register__year th {
+    .docs .register__year th {
       display: block;
     }
   }

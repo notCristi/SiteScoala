@@ -6,9 +6,10 @@ import Flash from '~/components/admin/Flash.astro';
 import { db, schema as s } from '~/server/db';
 import { audit, can } from '~/server/admin/audit';
 import { purge } from '~/server/admin/purge';
+import { imagePrefixOf, retireImagePrefix } from '~/server/admin/objects';
 import { translator } from '~/server/admin/i18n';
 import { flashFrom, mediaThumb, mediaUsage } from '~/server/admin/view';
-import { fmtDate, str } from '~/server/admin/util';
+import { badRequest, fmtDate, isHttpLink, readForm, str } from '~/server/admin/util';
 
 const user = Astro.locals.admin!;
 const t = translator(user.uiLocale);
@@ -17,10 +18,16 @@ let [m] = await db().select().from(s.mediaAssets).where(eq(s.mediaAssets.id, id)
 if (!m) return Astro.redirect('/admin/media?err=errNotFound', 303);
 const usage = await mediaUsage(id);
 const errors: Record<string, string> = {};
+/** 0 is a valid focal point (left / top edge); only a missing or invalid value keeps the stored one. */
+const focal = (v: ReturnType<FormData["get"]>, prev: number | null) => {
+  const n = typeof v === 'string' && v.trim() !== '' ? Number(v) : NaN;
+  return Number.isFinite(n) ? Math.min(1, Math.max(0, n)) : (prev ?? 0.5);
+};
 let flashErr = '';
 
 if (Astro.request.method === 'POST') {
-  const fd = await Astro.request.formData();
+  const fd = await readForm(Astro.request);
+  if (!fd) return badRequest();
   const act = str(fd.get('_action'), 20);
   const translatorOnly = user.role === 'translator';
   if (act === 'delete') {
@@ -29,6 +36,8 @@ if (Astro.request.method === 'POST') {
     else {
       await db().delete(s.mediaAssets).where(eq(s.mediaAssets.id, id));
       await audit(Astro, 'delete', 'media', id, m.altRo ?? m.originalFilename ?? '');
+      // the variants and the original leave R2 (and the edge) too: a deleted photo must really be gone
+      await retireImagePrefix(Astro, imagePrefixOf(m), id);
       return Astro.redirect('/admin/media?ok=okDeleted', 303);
     }
   } else {
@@ -45,11 +54,12 @@ if (Astro.request.method === 'POST') {
         captionRo: v('captionRo', 500),
         credit: v('credit', 200),
         license: v('license', 100),
-        sourceUrl: /^https?:\/\/\S+$/i.test(str(fd.get('sourceUrl'), 500)) ? str(fd.get('sourceUrl'), 500) : null,
-        focalX: Math.min(1, Math.max(0, Number(fd.get('focalX')) || 0.5)),
-        focalY: Math.min(1, Math.max(0, Number(fd.get('focalY')) || 0.5)),
+        sourceUrl: str(fd.get('sourceUrl'), 500) || null,
+        focalX: focal(fd.get('focalX'), m.focalX),
+        focalY: focal(fd.get('focalY'), m.focalY),
       });
       if (!upd.altRo) errors.altRo = 'errRequired';
+      if (upd.sourceUrl && !isHttpLink(upd.sourceUrl)) errors.sourceUrl = 'errUrl';
     }
     if (!Object.keys(errors).length) {
       await db().update(s.mediaAssets).set(upd).where(eq(s.mediaAssets.id, id));
@@ -139,7 +149,7 @@ const Suf = { ro: 'Ro', de: 'De', en: 'En' } as const;
       <section class="card">
         <div class="f"><label for="credit">{t('m_credit')}</label><input type="text" id="credit" name="credit" value={m.credit ?? ''} readonly={ro} /></div>
         <div class="f"><label for="license">{t('m_license')}</label><input type="text" id="license" name="license" value={m.license ?? ''} readonly={ro} /></div>
-        <div class="f"><label for="sourceUrl">{t('m_source')}</label><input type="text" inputmode="url" id="sourceUrl" name="sourceUrl" value={m.sourceUrl ?? ''} readonly={ro} /></div>
+        <div class="f"><label for="sourceUrl">{t('m_source')}</label><input type="text" inputmode="url" id="sourceUrl" name="sourceUrl" value={m.sourceUrl ?? ''} readonly={ro} aria-invalid={errors.sourceUrl ? 'true' : undefined} aria-describedby={errors.sourceUrl ? 'sourceUrl-err' : undefined} />{errors.sourceUrl && <p class="err" id="sourceUrl-err">{t('errUrl')}</p>}</div>
       </section>
       <section class="card">
         <h3>{t('m_usedIn')}</h3>

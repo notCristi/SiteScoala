@@ -51,7 +51,19 @@ const parent = NAV.find((n) => n.match.includes(match.id));
 const Emblem = { primar: EmblemPrimar, gimnaziu: EmblemGimnaziu, liceu: EmblemLiceu, german: EmblemDSD, coetus: EmblemCoetus, honterus: EmblemPress, campus: CompassRose }[
   match.id as string
 ];
-const desc = page ? pick(page, 'metaDescription', locale).value || lead?.value : undefined;
+const FALLBACK_DESC: Partial<Record<string, Record<'ro' | 'de' | 'en', string>>> = {
+  accessibility: {
+    ro: 'Declarația de accesibilitate a site-ului Colegiului Național „Johannes Honterus” Brașov: standardul urmărit, limitele cunoscute și cum ne semnalați o problemă.',
+    de: 'Erklärung zur Barrierefreiheit der Website des Honterus-Nationalkollegs Kronstadt: angestrebter Standard, bekannte Einschränkungen und wie Sie uns Probleme melden.',
+    en: 'Accessibility statement for the “Johannes Honterus” National College website: the standard we follow, known limitations and how to report a problem.',
+  },
+  privacy: {
+    ro: 'Cum prelucrează Colegiul Național „Johannes Honterus” Brașov datele personale pe acest site și ce drepturi aveți.',
+    de: 'Wie das Honterus-Nationalkolleg Kronstadt auf dieser Website personenbezogene Daten verarbeitet und welche Rechte Sie haben.',
+    en: 'How the “Johannes Honterus” National College processes personal data on this website, and your rights.',
+  },
+};
+const desc = (page ? pick(page, 'metaDescription', locale).value || lead?.value : undefined) || FALLBACK_DESC[match.id]?.[locale];
 ---
 
 <Base locale={locale} title={title.value} description={desc} route={match.id} alternates={alternates} settings={settings} banners={banners} fallback={body?.fallback}>
@@ -81,7 +93,7 @@ const desc = page ? pick(page, 'metaDescription', locale).value || lead?.value :
         hero && (
           <figure class="hero-fig">
             <div class="plate">
-              <Picture media={hero} locale={locale} sizes="(min-width: 60rem) 42rem, 100vw" priority ratio="3 / 2" />
+              <Picture media={hero} locale={locale} sizes="(min-width: 60rem) 42rem, calc(100vw - 3rem)" priority ratio="3 / 2" />
             </div>
             {caption(hero, locale) && (
               <figcaption>

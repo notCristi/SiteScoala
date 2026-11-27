@@ -6,7 +6,7 @@
 import type { EntityDef, FieldDef } from '~/server/admin/entities';
 import type { T } from '~/server/admin/i18n';
 import type { AdminUser } from '~/server/auth';
-import { flattenPageData, type Row } from '~/server/admin/crud';
+import { flattenPageData, isCorePage, versionOf, type Row } from '~/server/admin/crud';
 import { trGlyph, trState } from '~/server/admin/view';
 import { fmtDate } from '~/server/admin/util';
 import { LOCALES, SUFFIX, type Locale } from '~/i18n/locales';
@@ -25,8 +25,11 @@ interface Props {
   data: PickerData;
   parentId?: number | undefined;
   publicUrl?: string | undefined;
+  /** updated_at the form was loaded with (optimistic concurrency); defaults to the row's */
+  version?: string | undefined;
 }
-const { def, row, isNew, errors, t, user, data, parentId, publicUrl } = Astro.props;
+const { def, row, isNew, errors, t, user, data, parentId, publicUrl, version } = Astro.props;
+const loadedVersion = version ?? versionOf(row);
 const translatorMode = user.role === 'translator';
 const canPublish = user.role !== 'translator';
 const status = (row.status as string | undefined) ?? 'draft';
@@ -87,6 +90,7 @@ try {
 <form method="post" class="edit" novalidate enctype={multipart ? 'multipart/form-data' : undefined} data-entity-form data-dirty-guard>
   <input type="hidden" name="_csrf" value={user.csrf} />
   {parentId && <input type="hidden" name="parentId" value={parentId} />}
+  {!isNew && loadedVersion && <input type="hidden" name="_v" value={loadedVersion} />}
 
   <div class="edit__main">
     {
@@ -113,7 +117,7 @@ try {
               {f.type === 'file' && row.r2Key && (
                 <p class="help">
                   {t('doc_current')}:{' '}
-                  <a href={`/${String(row.r2Key)}`} target="_blank" rel="noopener">
+                  <a href={`/api/admin/documents/file/${String(row.id)}`} target="_blank" rel="noopener">
                     {String(row.originalFilename ?? row.r2Key)}
                   </a>{' '}
                   · {String(row.fileExt ?? '').toUpperCase()} · {Math.round(Number(row.sizeBytes ?? 0) / 1024)} KB{row.pages ? ` · ${row.pages} p.` : ''}
@@ -137,7 +141,7 @@ try {
               <button type="button" role="tab" id={`tab-${l}`} aria-controls={`panel-${l}`} aria-selected={i === (translatorMode ? 1 : 0) ? 'true' : 'false'} tabindex={i === (translatorMode ? 1 : 0) ? 0 : -1}>
                 {l.toUpperCase()}
                 <span class={`chip chip--${st}`} title={t(`tr_${st === 'filled' ? 'done' : st}`)}>
-                  {trGlyph(st)} {l === 'ro' ? '' : t(`tr_${st === 'filled' ? 'done' : st}`)}
+                  <span aria-hidden="true">{trGlyph(st)}</span> {t(`tr_${st === 'filled' ? 'done' : st}`)}
                 </span>
               </button>
             ))}
@@ -354,9 +358,13 @@ try {
                 {t('archive')}
               </button>
             )}
-            <button class="btn btn--sm btn--danger" name="_action" value="delete" data-confirm={t('confirmDelete')}>
-              {t('delete')}
-            </button>
+            {isCorePage(def, row) ? (
+              <p class="help">{t('corePageNote')}</p>
+            ) : (
+              <button class="btn btn--sm btn--danger" name="_action" value="delete" data-confirm={t('confirmDelete')}>
+                {t('delete')}
+              </button>
+            )}
           </div>
         )
       }

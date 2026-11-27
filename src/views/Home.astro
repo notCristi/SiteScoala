@@ -13,7 +13,6 @@ import Picture from '~/components/Picture.astro';
 import DateMark from '~/components/DateMark.astro';
 import CycleTriptych from '~/components/CycleTriptych.astro';
 import YouTube from '~/components/YouTube.astro';
-import Seal from '~/components/svg/Seal.astro';
 import Graticule from '~/components/svg/Graticule.astro';
 import Icon from '~/components/svg/Icon.astro';
 import { formatDate, pick, type Locale } from '~/i18n/locales';
@@ -137,9 +136,10 @@ const eventWhen = (start: number | null, end: number | null, loc: Locale) =>
           hero && (
             <figure>
               <div class="plate plate--hero">
-                <Picture media={hero} locale={locale} priority sizes="(min-width: 64rem) 34rem, 100vw" ratio="3 / 2" />
+                <Picture media={hero} locale={locale} priority sizes="(min-width: 90rem) 30rem, (min-width: 64rem) 34vw, (min-width: 37rem) 34rem, calc(100vw - 3rem)" ratio="3 / 2" />
                 <div class="title-page__seal">
-                  <Seal animate title={ui(locale, 'schoolFull')} size="100%" />
+                  {/* cached file (≈13 KB), not 180 KB of inline path data in every home response */}
+                  <img class="seal-img" src="/brand/honterus-seal-small.svg" width="144" height="144" alt={ui(locale, 'schoolFull')} decoding="async" loading="lazy" fetchpriority="low" />
                 </div>
               </div>
               <figcaption>
@@ -152,7 +152,7 @@ const eventWhen = (start: number | null, end: number | null, loc: Locale) =>
         {
           !hero && (
             <div class="title-page__seal title-page__seal--alone">
-              <Seal animate title={ui(locale, 'schoolFull')} size="100%" />
+              <img class="seal-img" src="/brand/honterus-seal.svg" width="352" height="352" alt={ui(locale, 'schoolFull')} decoding="async" />
             </div>
           )
         }
@@ -289,7 +289,7 @@ const eventWhen = (start: number | null, end: number | null, loc: Locale) =>
         heritageImg && (
           <figure class="heritage__fig">
             <div class="plate plate--dark">
-              <Picture media={heritageImg} locale={locale} sizes="(min-width: 64rem) 28rem, 100vw" />
+              <Picture media={heritageImg} locale={locale} sizes="(min-width: 64rem) 28rem, calc(100vw - 3rem)" />
             </div>
             <figcaption>
               {caption(heritageImg, locale)}
@@ -420,6 +420,23 @@ const eventWhen = (start: number | null, end: number | null, loc: Locale) =>
     border-radius: 50%;
     padding: 0.35rem;
   }
+  /* the seal is pressed onto the plate: opacity + scale only, 450 ms (reduced motion: shown at once) */
+  .seal-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @keyframes seal-press {
+    from {
+      opacity: 0;
+      transform: scale(1.08);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .seal-img {
+      animation: seal-press 450ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms both;
+    }
+  }
   .title-page__plate figcaption {
     margin-top: var(--s-3);
     padding-left: calc(clamp(6.5rem, 26%, 9rem) - 1rem);
@@ -520,9 +537,7 @@ const eventWhen = (start: number | null, end: number | null, loc: Locale) =>
     height: 1rem;
     flex: none;
     color: var(--ink-3);
-    transition:
-      transform 160ms ease,
-      color 160ms;
+    transition: transform 160ms ease;
   }
   .aud a:is(:hover, :focus-visible) :global(svg) {
     color: var(--lapis);

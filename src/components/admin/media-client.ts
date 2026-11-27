@@ -51,6 +51,22 @@ async function prepare(file: File): Promise<Prepared> {
   return { width, height, placeholder: `#${hex(r)}${hex(g)}${hex(b)}`, variants };
 }
 
+/** Plain-language message for a server error code (never a bare code or HTTP status). */
+function uploadError(code: string, status: number): string {
+  const M: Record<string, [string, string]> = {
+    size: ['Imaginea depășește 15 MB. Micșorați-o sau exportați-o ca JPG.', 'Das Bild ist größer als 15 MB. Bitte verkleinern oder als JPG exportieren.'],
+    type: ['Fișierul nu este o imagine JPG, PNG sau WebP.', 'Die Datei ist kein JPG-, PNG- oder WebP-Bild.'],
+    file: ['Alegeți un fișier.', 'Bitte eine Datei auswählen.'],
+    alt: ['Completați descrierea imaginii (RO).', 'Bitte die Bildbeschreibung (RO) ausfüllen.'],
+    url: ['Adresa sursei trebuie să fie de forma https://…', 'Die Quelladresse muss die Form https://… haben.'],
+    variant: ['Imaginea nu a putut fi pregătită pentru site. Încercați din nou sau exportați-o ca JPG.', 'Das Bild konnte nicht aufbereitet werden. Bitte erneut versuchen oder als JPG exportieren.'],
+    dimensions: ['Imaginea nu a putut fi citită (dimensiuni lipsă sau prea mici).', 'Das Bild konnte nicht gelesen werden (Abmessungen fehlen oder zu klein).'],
+    forbidden: ['Nu aveți dreptul să încărcați imagini.', 'Sie dürfen keine Bilder hochladen.'],
+  };
+  const m = M[code];
+  return m ? L(m[0], m[1]) : L(`Încărcarea nu a reușit (${status}). Încercați din nou.`, `Hochladen fehlgeschlagen (${status}). Bitte erneut versuchen.`);
+}
+
 function send(fd: FormData, onProgress: (p: number) => void): Promise<{ id: string; duplicate?: boolean }> {
   return new Promise((resolve, reject) => {
     const x = new XMLHttpRequest();
@@ -65,7 +81,7 @@ function send(fd: FormData, onProgress: (p: number) => void): Promise<{ id: stri
         /* ignore */
       }
       if (x.status >= 200 && x.status < 300 && j.id) resolve({ id: j.id, duplicate: !!j.duplicate });
-      else reject(new Error(j.error ?? `HTTP ${x.status}`));
+      else reject(new Error(uploadError(x.status === 413 ? 'size' : (j.error ?? ''), x.status)));
     };
     x.onerror = () => reject(new Error('network'));
     x.send(fd);

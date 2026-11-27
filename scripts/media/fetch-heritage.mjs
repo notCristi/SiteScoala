@@ -5,6 +5,10 @@
  *
  *   node scripts/media/fetch-heritage.mjs          # fetch missing files only
  *   node scripts/media/fetch-heritage.mjs --force  # re-fetch everything
+ *   node scripts/media/fetch-heritage.mjs --variants  # no network: (re)build the width steps from the largest local file
+ *
+ * Width steps 640 · 800 · 1024 · 1200 · 1600 so phones at DPR 2–3 get a file close to their box.
+ * Engraved maps and prints (line art) are encoded at a lower WebP quality: they stay crisp at half the bytes.
  *
  * Polite: one request at a time, pause between files, retries on 429 with backoff.
  * Selection rationale and licensing rules: docs/02_HONTERUS_HERITAGE_AND_MEDIA_DOSSIER.md §9.
@@ -14,7 +18,10 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 
 const OUT = 'public/media/heritage';
-const WIDTHS = [640, 1024, 1600];
+const WIDTHS = [640, 800, 1024, 1200, 1600];
+/** Line-art sources (maps, woodcuts, prints): lower quality is invisible, the bytes halve. */
+const LINE_ART = new Set(['harta-transilvaniei-1532', 'burzenland-1532', 'rudimenta-1542', 'cosmographia-1546', 'portret-septemcastrensis', 'tipografia', 'portret-xilogravura', 'stema-1539']);
+const quality = (id) => (LINE_ART.has(id) ? 48 : 74);
 const UA = 'HonterusSiteBuilder/1.0 (school website rebuild; heritage image import)';
 const force = process.argv.includes('--force');
 
@@ -81,6 +88,34 @@ const credPath = join(OUT, 'credits.json');
 const credits = (await exists(credPath)) ? JSON.parse(await readFile(credPath, 'utf8')) : [];
 const byId = new Map(credits.map((c) => [c.id, c]));
 
+if (process.argv.includes('--variants')) {
+  // Offline: rebuild every width step from the largest local variant (originals are not kept in the repo).
+  for (const c of byId.values()) {
+    const largest = [...c.variants].sort((a, b) => b.w - a.w)[0];
+    const src = await readFile(join('public', largest.key));
+    const width = largest.w;
+    const ratio = c.height / c.width;
+    const variants = [];
+    for (const w of WIDTHS.filter((x, i) => x <= width || i === 0)) {
+      const tw = Math.min(w, width);
+      const key = `/media/heritage/${c.id}-${tw}.webp`;
+      const existing = c.variants.find((v) => v.w === tw);
+      // keep photo variants that already exist (no second lossy pass); re-encode line art and fill new steps
+      if (!existing || LINE_ART.has(c.id)) {
+        const out = await sharp(src).resize({ width: tw }).webp({ quality: quality(c.id), effort: 6 }).toBuffer();
+        if (!existing || out.length < (await readFile(join('public', key))).length) await writeFile(join('public', key), out);
+      }
+      variants.push({ w: tw, key });
+    }
+    if (width > WIDTHS.at(-1)) variants.push(largest);
+    c.variants = variants;
+    c.height = Math.round(c.width * ratio);
+    console.log(`${c.id}: ${variants.map((v) => v.w).join(' · ')}`);
+  }
+  await writeFile(credPath, JSON.stringify([...byId.values()], null, 2) + '\n');
+  process.exit(0);
+}
+
 for (const h of HERITAGE) {
   const done = byId.get(h.id);
   if (done && !force && (await exists(join(OUT, `${h.id}-1024.webp`)))) continue;
@@ -96,7 +131,7 @@ for (const h of HERITAGE) {
     for (const w of WIDTHS.filter((x, i) => x < width || i === 0)) {
       const tw = Math.min(w, width);
       const key = `/media/heritage/${h.id}-${tw}.webp`;
-      await img.clone().resize({ width: tw }).webp({ quality: 74, effort: 5 }).toFile(join('public', key));
+      await img.clone().resize({ width: tw }).webp({ quality: quality(h.id), effort: 5 }).toFile(join('public', key));
       variants.push({ w: tw, key });
     }
     const largest = variants.at(-1);

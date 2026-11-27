@@ -12,6 +12,7 @@ import type { APIContext } from 'astro';
 import { and, asc, eq, isNull, lt, sql } from 'drizzle-orm';
 import { db, schema as s } from '../db';
 import { PURGE_TAGS } from '../cache';
+import { sha256Hex } from './util';
 
 const VALID = /^[a-z0-9:._-]{1,128}$/;
 const MAX_ATTEMPTS = 12;
@@ -98,4 +99,18 @@ export async function processPurgeQueue(): Promise<number> {
   await db().delete(s.purgeQueue).where(lt(s.purgeQueue.createdAt, now - 30 * 86400_000));
   await db().delete(s.sessions).where(lt(s.sessions.expiresAt, now));
   return ok ? rows.length : 0;
+}
+
+/** Edge-cache tag of one R2 object (valid purge tag: `obj:` + 24 hex); set by src/server/admin/serve.ts. */
+export const objectTag = async (key: string) => `obj:${(await sha256Hex(key.replace(/^\/+/, ''))).slice(0, 24)}`;
+
+/**
+ * Purge the edge copies of specific R2 objects (a /files or /img URL), e.g. after a document is unpublished,
+ * replaced or deleted. Uses the per-object tag that src/server/admin/serve.ts puts on every public response.
+ */
+export async function purgeObjects(ctx: APIContext | undefined, keys: (string | null | undefined)[]) {
+  const clean = [...new Set(keys.filter((k): k is string => !!k && !k.startsWith('/')))];
+  if (!clean.length) return;
+  const tags = await Promise.all(clean.map((k) => objectTag(k)));
+  for (let i = 0; i < tags.length; i += 90) await purge(ctx, [], tags.slice(i, i + 90));
 }

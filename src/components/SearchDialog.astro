@@ -2,7 +2,7 @@
 /**
  * ⌘K / Ctrl+K search. The index for the current language (~20 KB gzip) is fetched on first open,
  * cached by the browser and edge, and searched in memory — results update per keystroke (< 16 ms).
- * Without JS, the trigger falls back to the /search page form.
+ * Without JS, the header trigger is a plain link to the /search page and its form.
  */
 import { LOCALE_META, type Locale } from '~/i18n/locales';
 import { COUNT_FORMS } from '~/i18n/plural';
@@ -161,9 +161,17 @@ const emptyHint = {
       dlg.open ? dlg.close() : open();
     }
   });
-  for (const t of document.querySelectorAll('[data-search-open]')) t.addEventListener('click', open);
+  // Delegated: the header upgrades its no-JS search link to a button, whichever script runs first.
+  const trigger = (e: Event) => (e.target as Element | null)?.closest?.('[data-search-open]');
+  document.addEventListener('click', (e) => {
+    if (!trigger(e)) return;
+    e.preventDefault();
+    open();
+  });
   // Warm the index when the user shows intent.
-  for (const t of document.querySelectorAll('[data-search-open]')) t.addEventListener('pointerenter', () => void load(), { once: true });
+  document.addEventListener('pointerover', (e) => {
+    if (trigger(e)) void load();
+  });
 </script>
 
 <style>

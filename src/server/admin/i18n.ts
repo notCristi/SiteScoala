@@ -110,7 +110,10 @@ const S = {
   errorsTitle: ['Formularul are greșeli. Corectați câmpurile marcate:', 'Bitte korrigieren Sie die markierten Felder:'],
   errRequired: ['Completați acest câmp.', 'Bitte ausfüllen.'],
   errTooLong: ['Textul este prea lung.', 'Der Text ist zu lang.'],
-  errUrl: ['Adresa trebuie să înceapă cu https:// sau /.', 'Die Adresse muss mit https:// oder / beginnen.'],
+  errUrl: [
+    'Adresa trebuie să fie de forma https://exemplu.ro/…, o pagină a site-ului care începe cu un singur „/”, mailto: sau tel:.',
+    'Die Adresse muss die Form https://beispiel.de/… haben, eine Seite der Website mit genau einem „/“ am Anfang sein, oder mailto: bzw. tel:.',
+  ],
   errEmail: ['Adresa de e-mail nu este validă.', 'Ungültige E-Mail-Adresse.'],
   errSlugTaken: ['Această adresă este deja folosită.', 'Diese Adresse ist bereits vergeben.'],
   errSlug: ['Doar litere mici, cifre și cratime.', 'Nur Kleinbuchstaben, Ziffern und Bindestriche.'],
@@ -121,6 +124,22 @@ const S = {
   errNotFound: ['Înregistrarea nu există (poate a fost ștearsă).', 'Eintrag nicht gefunden (vielleicht gelöscht).'],
   errFile: ['Fișierul nu este acceptat.', 'Die Datei wird nicht akzeptiert.'],
   errInUse: ['Imaginea este folosită și nu poate fi ștearsă.', 'Das Bild wird verwendet und kann nicht gelöscht werden.'],
+  errFileSize: ['Fișierul este prea mare. Documentele pot avea cel mult 25 MB; micșorați PDF-ul sau împărțiți-l.', 'Die Datei ist zu groß. Dokumente dürfen höchstens 25 MB haben; bitte PDF verkleinern oder aufteilen.'],
+  errImageSize: ['Imaginea este prea mare (cel mult 15 MB).', 'Das Bild ist zu groß (höchstens 15 MB).'],
+  errPdfActive: [
+    'PDF-ul conține elemente active (scripturi, acțiuni automate, formulare sau fișiere atașate) și nu poate fi publicat. Salvați-l din nou ca PDF simplu (Imprimare → Salvare ca PDF) și încărcați-l pe acela.',
+    'Das PDF enthält aktive Inhalte (Skripte, automatische Aktionen, Formulare oder Anhänge) und kann nicht veröffentlicht werden. Bitte als einfaches PDF neu speichern (Drucken → Als PDF speichern) und dieses hochladen.',
+  ],
+  errMacro: ['Documentul conține macrocomenzi și nu poate fi publicat. Salvați-l fără macrocomenzi (.docx / .xlsx) sau ca PDF.', 'Das Dokument enthält Makros und kann nicht veröffentlicht werden. Bitte ohne Makros (.docx / .xlsx) oder als PDF speichern.'],
+  errConflict: [
+    'Altcineva a salvat această înregistrare după ce ați deschis-o. Modificările dumneavoastră NU au fost salvate, ca să nu le șteargă pe ale sale. Copiați-vă textul dacă aveți nevoie de el, apoi reîncărcați pagina și refaceți modificarea.',
+    'Jemand anderes hat diesen Eintrag gespeichert, nachdem Sie ihn geöffnet haben. Ihre Änderungen wurden NICHT gespeichert, damit seine nicht verloren gehen. Kopieren Sie bei Bedarf Ihren Text, laden Sie die Seite neu und wiederholen Sie die Änderung.',
+  ],
+  conflictReload: ['Reîncarcă versiunea actuală', 'Aktuelle Fassung neu laden'],
+  errCorePage: ['Această pagină face parte din structura site-ului și nu poate fi ștearsă. O puteți modifica sau retrage temporar.', 'Diese Seite gehört zum Aufbau der Website und kann nicht gelöscht werden. Sie können sie bearbeiten oder vorübergehend zurückziehen.'],
+  corePageNote: ['Pagină fixă a site-ului: nu poate fi ștearsă.', 'Feste Seite der Website: kann nicht gelöscht werden.'],
+  errPwAttempts: ['Prea multe încercări greșite. Încercați din nou peste 15 minute.', 'Zu viele Fehlversuche. Bitte in 15 Minuten erneut versuchen.'],
+  errUrlKeep: ['Adresa nu este validă și nu a fost salvată; valoarea anterioară a rămas.', 'Die Adresse ist ungültig und wurde nicht gespeichert; der bisherige Wert bleibt.'],
 
   // flash
   okSaved: ['Modificările au fost salvate.', 'Die Änderungen wurden gespeichert.'],
@@ -349,6 +368,17 @@ const S = {
   r_note: ['Notă', 'Notiz'],
   r_add: ['Adaugă redirecționare', 'Weiterleitung hinzufügen'],
   r_loop: ['Adresa nouă nu poate fi aceeași cu cea veche.', 'Neue und alte Adresse dürfen nicht gleich sein.'],
+  r_permanent: ['permanent', 'dauerhaft'],
+  r_temporary: ['temporar', 'vorübergehend'],
+  r_targetHelp: ['O pagină a site-ului (/ro/…) sau o adresă https://…', 'Eine Seite der Website (/de/…) oder eine Adresse https://…'],
+  r_fromLive: [
+    'Adresa veche este o pagină care există pe site. Redirecționarea nu s-ar aplica niciodată (se folosesc doar pentru adrese inexistente). Retrageți sau mutați întâi pagina; dacă i se schimbă adresa, redirecționarea se creează automat.',
+    'Die alte Adresse ist eine bestehende Seite der Website. Die Weiterleitung würde nie greifen (sie gilt nur für nicht vorhandene Adressen). Ziehen Sie die Seite zuerst zurück oder ändern Sie ihre Adresse; dann entsteht die Weiterleitung automatisch.',
+  ],
+  r_reserved: ['Adresele de administrare și fișierele interne nu pot fi redirecționate.', 'Verwaltungsadressen und interne Dateien können nicht weitergeleitet werden.'],
+  r_toRedirected: ['Adresa nouă este ea însăși redirecționată. Folosiți direct destinația finală, pentru a evita lanțurile:', 'Die neue Adresse wird selbst weitergeleitet. Verwenden Sie direkt das endgültige Ziel, um Ketten zu vermeiden:'],
+  r_repointed: ['Salvat. Redirecționările care duceau la adresa veche duc acum direct la cea nouă:', 'Gespeichert. Weiterleitungen, die auf die alte Adresse zeigten, führen jetzt direkt zur neuen:'],
+
 
   // settings
   set_contact: ['Date de contact', 'Kontaktdaten'],

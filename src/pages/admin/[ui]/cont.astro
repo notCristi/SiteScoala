@@ -1,5 +1,6 @@
 ---
 /** My account: password change (closes other sessions), interface language. */
+import { badRequest, readForm } from '~/server/admin/util';
 import Admin from '~/layouts/Admin.astro';
 import Flash from '~/components/admin/Flash.astro';
 import { changePassword } from '~/server/auth';
@@ -10,7 +11,8 @@ const user = Astro.locals.admin!;
 const t = translator(user.uiLocale);
 let error = '';
 if (Astro.request.method === 'POST') {
-  const fd = await Astro.request.formData();
+  const fd = await readForm(Astro.request);
+  if (!fd) return badRequest();
   const cur = String(fd.get('current') ?? '').slice(0, 300);
   const pw = String(fd.get('password') ?? '').slice(0, 300);
   if (pw !== String(fd.get('password2') ?? '').slice(0, 300)) error = 'pwMismatch';

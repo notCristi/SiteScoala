@@ -3,17 +3,20 @@
 import { eq } from 'drizzle-orm';
 import Admin from '~/layouts/Admin.astro';
 import { db, schema as s } from '~/server/db';
-import { audit } from '~/server/admin/audit';
+import { audit, can } from '~/server/admin/audit';
 import { translator } from '~/server/admin/i18n';
-import { fmtDate, str } from '~/server/admin/util';
+import { badRequest, fmtDate, readForm, str } from '~/server/admin/util';
 
 const user = Astro.locals.admin!;
 const t = translator(user.uiLocale);
+// parents' personal data: only the roles that answer messages (admin, editor) — never translators
+if (!can(user, 'content')) return Astro.redirect('/admin?err=errForbidden', 303);
 const id = Number(Astro.params.id);
 const [m] = Number.isInteger(id) ? await db().select().from(s.contactMessages).where(eq(s.contactMessages.id, id)).limit(1) : [];
 if (!m) return Astro.redirect('/admin/mesaje?err=errNotFound', 303);
 if (Astro.request.method === 'POST') {
-  const fd = await Astro.request.formData();
+  const fd = await readForm(Astro.request);
+  if (!fd) return badRequest();
   const next = str(fd.get('_action'), 20);
   if (next === 'archive' || next === 'new' || next === 'read') {
     await db().update(s.contactMessages).set({ status: next === 'archive' ? 'archived' : next }).where(eq(s.contactMessages.id, id));

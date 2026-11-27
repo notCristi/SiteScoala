@@ -28,7 +28,7 @@ const galLabel = ({ ro: 'Galerie', de: 'Galerie', en: 'Gallery' } as const)[loca
           <li>
             <figure>
               <a href={imageSources(m).src} class="plate" target="_blank">
-                <Picture media={m} locale={locale} sizes="(min-width: 60rem) 30rem, 100vw" />
+                <Picture media={m} locale={locale} sizes="(min-width: 60rem) 30rem, calc(100vw - 3rem)" />
               </a>
               {(caption(m, locale) || m.credit) && (
                 <figcaption>

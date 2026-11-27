@@ -14,14 +14,16 @@ import { audit, can, revision } from './audit';
 import { purge } from './purge';
 import type { EntityDef, FieldDef } from './entities';
 import { cleanFilename, DOC_MAX, disposition, pdfPages, putObject, readFile, safeBase, sniffDocument } from './upload';
-import { fromInput, slugify, str } from './util';
+import { fromInput, isSafeLink, isSafeRedirectTarget, slugify, str } from './util';
+import { retireObjects } from './objects';
+import { purgeObjects } from './purge';
+import { ROUTES } from '~/i18n/routes';
 
 export type Row = Record<string, unknown>;
 export type Action = 'save' | 'publish' | 'unpublish' | 'archive' | 'delete';
 export const ACTIONS: Action[] = ['save', 'publish', 'unpublish', 'archive', 'delete'];
 
 const col = (name: string, l: Locale) => `${name}${SUFFIX[l]}`;
-const URL_RE = /^(https?:\/\/[^\s<>"]+|\/[^\s<>"]*)$/i;
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 // ───────────────────────────── repeaters ─────────────────────────────
@@ -177,7 +179,7 @@ export async function parseForm(ctx: APIContext, def: EntityDef, fd: FormData, e
         values[f.name] = v || null;
         break;
       case 'url':
-        if (v && !URL_RE.test(v)) errors[f.name] = 'errUrl';
+        if (v && !isSafeLink(v)) errors[f.name] = 'errUrl';
         values[f.name] = v || null;
         break;
       case 'email':
@@ -362,7 +364,13 @@ export async function listRows(def: EntityDef, o: ListOpts) {
 // ───────────────────────────── write ─────────────────────────────
 export type SaveResult =
   | { ok: true; id: number; flash: string; redirected?: boolean }
-  | { ok: false; errors: Record<string, string>; values: Row; flashError?: string };
+  | { ok: false; errors: Record<string, string>; values: Row; flashError?: string; conflict?: boolean };
+
+/** Fixed pages that public routes render (pages.key = a route id): never deletable. */
+export const isCorePage = (def: EntityDef, row: Row | undefined) => def.key === 'pagini' && !!row && typeof row.key === 'string' && row.key in ROUTES;
+
+/** Optimistic concurrency: the version (updated_at) a form was loaded with. */
+export const versionOf = (row: Row | undefined) => (row && row.updatedAt != null ? String(row.updatedAt) : '');
 
 const titleOf = (def: EntityDef, r: Row) => String(r[def.titleLocalized ? col(def.titleField, 'ro') : def.titleField] ?? '');
 
@@ -395,17 +403,17 @@ async function redirectSlug(def: EntityDef, oldSlug: string, newSlug: string) {
 async function handleDocumentFile(ctx: APIContext, fd: FormData, values: Row, existing: Row | undefined, errors: Record<string, string>) {
   const file = fd.get('file');
   const ext = str(fd.get('externalUrl'), 2000);
-  if (ext && !URL_RE.test(ext)) errors.externalUrl = 'errUrl';
+  if (ext && !isSafeRedirectTarget(ext)) errors.externalUrl = 'errUrl';
   values.externalUrl = ext || null;
   if (file instanceof File && file.size > 0) {
     if (file.size > DOC_MAX) {
-      errors.file = 'errFile';
+      errors.file = 'errFileSize';
       return;
     }
     const { bytes, sha } = await readFile(file);
-    const sniff = sniffDocument(bytes, file.name);
+    const sniff = await sniffDocument(bytes, file.name);
     if ('error' in sniff) {
-      errors.file = 'errFile';
+      errors.file = sniff.error === 'pdfActive' ? 'errPdfActive' : sniff.error === 'macro' ? 'errMacro' : 'errFile';
       return;
     }
     const [dupe] = await db()
@@ -451,28 +459,55 @@ export async function saveEntity(ctx: APIContext, def: EntityDef, id: number | n
   // ── delete
   if (action === 'delete') {
     if (!existing) return forbidden();
+    // the fixed pages rendered by public routes (Contact, Accesibilitate, …) cannot be recreated by editors
+    if (isCorePage(def, existing)) return { ok: false, errors: {}, values: existing, flashError: 'errCorePage' };
     await db().delete(def.table).where(eq(def.table.id, id!));
     await audit(ctx, 'delete', def.entityType, id, titleOf(def, existing));
     if (!def.hasStatus || existing.status === 'published') await purge(ctx, [def.entityType, ...(def.alsoPurge ?? []), ...(existing.pinnedBanner ? ['banner'] : [])]);
+    if (def.key === 'documente') await retireObjects(ctx, [existing.r2Key as string | null]);
     return { ok: true, id: id!, flash: 'okDeleted' };
+  }
+
+  // ── optimistic concurrency: refuse to overwrite changes saved by someone else since this form was loaded
+  if (existing && fd.has('_v') && 'updatedAt' in def.table) {
+    const loaded = str(fd.get('_v'), 40);
+    if (loaded !== versionOf(existing)) {
+      const { values } = await parseForm(ctx, def, fd, existing);
+      return { ok: false, errors: {}, values: { ...existing, ...values, updatedAt: existing.updatedAt }, flashError: 'errConflict', conflict: true };
+    }
   }
 
   const { values, errors, slugFromTitle } = await parseForm(ctx, def, fd, existing);
   if (def.key === 'documente' && user.role !== 'translator') await handleDocumentFile(ctx, fd, values, existing, errors);
+  const hasSlug = def.fields.some((f) => f.type === 'slug') && user.role !== 'translator';
 
-  if (typeof values.slug === 'string' && values.slug) {
-    if (await slugTaken(def, values.slug, id)) {
-      if (slugFromTitle) {
-        let n = 2;
-        while (n < 50 && (await slugTaken(def, `${values.slug}-${n}`, id))) n++;
-        values.slug = `${values.slug}-${n}`;
-      } else errors.slug = 'errSlugTaken';
-    }
-  } else if (def.fields.some((f) => f.type === 'slug') && !existing?.slug && user.role !== 'translator') {
-    values.slug = `${def.key}-${Date.now().toString(36)}`;
+  if (Object.keys(errors).length) {
+    // a file stored for this attempt is not kept: the row does not point at it
+    if (typeof values.r2Key === 'string' && values.r2Key !== existing?.r2Key) await retireObjects(ctx, [values.r2Key]);
+    const shown: Row = { ...(existing ?? {}), ...values };
+    // never echo a slug the editor did not type: it would stick even after the title is corrected
+    if (hasSlug && slugFromTitle) shown.slug = existing?.slug ?? null;
+    if (def.key === 'documente' && values.r2Key !== existing?.r2Key) for (const k of ['r2Key', 'originalFilename', 'mime', 'fileExt', 'sizeBytes', 'sha256', 'pages']) shown[k] = existing?.[k] ?? null;
+    return { ok: false, errors, values: shown };
   }
 
-  if (Object.keys(errors).length) return { ok: false, errors, values: { ...(existing ?? {}), ...values } };
+  // slug: typed by the editor, else from the RO title (only now that the title is valid), numbered if taken
+  if (hasSlug) {
+    if (!values.slug && !existing?.slug) {
+      values.slug = slugify(titleOf(def, { ...(existing ?? {}), ...values })) || slugify(def.newLabel[0]) || def.key;
+    }
+    if (typeof values.slug === 'string' && values.slug && (await slugTaken(def, values.slug, id))) {
+      if (slugFromTitle || !existing?.slug) {
+        const base = values.slug;
+        let n = 2;
+        while (n < 500 && (await slugTaken(def, `${base}-${n}`, id))) n++;
+        values.slug = `${base}-${n}`;
+      } else {
+        const shown: Row = { ...(existing ?? {}), ...values };
+        return { ok: false, errors: { slug: 'errSlugTaken' }, values: shown };
+      }
+    }
+  }
 
   const now = Date.now();
   const prevStatus = (existing?.status as string | undefined) ?? null;
@@ -537,6 +572,12 @@ export async function saveEntity(ctx: APIContext, def: EntityDef, id: number | n
 
   if (existing && prevStatus === 'published' && existing.slug && after.slug && existing.slug !== after.slug) {
     if (await redirectSlug(def, String(existing.slug), String(after.slug))) flash = 'okRedirect';
+  }
+
+  // files: a replaced file is deleted from R2; an unpublished/archived one is purged from the edge (kept in R2)
+  if (def.key === 'documente' && existing?.r2Key) {
+    if (after.r2Key !== existing.r2Key) await retireObjects(ctx, [existing.r2Key as string]);
+    else if (prevStatus === 'published' && status !== 'published') await purgeObjects(ctx, [existing.r2Key as string]);
   }
 
   const live = !def.hasStatus || prevStatus === 'published' || status === 'published';

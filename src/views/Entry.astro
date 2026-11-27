@@ -23,7 +23,7 @@ const parent = isProject
   : { label: ({ ro: 'Viața școlară', de: 'Schulleben', en: 'School life' } as const)[locale], route: 'life' as const };
 ---
 
-<Base locale={locale} title={t.value} description={s.value} route={match.id} alternates={alternates} settings={settings} banners={banners} fallback={body.fallback}>
+<Base locale={locale} title={isProject ? `${t.value} · ${({ ro: 'Proiect', de: 'Projekt', en: 'Project' } as const)[locale]}` : t.value} description={s.value} route={match.id} alternates={alternates} settings={settings} banners={banners} fallback={body.fallback}>
   <PageHead locale={locale} kicker={parent.label} title={t.value} titleLang={t.lang} lead={s.value} leadLang={s.lang} crumbs={[{ label: parent.label, route: parent.route }, { label: t.value }]} />
   <div class="wrap book">
     <div class="book__gutter"></div>
@@ -32,7 +32,7 @@ const parent = isProject
         cover && (
           <figure class="cover">
             <div class="plate">
-              <Picture media={cover} locale={locale} priority sizes="(min-width: 60rem) 42rem, 100vw" />
+              <Picture media={cover} locale={locale} priority sizes="(min-width: 60rem) 42rem, calc(100vw - 3rem)" />
             </div>
             {caption(cover, locale) && <figcaption>{caption(cover, locale)}{cover.credit && <span class="credit">{creditLine(cover, locale)}</span>}</figcaption>}
           </figure>
